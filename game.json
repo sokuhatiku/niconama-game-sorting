@@ -2,6 +2,7 @@
 	"width": 1280,
 	"height": 720,
 	"fps": 30,
+	"maxPoints": 1,
 	"main": "./script/main.js",
 	"assets": {
 		"player": {
@@ -37,10 +38,20 @@
 			"type": "script",
 			"path": "script/scenes/gameScene.js",
 			"global": true
+		},
+		"character": {
+			"type": "script",
+			"path": "script/entities/character.js",
+			"global": true
 		}
 	},
 	"environment": {
-		"sandbox-runtime": "3"
+		"sandbox-runtime": "3",
+		"nicolive": {
+			"supportedModes": [
+				"multi_admission"
+			]
+		}
 	},
 	"globalScripts": [
 		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",

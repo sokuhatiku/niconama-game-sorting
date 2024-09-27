@@ -1,76 +1,102 @@
-import { Timeline, Tween } from "@akashic-extension/akashic-timeline"
+import { CommonOffset, CommonRect } from "@akashic/akashic-engine";
+import { Timeline } from "@akashic-extension/akashic-timeline";
+import { Character } from "../entities/character";
 
 const assets = {
     player: "/image/player.png",
     shot: "/image/shot.png",
-}
+};
 
 const scene = new g.Scene({
     game: g.game,
     assetPaths: [assets.player, assets.shot],
-})
-scene.onLoad.add(() => {
-    const timeline = new Timeline(scene)
-    const playerSprite = scene.asset.getImage(assets.player)
-    const localPlayerEntity = new g.Sprite({
-        scene: scene,
-        src: playerSprite,
-        width: playerSprite.width,
-        height: playerSprite.height,
-        touchable: true,
-    })
-    scene.append(localPlayerEntity)
+});
 
-    let isTouching = false
-    let currentMoving: Tween
+const isRectContainingPoint = (rect: CommonRect, point: CommonOffset): boolean => {
+    return point.x >= rect.left &&
+        point.x <= rect.right &&
+        point.y >= rect.top &&
+        point.y <= rect.bottom;
+};
 
-    localPlayerEntity.onPointDown.add((ev) => {
-        console.log("onPointDown")
-        currentMoving?.cancel()
-        isTouching = true
-    })
-    localPlayerEntity.onPointMove.add((ev) => {
-        localPlayerEntity.x += ev.prevDelta.x
-        localPlayerEntity.y += ev.prevDelta.y
-        localPlayerEntity.modified()
-    })
-    localPlayerEntity.onPointUp.add((ev) => {
-        console.log("onPointUp")
-        isTouching = false
-    })
-
-    localPlayerEntity.onUpdate.add(() => {
-        if (isTouching) {
-            return
-        }
-
-        if(currentMoving && !currentMoving.isFinished()) {
-            return
-        }
-
-        // 1秒あたりの移動距離(px)
-        const speed = 300
-
-        // 移動先の座標をランダムに決定
-        const targetX = Math.floor(g.game.random.generate() * g.game.width)
-        const targetY = Math.floor(g.game.random.generate() * g.game.height)
-
-        // 現在の座標から目的地までの距離を計算
-        const distanceX = targetX - localPlayerEntity.x
-        const distanceY = targetY - localPlayerEntity.y
-        const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2)
-
-        // 移動にかかる時間を計算
-        const duration = distance / speed * 1000
-
-        // 移動アニメーションを開始
-        currentMoving = timeline.create(localPlayerEntity).moveTo(targetX, targetY, duration)
-
-    })
-})
-
-const setup = () => {
-    g.game.pushScene(scene)
+function setEntityParentWithKeepPosition(entity: g.E, parent: g.E): void {
+    const globalEntityPos = entity.localToGlobal({ x: 0, y: 0 });
+    parent.append(entity);
+    const localEntityPos = parent.globalToLocal(globalEntityPos);
+    entity.x = localEntityPos.x;
+    entity.y = localEntityPos.y;
 }
 
-export default { setup }
+scene.onLoad.add(() => {
+    const timeline = new Timeline(scene);
+    const playerSprite = scene.asset.getImage(assets.player);
+
+    const leftArea = new g.FilledRect({
+        scene: scene,
+        x: 0,
+        y: 200,
+        width: 320,
+        height: 320,
+        cssColor: "rgba(200, 100, 100, 1)",
+    });
+    scene.append(leftArea);
+
+    const rightArea = new g.FilledRect({
+        scene: scene,
+        x: 960,
+        y: 200,
+        width: 320,
+        height: 320,
+        cssColor: "rgba(100, 100, 200, 1)",
+    });
+    scene.append(rightArea);
+
+    const centerArea = new g.FilledRect({
+        scene: scene,
+        x: 320,
+        y: 0,
+        width: 640,
+        height: 720,
+        cssColor: "rgba(200, 200, 200, 1)",
+    });
+    scene.append(centerArea);
+
+    // 掴んでいるキャラクターを最前面に表示するための親としてのエンティティ
+    const foreground = new g.E({
+        scene: scene,
+        x: 0,
+        y: 0,
+        width: 1280,
+        height: 720,
+        touchable: false,
+    });
+    scene.append(foreground);
+
+    for (let i = 0; i < 50; i++) {
+        const character = new Character({
+            name: `character${i}`,
+            scene: scene,
+            parent: centerArea,
+            timeline: timeline,
+            sprite: playerSprite,
+        });
+        character.onPointDown = (ev) => {
+            setEntityParentWithKeepPosition(character.entity, foreground);
+        };
+        character.onPointUp = (ev) => {
+            const worldPoint = character.entity.localToGlobal(ev.point);
+            for (const area of [leftArea, centerArea, rightArea]) {
+                if (isRectContainingPoint(area.calculateBoundingRect(), worldPoint)) {
+                    setEntityParentWithKeepPosition(character.entity, area);
+                    return;
+                }
+            }
+        };
+    }
+});
+
+const setup = (): void => {
+    g.game.pushScene(scene);
+};
+
+export default { setup };
