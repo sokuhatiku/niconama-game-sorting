@@ -61,22 +61,22 @@ module.exports = {
       "error",
       {
         "multiline": {
-          "delimiter": "semi",
-          "requireLast": true
+          "delimiter": "none",
+          "requireLast": false
         },
         "singleline": {
-          "delimiter": "semi",
+          "delimiter": "comma",
           "requireLast": false
         },
         "overrides": {
           "interface": {
             "singleline": {
-              "delimiter": "semi",
-              "requireLast": true
+              "delimiter": "comma",
+              "requireLast": false
             },
             "multiline": {
-              "delimiter": "semi",
-              "requireLast": true
+              "delimiter": "none",
+              "requireLast": false
             }
           }
         }
@@ -103,7 +103,8 @@ module.exports = {
       "double"
     ],
     "@typescript-eslint/semi": [
-      "error"
+      "error",
+      "never"
     ],
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/typedef": ["error", {
@@ -174,6 +175,7 @@ module.exports = {
     "no-redeclare": "off",
     "no-trailing-spaces": "error",
     "comma-spacing": "error",
+    "comma-dangle": ['error', 'always-multiline'],
     "brace-style": "error",
     "no-underscore-dangle": "off",
     "no-unused-expressions": "error",
@@ -186,6 +188,6 @@ module.exports = {
         "order": "asc",
         "caseInsensitive": true
       }
-    }]
+    }],
   }
 }
