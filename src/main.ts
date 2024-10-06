@@ -1,7 +1,8 @@
-import gameScene from "./scenes/gameScene"
+import { createGameScene } from "./scenes/gameScene"
 
 function main(param: g.GameMainParameterObject): void {
-    gameScene.setup()
+    const gameScene = createGameScene()
+    g.game.pushScene(gameScene)
 }
 
 export = main
