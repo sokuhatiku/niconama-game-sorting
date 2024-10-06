@@ -19,7 +19,7 @@ class ScoreImpl implements Score {
 
     private _entity: g.Label
 
-    get entity(): E {
+    get entity(): g.E {
         return this._entity
     }
 
@@ -41,7 +41,7 @@ class ScoreImpl implements Score {
         })
 
         label.aligning(g.game.width, "right")
-        this._entity.invalidate()
+        label.invalidate()
 
         const parent = param.parent ?? param.scene
         parent.append(label)
