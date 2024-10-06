@@ -3,6 +3,7 @@ import { Timeline } from "@akashic-extension/akashic-timeline"
 import { createCharacter, Character } from "../entities/character"
 import { createScore } from "../entities/score"
 import { createTimer } from "../entities/timer"
+import { ScoreHandler } from "../scoreHandler"
 
 const assets = {
     player: "/image/player.png",
@@ -13,7 +14,7 @@ const assets = {
 
 const assetsArray = [assets.player, assets.shot, assets.male, assets.female]
 
-export function createGameScene(): g.Scene {
+export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
     const scene = new g.Scene({
         game: g.game,
         assetPaths: assetsArray,
@@ -108,7 +109,7 @@ export function createGameScene(): g.Scene {
                         // そのキャラクターにおけるターゲットエリアに含まれる場合はポイントを加算
                         if (area === targetArea) {
                             point += 1
-                            setGameScore(point)
+                            scoreHandler.set(point)
                             score.set(point)
                         }
                         return

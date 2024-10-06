@@ -65,14 +65,22 @@
 			"type": "script",
 			"path": "script/entities/score.js",
 			"global": true
+		},
+		"scoreHandler": {
+			"type": "script",
+			"path": "script/scoreHandler.js",
+			"global": true
 		}
 	},
 	"environment": {
 		"sandbox-runtime": "3",
 		"nicolive": {
 			"supportedModes": [
-				"multi_admission"
-			]
+				"ranking"
+			],
+			"preferredSessionParameters": {
+				"totalTimeLimit": 35
+			}
 		}
 	},
 	"globalScripts": [
