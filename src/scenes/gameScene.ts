@@ -1,6 +1,6 @@
 import { CommonOffset, CommonRect } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
-import { Character } from "../entities/character"
+import { createCharacter } from "../entities/character"
 
 const assets = {
     player: "/image/player.png",
@@ -61,7 +61,7 @@ export function createGameScene(): g.Scene {
         scene.append(foreground)
 
         for (let i = 0; i < 50; i++) {
-            const character = new Character({
+            const character = createCharacter({
                 name: `character${i}`,
                 scene: scene,
                 parent: centerArea,

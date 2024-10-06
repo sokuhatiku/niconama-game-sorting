@@ -1,6 +1,6 @@
 import { Tween, Timeline } from "@akashic-extension/akashic-timeline"
 
-export type CharacterCreateParams = {
+export type CharacterParameterObject = {
     name?: string
     scene: g.Scene
     parent?: g.Scene | g.E
@@ -8,7 +8,28 @@ export type CharacterCreateParams = {
     sprite: g.ImageAsset
 }
 
-export class Character {
+export interface Character {
+    /**
+     * キャラクターのルートエンティティ
+     */
+    entity: g.E
+
+    onPointDown?: (ev: g.PointDownEvent) => void
+    onPointMove?: (ev: g.PointMoveEvent) => void
+    onPointUp?: (ev: g.PointUpEvent) => void
+
+    /**
+     * キャラクターの動作状態を設定する
+     * @param state "active" または "inactive"
+     */
+    setState(state: "active" | "inactive"): void
+}
+
+export function createCharacter(param: CharacterParameterObject): Character {
+    return new CharacterImpl(param)
+}
+
+class CharacterImpl implements Character {
     public onPointDown?: (ev: g.PointDownEvent) => void = null
     public onPointMove?: (ev: g.PointMoveEvent) => void = null
     public onPointUp?: (ev: g.PointUpEvent) => void = null
@@ -23,12 +44,12 @@ export class Character {
         return this._entity
     }
 
-    constructor(params: CharacterCreateParams) {
+    constructor(param: CharacterParameterObject) {
         const entity = new g.Sprite({
-            scene: params.scene,
-            src: params.sprite,
-            width: params.sprite.width,
-            height: params.sprite.height,
+            scene: param.scene,
+            src: param.sprite,
+            width: param.sprite.width,
+            height: param.sprite.height,
             touchable: true,
             local: true,
         })
@@ -42,7 +63,7 @@ export class Character {
                 return
             }
 
-            console.log(params.name, "touched by", ev.player.id)
+            console.log(param.name, "touched by", ev.player.id)
             this._handlingPlayer = ev.player.id
             this._isTouching = true
             this._currentMoving?.cancel()
@@ -101,12 +122,12 @@ export class Character {
             const duration = distance / speed * 1000
 
             // 移動アニメーションを開始
-            this._currentMoving = params.timeline.create(entity).moveTo(targetX, targetY, duration)
+            this._currentMoving = param.timeline.create(entity).moveTo(targetX, targetY, duration)
 
         })
 
-        if (params.parent) {
-            params.parent.append(entity)
+        if (param.parent) {
+            param.parent.append(entity)
         }
     }
 
