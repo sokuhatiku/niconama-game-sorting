@@ -43,7 +43,7 @@ module.exports = {
     ],
     "@typescript-eslint/indent": [
       "error",
-      "tab",
+      4,
       {
         "FunctionDeclaration": {
           "parameters": "first"
