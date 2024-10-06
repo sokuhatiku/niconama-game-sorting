@@ -1,6 +1,6 @@
 import { CommonOffset, CommonRect } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
-import { createCharacter } from "../entities/character"
+import { createCharacter, Character } from "../entities/character"
 import { createTimer } from "../entities/timer"
 
 const assets = {
@@ -61,13 +61,7 @@ export function createGameScene(): g.Scene {
         })
         scene.append(foreground)
 
-        const timer = createTimer({
-            scene: scene,
-            parent: foreground,
-        })
-        timer.set(30)
-        timer.start()
-
+        const characters: Character[] = []
         for (let i = 0; i < 50; i++) {
             const character = createCharacter({
                 name: `character${i}`,
@@ -96,6 +90,19 @@ export function createGameScene(): g.Scene {
                 // どのエリアにも含まれない場合は中央エリアに戻す
                 setEntityParentWithKeepPosition(character.entity, centerArea)
             }
+            characters.push(character)
+        }
+
+        const timer = createTimer({
+            scene: scene,
+            parent: foreground,
+        })
+        timer.set(30)
+        timer.start()
+        timer.onTimeUp = () => {
+            characters.forEach((character) => {
+                character.setState("inactive")
+            })
         }
     })
 
