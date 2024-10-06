@@ -61,14 +61,14 @@
 			"width": 32,
 			"height": 32
 		},
-		"score": {
-			"type": "script",
-			"path": "script/entities/score.js",
-			"global": true
-		},
 		"scoreHandler": {
 			"type": "script",
 			"path": "script/scoreHandler.js",
+			"global": true
+		},
+		"scoreboard": {
+			"type": "script",
+			"path": "script/entities/scoreboard.js",
 			"global": true
 		}
 	},

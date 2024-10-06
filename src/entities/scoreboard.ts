@@ -1,21 +1,21 @@
-export type ScoreParameterObject = {
+export type ScoreboardParameterObject = {
     name?: string
     scene: g.Scene
     parent?: g.Scene | g.E
     font?: g.Font
 }
 
-export interface Score {
+export interface Scoreboard {
     get entity(): g.E
 
     set(point: number): void
 }
 
-export function createScore(param: ScoreParameterObject): Score {
-    return new ScoreImpl(param)
+export function createScoreboard(param: ScoreboardParameterObject): Scoreboard {
+    return new ScoreboardImpl(param)
 }
 
-class ScoreImpl implements Score {
+class ScoreboardImpl implements Scoreboard {
 
     private _entity: g.Label
 
@@ -23,7 +23,7 @@ class ScoreImpl implements Score {
         return this._entity
     }
 
-    constructor(param: ScoreParameterObject) {
+    constructor(param: ScoreboardParameterObject) {
         const font = param.font ?? new g.DynamicFont({
             game: g.game,
             fontFamily: "sans-serif",

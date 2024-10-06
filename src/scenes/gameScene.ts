@@ -1,7 +1,7 @@
 import { CommonOffset, CommonRect } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
 import { createCharacter, Character } from "../entities/character"
-import { createScore } from "../entities/score"
+import { createScoreboard } from "../entities/scoreboard"
 import { createTimer } from "../entities/timer"
 import { ScoreHandler } from "../scoreHandler"
 
@@ -79,7 +79,7 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
         }
         let point = 0
 
-        const score = createScore({
+        const score = createScoreboard({
             scene: scene,
             parent: foreground,
         })
