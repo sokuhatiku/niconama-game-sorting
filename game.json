@@ -48,6 +48,23 @@
 			"type": "script",
 			"path": "script/entities/timer.js",
 			"global": true
+		},
+		"female": {
+			"type": "image",
+			"path": "image/female.png",
+			"width": 32,
+			"height": 32
+		},
+		"male": {
+			"type": "image",
+			"path": "image/male.png",
+			"width": 32,
+			"height": 32
+		},
+		"score": {
+			"type": "script",
+			"path": "script/entities/score.js",
+			"global": true
 		}
 	},
 	"environment": {

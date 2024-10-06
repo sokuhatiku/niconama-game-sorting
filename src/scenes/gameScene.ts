@@ -1,14 +1,17 @@
 import { CommonOffset, CommonRect } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
 import { createCharacter, Character } from "../entities/character"
+import { createScore } from "../entities/score"
 import { createTimer } from "../entities/timer"
 
 const assets = {
     player: "/image/player.png",
     shot: "/image/shot.png",
+    male: "/image/male.png",
+    female: "/image/female.png",
 }
 
-const assetsArray = [assets.player, assets.shot]
+const assetsArray = [assets.player, assets.shot, assets.male, assets.female]
 
 export function createGameScene(): g.Scene {
     const scene = new g.Scene({
@@ -18,7 +21,8 @@ export function createGameScene(): g.Scene {
 
     scene.onLoad.add(() => {
         const timeline = new Timeline(scene)
-        const playerSprite = scene.asset.getImage(assets.player)
+        const femaleSprite = scene.asset.getImage(assets.female)
+        const maleSprite = scene.asset.getImage(assets.male)
 
         const leftArea = new g.FilledRect({
             scene: scene,
@@ -62,13 +66,33 @@ export function createGameScene(): g.Scene {
         scene.append(foreground)
 
         const characters: Character[] = []
+        const genderData = {
+            "male": {
+                sprite: maleSprite,
+                targetArea: leftArea,
+            },
+            "female": {
+                sprite: femaleSprite,
+                targetArea: rightArea,
+            },
+        }
+        let point = 0
+
+        const score = createScore({
+            scene: scene,
+            parent: foreground,
+        })
+
         for (let i = 0; i < 50; i++) {
+            const gender = i % 2 === 0 ? "male" : "female"
+            const targetArea = genderData[gender].targetArea
+
             const character = createCharacter({
                 name: `character${i}`,
                 scene: scene,
                 parent: centerArea,
                 timeline: timeline,
-                sprite: playerSprite,
+                sprite: genderData[gender].sprite,
             })
             character.onPointDown = (ev) => {
                 setEntityParentWithKeepPosition(character.entity, foreground)
@@ -80,9 +104,13 @@ export function createGameScene(): g.Scene {
                 for (const area of [leftArea, rightArea]) {
                     if (isRectContainingPoint(area.calculateBoundingRect(), worldPoint)) {
                         setEntityParentWithKeepPosition(character.entity, area)
-
-                        // 左右のエリアに含まれている場合はキャラクターを非アクティブにする
-                        character.setState("inactive")
+                        character.setInteractable(false)
+                        // そのキャラクターにおけるターゲットエリアに含まれる場合はポイントを加算
+                        if (area === targetArea) {
+                            point += 1
+                            setGameScore(point)
+                            score.set(point)
+                        }
                         return
                     }
                 }
@@ -100,8 +128,9 @@ export function createGameScene(): g.Scene {
         timer.set(30)
         timer.start()
         timer.onTimeUp = () => {
+            // ゲーム終了処理を行う
             characters.forEach((character) => {
-                character.setState("inactive")
+                character.setInteractable(false)
             })
         }
     })
@@ -115,11 +144,11 @@ export function createGameScene(): g.Scene {
  * @param point 判定対象の点
  * @returns 矩形の中に点が含まれている場合はtrue、それ以外はfalse
  */
-const isRectContainingPoint = (rect: CommonRect, point: CommonOffset): boolean => {
+function isRectContainingPoint(rect: CommonRect, point: CommonOffset): boolean {
     return point.x >= rect.left &&
-		point.x <= rect.right &&
-		point.y >= rect.top &&
-		point.y <= rect.bottom
+        point.x <= rect.right &&
+        point.y >= rect.top &&
+        point.y <= rect.bottom
 }
 
 /**

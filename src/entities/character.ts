@@ -18,11 +18,7 @@ export interface Character {
     onPointMove?: (ev: g.PointMoveEvent) => void
     onPointUp?: (ev: g.PointUpEvent) => void
 
-    /**
-     * キャラクターの動作状態を設定する
-     * @param state "active" または "inactive"
-     */
-    setState(state: "active" | "inactive"): void
+    setInteractable(isDraggable: boolean): void
 }
 
 export function createCharacter(param: CharacterParameterObject): Character {
@@ -38,7 +34,6 @@ class CharacterImpl implements Character {
     private _isTouching: boolean = false
     private _currentMoving: Tween = null
     private _handlingPlayer: string = null
-    private _state: "active" | "inactive" = "active"
 
     get entity(): g.E {
         return this._entity
@@ -59,7 +54,7 @@ class CharacterImpl implements Character {
             if (this._handlingPlayer) {
                 return
             }
-            if (this._state === "inactive") {
+            if (!this._entity.touchable) {
                 return
             }
 
@@ -131,9 +126,8 @@ class CharacterImpl implements Character {
         }
     }
 
-    public setState(state: "active" | "inactive"): void {
-        this._state = state
-        this._entity.touchable = state === "active"
-        this._entity.opacity = state === "active" ? 1 : 0.5
+    public setInteractable(isDraggable: boolean): void {
+        this._entity.touchable = isDraggable
+        this._entity.opacity = isDraggable ? 1 : 0.5
     }
 }
