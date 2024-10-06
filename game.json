@@ -43,6 +43,11 @@
 			"type": "script",
 			"path": "script/entities/character.js",
 			"global": true
+		},
+		"timer": {
+			"type": "script",
+			"path": "script/entities/timer.js",
+			"global": true
 		}
 	},
 	"environment": {

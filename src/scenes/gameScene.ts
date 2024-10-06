@@ -1,6 +1,7 @@
 import { CommonOffset, CommonRect } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
 import { createCharacter } from "../entities/character"
+import { createTimer } from "../entities/timer"
 
 const assets = {
     player: "/image/player.png",
@@ -59,6 +60,13 @@ export function createGameScene(): g.Scene {
             touchable: false,
         })
         scene.append(foreground)
+
+        const timer = createTimer({
+            scene: scene,
+            parent: foreground,
+        })
+        timer.set(30)
+        timer.start()
 
         for (let i = 0; i < 50; i++) {
             const character = createCharacter({
