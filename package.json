@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "npm run build",
     "build": "rimraf ./script && tsc && akashic-cli-scan asset script",
+    "build:watch": "watch \"npm run build\" src",
     "update": "akashic-cli-scan asset && akashic-cli-scan globalScripts",
     "lint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
     "start": "akashic-sandbox .",
@@ -31,7 +32,8 @@
     "jest": "^29.1.1",
     "rimraf": "^6.0.0",
     "ts-jest": "^29.0.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "watch": "^1.0.2"
   },
   "dependencies": {
     "@akashic-extension/akashic-timeline": "^3.2.1"
