@@ -35,30 +35,30 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
 
         const leftArea = new g.FilledRect({
             scene: scene,
-            x: 0,
-            y: 200,
-            width: 320,
-            height: 320,
+            x: 38,
+            y: 128,
+            width: 301,
+            height: 544,
             cssColor: "rgba(200, 100, 100, 1)",
         })
         scene.append(leftArea)
 
         const rightArea = new g.FilledRect({
             scene: scene,
-            x: 960,
-            y: 200,
-            width: 320,
-            height: 320,
+            x: 941,
+            y: 128,
+            width: 301,
+            height: 544,
             cssColor: "rgba(100, 100, 200, 1)",
         })
         scene.append(rightArea)
 
         const centerArea = new g.FilledRect({
             scene: scene,
-            x: 320,
-            y: 0,
-            width: 640,
-            height: 720,
+            x: 339,
+            y: 128,
+            width: 602,
+            height: 544,
             cssColor: "rgba(200, 200, 200, 1)",
         })
         scene.append(centerArea)
