@@ -6,13 +6,16 @@ import { createTimer } from "../entities/timer"
 import { ScoreHandler } from "../scoreHandler"
 
 const assets = {
+    safearea: "/image/safearea.png",
     player: "/image/player.png",
     shot: "/image/shot.png",
     male: "/image/male.png",
     female: "/image/female.png",
+    bgm: "/audio/bgm",
+    whistle: "/audio/whistle",
 }
 
-const assetsArray = [assets.player, assets.shot, assets.male, assets.female]
+const assetsArray = [assets.safearea, assets.player, assets.shot, assets.male, assets.female, assets.bgm, assets.whistle]
 
 export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
     const scene = new g.Scene({
@@ -21,6 +24,11 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
     })
 
     scene.onLoad.add(() => {
+        const bgm = scene.asset.getAudio(assets.bgm)
+        const bgmContext = g.game.audio.music.create(bgm)
+        bgmContext.play()
+        const whistle = scene.asset.getAudio(assets.whistle)
+
         const timeline = new Timeline(scene)
         const femaleSprite = scene.asset.getImage(assets.female)
         const maleSprite = scene.asset.getImage(assets.male)
@@ -130,10 +138,23 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
         timer.start()
         timer.onTimeUp = () => {
             // ゲーム終了処理を行う
+            whistle.play()
+            g.AudioUtil.fadeOut(g.game, bgmContext, 500)
             characters.forEach((character) => {
                 character.setInteractable(false)
             })
         }
+
+        const safearea = new g.Sprite({
+            scene: scene,
+            src: scene.asset.getImage(assets.safearea),
+            x: 0,
+            y: 0,
+            width: 1280,
+            height: 720,
+            opacity: 0.5,
+        })
+        scene.append(safearea)
     })
 
     return scene

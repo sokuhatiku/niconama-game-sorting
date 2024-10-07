@@ -3,3 +3,5 @@ node_modules
 /game
 coverage
 game.zip
+/audio/*.m4a
+/audio/*.ogg

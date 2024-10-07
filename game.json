@@ -70,6 +70,36 @@
 			"type": "script",
 			"path": "script/entities/scoreboard.js",
 			"global": true
+		},
+		"safearea": {
+			"type": "image",
+			"path": "image/safearea.png",
+			"width": 1280,
+			"height": 720
+		},
+		"bgm": {
+			"type": "audio",
+			"path": "audio/bgm",
+			"systemId": "music",
+			"duration": 32000,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"whistle": {
+			"type": "audio",
+			"path": "audio/whistle",
+			"systemId": "sound",
+			"duration": 3816,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
 		}
 	},
 	"environment": {
