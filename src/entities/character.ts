@@ -129,5 +129,6 @@ class CharacterImpl implements Character {
     public setInteractable(isDraggable: boolean): void {
         this._entity.touchable = isDraggable
         this._entity.opacity = isDraggable ? 1 : 0.5
+        this._entity.invalidate()
     }
 }
