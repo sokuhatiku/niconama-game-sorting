@@ -89,6 +89,9 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
         const scoreboard = createScoreboard({
             scene: scene,
             parent: foreground,
+            onScoreUpdated: (score) => {
+                scoreHandler.notice(score)
+            },
         })
 
         for (let i = 0; i < 50; i++) {
@@ -119,7 +122,6 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
                         } else {
                             scoreboard.addIncorrectPoint()
                         }
-                        scoreHandler.set(scoreboard.score)
                         return
                     }
                 }
@@ -154,6 +156,7 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
             height: 720,
             opacity: 0.5,
         })
+
         scene.append(safearea)
     })
 

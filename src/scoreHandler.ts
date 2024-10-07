@@ -1,5 +1,5 @@
 export interface ScoreHandler {
-    set(point: number): void
+    notice(point: number): void
     get score(): number
 }
 
@@ -21,7 +21,7 @@ class ScoreHandlerImpl implements ScoreHandler {
         }
     }
 
-    set(point: number): void {
+    notice(point: number): void {
         this._score = point
         g.game.vars.gameState.score = this._score
     }

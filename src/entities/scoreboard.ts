@@ -3,6 +3,7 @@ export type ScoreboardParameterObject = {
     scene: g.Scene
     parent?: g.Scene | g.E
     font?: g.Font
+    onScoreUpdated?: (score: number) => void
 }
 
 export interface Scoreboard {
@@ -29,11 +30,14 @@ class ScoreboardImpl implements Scoreboard {
     private _incorrectCount: number = 0
     private _score: number = 0
 
+    private _scoreUpdatedHandler?: (score: number) => void
+
     get entity(): g.E {
         return this._entity
     }
 
     constructor(param: ScoreboardParameterObject) {
+        this._scoreUpdatedHandler = param.onScoreUpdated
 
         const root = new g.E({
             scene: param.scene,
@@ -115,8 +119,12 @@ class ScoreboardImpl implements Scoreboard {
         const baseScore = this._correctCount * 100
         const qualityScore = this._correctCount === 0 ? 100
           : Math.max(this._correctCount - this._incorrectCount, 0) / this._correctCount * 100
-        const totalScore = baseScore * (qualityScore / 100)
-        this._score = Math.floor(totalScore)
+        const totalScore = Math.floor(baseScore * (qualityScore / 100))
+
+        if (this._score !== totalScore){
+            this._score = totalScore
+            this._scoreUpdatedHandler?.(this._score)
+        }
 
         const correctText = `納品:${this._correctCount}`
         const qualityText = `品質:${qualityScore.toFixed(2)}%`
