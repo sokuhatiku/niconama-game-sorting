@@ -77,9 +77,8 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
                 targetArea: rightArea,
             },
         }
-        let point = 0
 
-        const score = createScoreboard({
+        const scoreboard = createScoreboard({
             scene: scene,
             parent: foreground,
         })
@@ -108,10 +107,11 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
                         character.setInteractable(false)
                         // そのキャラクターにおけるターゲットエリアに含まれる場合はポイントを加算
                         if (area === targetArea) {
-                            point += 1
-                            scoreHandler.set(point)
-                            score.set(point)
+                            scoreboard.addCorrectPoint()
+                        } else {
+                            scoreboard.addIncorrectPoint()
                         }
+                        scoreHandler.set(scoreboard.score)
                         return
                     }
                 }
