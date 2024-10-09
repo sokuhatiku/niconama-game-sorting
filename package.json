@@ -14,6 +14,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
+    "@akashic-extension/akashic-timeline": "^3.2.1",
     "@akashic/akashic-cli-export": "^1.7.51",
     "@akashic/akashic-cli-scan": "^0.17.0",
     "@akashic/akashic-engine": "^3.6.0",

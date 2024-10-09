@@ -17,7 +17,12 @@ const assets = {
 
 const assetsArray = [assets.safearea, assets.player, assets.shot, assets.male, assets.female, assets.bgm, assets.whistle]
 
-export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
+export type GameSceneParameterObject = {
+    scoreHandler: ScoreHandler,
+    timelimit: number,
+}
+
+export function createGameScene(param: GameSceneParameterObject): g.Scene {
     const scene = new g.Scene({
         game: g.game,
         assetPaths: assetsArray,
@@ -90,7 +95,7 @@ export function createGameScene(scoreHandler: ScoreHandler): g.Scene {
             scene: scene,
             parent: foreground,
             onScoreUpdated: (score) => {
-                scoreHandler.notice(score)
+                param.scoreHandler.notice(score)
             },
         })
 

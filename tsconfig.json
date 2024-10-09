@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "lib": ["es5"],
+    "target": "ES2015",
+    "lib": [
+      "es2015"
+    ],
     "noImplicitAny": true,
-    "module": "commonjs" ,
+    "module": "commonjs",
     "outDir": "script",
-    "types" : [],
+    "types": [],
     "allowUmdGlobalAccess": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true

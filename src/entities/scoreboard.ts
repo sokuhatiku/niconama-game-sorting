@@ -118,7 +118,7 @@ class ScoreboardImpl implements Scoreboard {
     private updateScore(): void {
         const baseScore = this._correctCount * 100
         const qualityScore = this._correctCount === 0 ? 100
-          : Math.max(this._correctCount - this._incorrectCount, 0) / this._correctCount * 100
+            : Math.max(this._correctCount - this._incorrectCount, 0) / this._correctCount * 100
         const totalScore = Math.floor(baseScore * (qualityScore / 100))
 
         if (this._score !== totalScore){

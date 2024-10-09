@@ -17,9 +17,12 @@ export default [
     },
     rules: {
       "no-var": "error",
-      "prefer-const": "error",
+      "prefer-const": ["warn", {
+        "destructuring": "all",
+        "ignoreReadBeforeAssign": true,
+      }],
       "no-console": "off",
-      "no-unused-vars": ["warn"],
+      "no-unused-vars": ["warn", { args: "none" }],
       "no-restricted-syntax": [
         "error",
         {
@@ -29,8 +32,9 @@ export default [
       ],
       "@stylistic/quotes": ["error", "double"],
       "@stylistic/semi": ["error", "never"],
-      "@stylistic/indent": ["error", 2],
+      "@stylistic/indent": ["error", 4],
       "@stylistic/comma-dangle": ["error", "always-multiline"],
+      "@stylistic/eol-last": ["error", "always"],
     },
   },
-];
+]
