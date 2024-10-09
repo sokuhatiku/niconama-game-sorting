@@ -1,5 +1,5 @@
 module.exports = {
-  "warn": {
-    "es6": false
-  }
-};
+    "warn": {
+        "es6": false,
+    },
+}
