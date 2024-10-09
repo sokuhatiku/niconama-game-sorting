@@ -2,61 +2,27 @@
 	"width": 1280,
 	"height": 720,
 	"fps": 30,
-	"maxPoints": 1,
-	"main": "./script/main.js",
+	"main": "./script/_bootstrap.js",
 	"assets": {
+		"_bootstrap": {
+			"type": "script",
+			"path": "script/_bootstrap.js",
+			"global": true
+		},
 		"main": {
 			"type": "script",
 			"path": "script/main.js",
 			"global": true
 		},
-		"gameScene": {
+		"parameterObject": {
 			"type": "script",
-			"path": "script/scenes/gameScene.js",
+			"path": "script/parameterObject.js",
 			"global": true
-		},
-		"character": {
-			"type": "script",
-			"path": "script/entities/character.js",
-			"global": true
-		},
-		"timer": {
-			"type": "script",
-			"path": "script/entities/timer.js",
-			"global": true
-		},
-		"female": {
-			"type": "image",
-			"path": "image/female.png",
-			"width": 32,
-			"height": 32
-		},
-		"male": {
-			"type": "image",
-			"path": "image/male.png",
-			"width": 32,
-			"height": 32
-		},
-		"scoreHandler": {
-			"type": "script",
-			"path": "script/scoreHandler.js",
-			"global": true
-		},
-		"scoreboard": {
-			"type": "script",
-			"path": "script/entities/scoreboard.js",
-			"global": true
-		},
-		"safearea": {
-			"type": "image",
-			"path": "image/safearea.png",
-			"width": 1280,
-			"height": 720
 		},
 		"bgm": {
 			"type": "audio",
 			"path": "audio/bgm",
-			"systemId": "music",
+			"systemId": "sound",
 			"duration": 32000,
 			"hint": {
 				"extensions": [
@@ -76,6 +42,49 @@
 					".ogg"
 				]
 			}
+		},
+		"female": {
+			"type": "image",
+			"path": "image/female.png",
+			"width": 32,
+			"height": 32
+		},
+		"male": {
+			"type": "image",
+			"path": "image/male.png",
+			"width": 32,
+			"height": 32
+		},
+		"safearea": {
+			"type": "image",
+			"path": "image/safearea.png",
+			"width": 1280,
+			"height": 720
+		},
+		"character": {
+			"type": "script",
+			"path": "script/entities/character.js",
+			"global": true
+		},
+		"scoreboard": {
+			"type": "script",
+			"path": "script/entities/scoreboard.js",
+			"global": true
+		},
+		"timer": {
+			"type": "script",
+			"path": "script/entities/timer.js",
+			"global": true
+		},
+		"gameScene": {
+			"type": "script",
+			"path": "script/scenes/gameScene.js",
+			"global": true
+		},
+		"scoreHandler": {
+			"type": "script",
+			"path": "script/scoreHandler.js",
+			"global": true
 		}
 	},
 	"environment": {
@@ -85,18 +94,9 @@
 				"ranking"
 			],
 			"preferredSessionParameters": {
-				"totalTimeLimit": 35
+				"totalTimeLimit": 82
 			}
 		}
 	},
-	"globalScripts": [
-		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
-	],
-	"moduleMainScripts": {
-		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js"
-	}
+	"globalScripts": []
 }

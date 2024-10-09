@@ -1,10 +1,15 @@
-import { createGameScene } from "./scenes/gameScene"
-import { createScoreHandler } from "./scoreHandler"
+import { GameMainParameterObject } from "./parameterObject";
+import { createGameScene } from "./scenes/gameScene";
+import { createScoreHandler } from "./scoreHandler";
 
-function main(param: g.GameMainParameterObject): void {
-    const scoreHandler = createScoreHandler()
-    const gameScene = createGameScene(scoreHandler)
-    g.game.pushScene(gameScene)
+export function main(param: GameMainParameterObject): void {
+	let time = 60;
+	if (param.sessionParameter.totalTimeLimit) {
+		time = param.sessionParameter.totalTimeLimit;
+	}
+
+	const scoreHandler = createScoreHandler();
+    const gameScene = createGameScene(scoreHandler);
+    g.game.pushScene(gameScene);
+	
 }
-
-export = main
