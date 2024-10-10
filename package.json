@@ -5,11 +5,11 @@
   "description": "",
   "scripts": {
     "build": "rimraf ./script && tsc && akashic-cli-scan asset script",
-    "build:watch": "watch \"npm run build\" src",
+    "build:watch": "chokidar \"src/**/*.ts\" -c \"npm run build\"",
     "update": "akashic-cli-scan asset && akashic-cli-scan globalScripts",
-    "update:watch": "watch \"npm run update\" audio image",
+    "update:watch": "chokidar audio image -c \"npm run update\"",
     "lint": "eslint src -c eslint.config.mjs --fix",
-    "start": "akashic-sandbox .",
+    "start": "akashic sandbox .",
     "export-zip": "rimraf game.zip && akashic-cli-export zip -o game.zip -s",
     "export-html": "rimraf game && akashic-cli-export html -o game",
     "serve": "run-p -l start build:watch update:watch"
@@ -18,23 +18,24 @@
   "license": "",
   "devDependencies": {
     "@akashic-extension/akashic-timeline": "^3.2.1",
+    "@akashic/akashic-cli": "^2.17.23",
     "@akashic/akashic-cli-export": "^1.7.51",
     "@akashic/akashic-cli-scan": "^0.17.0",
     "@akashic/akashic-engine": "^3.6.0",
-    "@akashic/akashic-sandbox": "^0.28.0",
     "@akashic/headless-akashic": "^4.0.0",
     "@eslint/js": "^9.12.0",
     "@stylistic/eslint-plugin": "^2.9.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
+    "chokidar-cli": "^3.0.0",
     "eslint": "^8.57.1",
     "globals": "^15.11.0",
     "jest": "^29.1.1",
+    "npm": "^10.9.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^6.0.0",
     "ts-jest": "^29.0.3",
     "typescript": ">=4.7.4 <5.6.0",
-    "typescript-eslint": "^8.8.1",
-    "watch": "^1.0.2"
+    "typescript-eslint": "^8.8.1"
   }
 }
