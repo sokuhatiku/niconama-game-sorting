@@ -35,6 +35,8 @@ export default [
             "@stylistic/indent": ["error", 4],
             "@stylistic/comma-dangle": ["error", "always-multiline"],
             "@stylistic/eol-last": ["error", "always"],
+            "@stylistic/comma-spacing": ["error", { "before": false, "after": true }],
+            "@stylistic/key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
         },
     },
 ]

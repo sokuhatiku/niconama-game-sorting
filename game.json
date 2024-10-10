@@ -85,6 +85,11 @@
 			"type": "script",
 			"path": "script/_bootstrap.js",
 			"global": true
+		},
+		"area": {
+			"type": "script",
+			"path": "script/entities/area.js",
+			"global": true
 		}
 	},
 	"environment": {

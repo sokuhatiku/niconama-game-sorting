@@ -1,9 +1,10 @@
-import { AudioAsset, CommonOffset, CommonRect } from "@akashic/akashic-engine"
+import { AudioAsset } from "@akashic/akashic-engine"
 import { Timeline } from "@akashic-extension/akashic-timeline"
 import { createCharacter, Character } from "../entities/character"
 import { createScoreboard } from "../entities/scoreboard"
 import { createTimer } from "../entities/timer"
 import { ScoreHandler } from "../scoreHandler"
+import { createArea } from "../entities/area"
 
 const assets = [
     "/image/safearea.png",
@@ -47,43 +48,28 @@ export function createGameScene(param: GameSceneParameterObject): g.Scene {
         const femaleSprite = getImage(scene, "/image/female.png")
         const maleSprite = getImage(scene, "/image/male.png")
 
-        const leftArea = new g.FilledRect({
+        const leftArea = createArea({
             scene: scene,
-            x: 38,
-            y: 128,
-            width: 301,
-            height: 544,
-            cssColor: "rgba(200, 100, 100, 1)",
+            rect: { x: 38, y: 128, width: 301, height: 544 },
+            color: "rgba(200, 100, 100, 1)",
         })
-        scene.append(leftArea)
 
-        const rightArea = new g.FilledRect({
+        const rightArea = createArea({
             scene: scene,
-            x: 941,
-            y: 128,
-            width: 301,
-            height: 544,
-            cssColor: "rgba(100, 100, 200, 1)",
+            rect: { x: 941, y: 128, width: 301, height: 544 },
+            color: "rgba(100, 100, 200, 1)",
         })
-        scene.append(rightArea)
 
-        const centerArea = new g.FilledRect({
+        const centerArea = createArea({
             scene: scene,
-            x: 339,
-            y: 128,
-            width: 602,
-            height: 544,
-            cssColor: "rgba(200, 200, 200, 1)",
+            rect: { x: 339, y: 128, width: 602, height: 544 },
+            color: "rgba(200, 200, 200, 1)",
         })
-        scene.append(centerArea)
 
         // 掴んでいるキャラクターを最前面に表示するための親としてのエンティティ
         const foreground = new g.E({
             scene: scene,
-            x: 0,
-            y: 0,
-            width: 1280,
-            height: 720,
+            x: 0, y: 0, width: 1280, height: 720,
             touchable: false,
         })
         scene.append(foreground)
@@ -115,11 +101,12 @@ export function createGameScene(param: GameSceneParameterObject): g.Scene {
             const character = createCharacter({
                 name: `character${i}`,
                 scene: scene,
-                parent: centerArea,
                 timeline: timeline,
                 sprite: genderData[gender].sprite,
             })
+            centerArea.addCharacter(character)
             character.onPointDown = (ev) => {
+                centerArea.removeCharacter(character)
                 setEntityParentWithKeepPosition(character.entity, foreground)
             }
             character.onPointUp = (ev) => {
@@ -127,8 +114,8 @@ export function createGameScene(param: GameSceneParameterObject): g.Scene {
 
                 // 左右のエリアに含まれるかどうかを判定
                 for (const area of [leftArea, rightArea]) {
-                    if (isRectContainingPoint(area.calculateBoundingRect(), worldPoint)) {
-                        setEntityParentWithKeepPosition(character.entity, area)
+                    if (area.contains(worldPoint)) {
+                        area.addCharacter(character)
                         character.setInteractable(false)
                         // そのキャラクターにおけるターゲットエリアに含まれる場合はポイントを加算
                         if (area === targetArea) {
@@ -141,7 +128,7 @@ export function createGameScene(param: GameSceneParameterObject): g.Scene {
                 }
 
                 // どのエリアにも含まれない場合は中央エリアに戻す
-                setEntityParentWithKeepPosition(character.entity, centerArea)
+                centerArea.addCharacter(character)
             }
             characters.push(character)
         }
@@ -178,19 +165,6 @@ export function createGameScene(param: GameSceneParameterObject): g.Scene {
 }
 
 /**
- * 矩形と点の当たり判定をチェックする
- * @param rect 判定対象の矩形
- * @param point 判定対象の点
- * @returns 矩形の中に点が含まれている場合はtrue、それ以外はfalse
- */
-function isRectContainingPoint(rect: CommonRect, point: CommonOffset): boolean {
-    return point.x >= rect.left &&
-        point.x <= rect.right &&
-        point.y >= rect.top &&
-        point.y <= rect.bottom
-}
-
-/**
  * エンティティの親を、エンティティのグローバル空間上の位置を保持したまま変更する
  * @param entity 操作対象のエンティティ
  * @param parent 新しい親エンティティ
@@ -201,4 +175,5 @@ function setEntityParentWithKeepPosition(entity: g.E, parent: g.E): void {
     const localEntityPos = parent.globalToLocal(globalEntityPos)
     entity.x = localEntityPos.x
     entity.y = localEntityPos.y
+    entity.modified()
 }

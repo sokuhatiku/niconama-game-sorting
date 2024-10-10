@@ -17,7 +17,7 @@ class ScoreHandlerImpl implements ScoreHandler {
     constructor() {
         g.game.vars.gameState = {
             ...g.game.vars.gameState,
-            score:0,
+            score: 0,
         }
     }
 

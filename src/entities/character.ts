@@ -48,6 +48,7 @@ class CharacterImpl implements Character {
             touchable: true,
             local: true,
         })
+        entity.scale(1.5)
         this._entity = entity
 
         entity.onPointDown.add((ev) => {
