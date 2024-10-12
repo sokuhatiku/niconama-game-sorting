@@ -1,14 +1,14 @@
-import { CommonArea } from "@akashic/akashic-engine"
-import { Area, createArea } from "./area"
+import { CommonArea } from "@akashic/akashic-engine";
+import { Area, createArea } from "./area";
 
 export class AreaManager{
-    private readonly _scene: g.Scene
-    private readonly _areas: Area[] = []
+    private readonly _scene: g.Scene;
+    private readonly _areas: Area[] = [];
 
     constructor(params: {
         scene: g.Scene,
     }) {
-        this._scene = params.scene
+        this._scene = params.scene;
     }
 
     public addArea(params: {
@@ -19,8 +19,8 @@ export class AreaManager{
             scene: this._scene,
             rect: params.size,
             color: params.csscolor,
-        })
-        this._areas.push(area)
-        return area
+        });
+        this._areas.push(area);
+        return area;
     }
 }

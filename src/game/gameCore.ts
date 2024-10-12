@@ -1,12 +1,16 @@
-import { Timeline } from "@akashic-extension/akashic-timeline"
-import { CharacterManager } from "./characterManager"
+import { Timeline } from "@akashic-extension/akashic-timeline";
+import { CharacterManager } from "./characterManager";
+import { AssetLoader } from "../assetLoader";
 
 export class GameCore {
-    private readonly _scene: g.Scene
-    private readonly _timeline: Timeline
-    private readonly _characterManager: CharacterManager
-    private readonly _root: g.E
-    private _active: boolean = false
+    private readonly _scene: g.Scene;
+    private readonly _timeline: Timeline;
+    private readonly _characterManager: CharacterManager;
+    private readonly _root: g.E;
+    private readonly _assetLoader: AssetLoader;
+    private _active = false;
+
+    private _cooldown = 0;
 
     /**
      * ゲームを初期化します。
@@ -16,20 +20,21 @@ export class GameCore {
         scene: g.Scene
         timeline: Timeline
     }) {
-        this._scene = params.scene
-        this._timeline = params.timeline
+        this._scene = params.scene;
+        this._assetLoader = new AssetLoader(this._scene);
+        this._timeline = params.timeline;
 
         this._root = new g.E({
             scene: this._scene,
             width: g.game.width,
             height: g.game.height,
-        })
+        });
 
         this._characterManager = new CharacterManager({
             scene: this._scene,
             parent: this._root,
             timeline: this._timeline,
-        })
+        });
 
     }
 
@@ -37,30 +42,44 @@ export class GameCore {
      * ゲームのアクティブ状態を切り替えます
      * @param active 新しいアクティブ状態
      */
-    public setActive(active: boolean): void {
-        if(this._active === active) return
-        this._active = active
+    public setActive(active: boolean) {
+        if(this._active === active) return;
+        this._active = active;
         if(active) {
-            this.onTurnToActive()
+            this.onTurnToActive();
         } else {
-            this.onTurnToDeactive()
+            this.onTurnToDeactive();
         }
     }
 
-    private onTurnToActive(): void {
-
+    private onTurnToActive() {
+        this._characterManager.setAllCharactersInteractable(true);
     }
 
-    private onTurnToDeactive(): void {
-
+    private onTurnToDeactive() {
+        this._characterManager.setAllCharactersInteractable(false);
     }
 
     // 毎フレーム呼ばれる
-    public update(): void {
+    public update() {
+        if(!this._active) return;
 
+        if(this._cooldown > 0) {
+            this._cooldown--;
+            return;
+        }
+        this._cooldown = g.game.random.generate() * 5;
+
+        const image = this._assetLoader.getImage("/image/male.png");
+
+        this._characterManager.spawnCharacter({
+            x: 0,
+            y: 0,
+            sprite: image,
+        });
     }
 
     public get score(): number {
-        return 0
+        return g.game.random.generate() * 100;
     }
 }
