@@ -30,6 +30,7 @@ export default [
                     "message": "Optional chaining is not supported in ES2015.",
                 },
             ],
+            "@typescript-eslint/explicit-function-return-type": ["error"],
             "@stylistic/quotes": ["error", "double"],
             "@stylistic/semi": ["error", "never"],
             "@stylistic/indent": ["error", 4],
@@ -37,6 +38,7 @@ export default [
             "@stylistic/eol-last": ["error", "always"],
             "@stylistic/comma-spacing": ["error", { "before": false, "after": true }],
             "@stylistic/key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+            "@stylistic/type-annotation-spacing": ["error", { "before": false, "after": true, "overrides": { "arrow": { "before": true, "after": true } } }],
         },
     },
 ]

@@ -59,6 +59,7 @@ class AreaImpl implements Area {
         character.entity.moveTo(newLocalPoint)
         character.entity.modified()
     }
+    
     removeCharacter(character: Character): void {
         const index = this._characters.indexOf(character)
         if (index >= 0) {

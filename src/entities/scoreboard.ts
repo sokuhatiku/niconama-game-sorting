@@ -1,25 +1,4 @@
-export type ScoreboardParameterObject = {
-    name?: string
-    scene: g.Scene
-    parent?: g.Scene | g.E
-    font?: g.Font
-    onScoreUpdated?: (score: number) => void
-}
-
-export interface Scoreboard {
-    get entity(): g.E
-    get score(): number
-
-    addCorrectPoint(): void
-    addIncorrectPoint(): void
-}
-
-export function createScoreboard(param: ScoreboardParameterObject): Scoreboard {
-    return new ScoreboardImpl(param)
-}
-
-class ScoreboardImpl implements Scoreboard {
-
+export class Scoreboard {
     private _entity: g.E
 
     private _correctCountLabel: g.Label
@@ -36,8 +15,13 @@ class ScoreboardImpl implements Scoreboard {
         return this._entity
     }
 
-    constructor(param: ScoreboardParameterObject) {
-        this._scoreUpdatedHandler = param.onScoreUpdated
+    constructor(param: {
+        scene: g.Scene
+        parent?: g.Scene | g.E
+        font?: g.Font
+        scoreCallback?: (score: number) => void
+    }) {
+        this._scoreUpdatedHandler = param.scoreCallback
 
         const root = new g.E({
             scene: param.scene,

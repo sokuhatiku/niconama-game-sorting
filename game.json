@@ -14,7 +14,8 @@
 					".m4a",
 					".ogg"
 				]
-			}
+			},
+			"global": true
 		},
 		"whistle": {
 			"type": "audio",
@@ -26,29 +27,28 @@
 					".m4a",
 					".ogg"
 				]
-			}
+			},
+			"global": true
 		},
 		"female": {
 			"type": "image",
 			"path": "image/female.png",
 			"width": 32,
-			"height": 32
+			"height": 32,
+			"global": true
 		},
 		"male": {
 			"type": "image",
 			"path": "image/male.png",
 			"width": 32,
-			"height": 32
+			"height": 32,
+			"global": true
 		},
 		"safearea": {
 			"type": "image",
 			"path": "image/safearea.png",
 			"width": 1280,
-			"height": 720
-		},
-		"character": {
-			"type": "script",
-			"path": "script/entities/character.js",
+			"height": 720,
 			"global": true
 		},
 		"scoreboard": {
@@ -71,11 +71,6 @@
 			"path": "script/parameterObject.js",
 			"global": true
 		},
-		"gameScene": {
-			"type": "script",
-			"path": "script/scenes/gameScene.js",
-			"global": true
-		},
 		"scoreHandler": {
 			"type": "script",
 			"path": "script/scoreHandler.js",
@@ -86,9 +81,44 @@
 			"path": "script/_bootstrap.js",
 			"global": true
 		},
+		"assetLoader": {
+			"type": "script",
+			"path": "script/assetLoader.js",
+			"global": true
+		},
 		"area": {
 			"type": "script",
-			"path": "script/entities/area.js",
+			"path": "script/game/area.js",
+			"global": true
+		},
+		"areaManager": {
+			"type": "script",
+			"path": "script/game/areaManager.js",
+			"global": true
+		},
+		"character": {
+			"type": "script",
+			"path": "script/game/character.js",
+			"global": true
+		},
+		"characterManager": {
+			"type": "script",
+			"path": "script/game/characterManager.js",
+			"global": true
+		},
+		"gameCore": {
+			"type": "script",
+			"path": "script/game/gameCore.js",
+			"global": true
+		},
+		"mainSequencer": {
+			"type": "script",
+			"path": "script/mainSequencer.js",
+			"global": true
+		},
+		"appProgressBar": {
+			"type": "script",
+			"path": "script/appProgressBar.js",
 			"global": true
 		}
 	},
