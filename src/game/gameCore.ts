@@ -134,6 +134,7 @@ export class GameCore {
 
     /**
      * ゲームのアクティブ状態を切り替えます
+     * 非アクティブ状態ではキャラクターのスポーンや操作判定が行われません
      * @param active 新しいアクティブ状態
      */
     public setActive(active: boolean) {
