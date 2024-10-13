@@ -115,6 +115,11 @@
 			"type": "script",
 			"path": "script/appProgressBar.js",
 			"global": true
+		},
+		"positionNavigator": {
+			"type": "script",
+			"path": "script/game/positionNavigator.js",
+			"global": true
 		}
 	},
 	"environment": {

@@ -12,7 +12,7 @@ export function createArea(param: AreaParameterObject): Area {
     return new Area(param);
 }
 
-class Area  {
+export class Area  {
     private _entity: g.E;
     private _characters: Character[] = [];
     private _rect: g.CommonArea;

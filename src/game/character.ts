@@ -13,15 +13,22 @@ export interface CharacterParameterObject {
     profile: CharacterProfile
 }
 
+export interface PointEvent {
+    point: g.CommonOffset
+}
+
+export interface PointMoveEvent extends PointEvent {
+    prevDelta: g.CommonOffset
+}
+
 export class Character {
-    public onPointDown: ((ev: g.PointDownEvent) => void) | null = null;
-    public onPointMove: ((ev: g.PointMoveEvent) => void) | null = null;
-    public onPointUp: ((ev: g.PointUpEvent) => void) | null = null;
+    public onPointDown: ((ev: PointEvent) => void) | null = null;
+    public onPointMove: ((ev: PointMoveEvent) => void) | null = null;
+    public onPointUp: ((ev: PointEvent) => void) | null = null;
 
     private readonly _entity: g.Sprite;
     private _isTouching = false;
     private _currentMoving: Tween | null = null;
-    private _handlingPlayer: string | null = null;
 
     public get entity(): g.E {
         return this._entity;
@@ -40,43 +47,9 @@ export class Character {
         entity.scale(1.5);
         this._entity = entity;
 
-        entity.onPointDown.add((ev) => {
-            if (this._handlingPlayer) {
-                return;
-            }
-            if (!this._entity.touchable) {
-                return;
-            }
-
-            this._handlingPlayer = ev.player?.id ?? null;
-            this._isTouching = true;
-            this._currentMoving?.cancel();
-
-            this.onPointDown?.(ev);
-        });
-
-        entity.onPointMove.add((ev) => {
-            if (ev.player?.id !== this._handlingPlayer) {
-                return;
-            }
-
-            entity.x += ev.prevDelta.x;
-            entity.y += ev.prevDelta.y;
-            entity.modified();
-
-            this.onPointMove?.(ev);
-        });
-
-        entity.onPointUp.add((ev) => {
-            if (ev.player?.id !== this._handlingPlayer) {
-                return;
-            }
-
-            this._handlingPlayer = null;
-            this._isTouching = false;
-
-            this.onPointUp?.(ev);
-        });
+        entity.onPointDown.add(this.handlePointDownEvent.bind(this));
+        entity.onPointMove.add(this.handlePointMoveEvent.bind(this));
+        entity.onPointUp.add(this.handlePointUpEvent.bind(this));
 
         entity.onUpdate.add(() => {
             if (this._isTouching) {
@@ -115,9 +88,46 @@ export class Character {
         }
     }
 
+    private handlePointDownEvent(ev: PointEvent):void {
+        if (!this._entity.touchable) {
+            return;
+        }
+
+        this._isTouching = true;
+        this._currentMoving?.cancel();
+
+        this.onPointDown?.({point: this._entity.localToGlobal(ev.point)});
+    }
+
+    private handlePointMoveEvent(ev: PointMoveEvent): void {
+        if (!this._isTouching) {
+            return;
+        }
+
+        this._entity.x += ev.prevDelta.x;
+        this._entity.y += ev.prevDelta.y;
+        this._entity.modified();
+
+        this.onPointMove?.({point: this._entity.localToGlobal(ev.point), prevDelta: ev.prevDelta});
+    }
+
+    private handlePointUpEvent(ev: PointEvent): void {
+        if (!this._isTouching) {
+            return;
+        }
+
+        this._isTouching = false;
+
+        this.onPointUp?.({point: this._entity.localToGlobal(ev.point)});
+    }
+
     public setInteractable(isDraggable: boolean): void {
         this._entity.touchable = isDraggable;
         this._entity.opacity = isDraggable ? 1 : 0.5;
         this._entity.invalidate();
+        if(this._isTouching) {
+            const point = this._entity.localToGlobal({ x: 0, y: 0 });
+            this.handlePointUpEvent({ point: point });
+        }
     }
 }

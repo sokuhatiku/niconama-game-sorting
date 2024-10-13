@@ -91,6 +91,7 @@ export class GameCore {
             scene: this._scene,
             parent: this._root,
             timeline: this._timeline,
+            areas: [this._areas.center, this._areas.left, this._areas.right],
         });
 
     }
