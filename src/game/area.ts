@@ -26,6 +26,13 @@ export class Area  {
         return this._id;
     }
 
+    /**
+     * このエリアに存在するキャラクターのリストを取得します。
+     */
+    public get characters(): readonly Character[] {
+        return this._characters;
+    }
+
     public constructor(param: AreaParameterObject) {
         this._id = param.id;
         const entity = new g.FilledRect({

@@ -135,6 +135,17 @@ export class GameCore {
             y: 0,
             profile: isMale ? this._characterProfiles.male : this._characterProfiles.female,
         });
+
+        // 左右にいるエリアの判定実施
+        for(const area of [this._areas.left, this._areas.right]) {
+            if(area.characters.length < 10) continue;
+            // 10匹を超えている場合は全員削除する
+            const charactersToDestroy = area.characters.slice();
+            charactersToDestroy.forEach((c) => {
+                area.removeCharacter(c);
+                this._characterManager.destroyCharacter(c);
+            });
+        }
     }
 
     public get score(): number {

@@ -91,4 +91,11 @@ export class CharacterManager {
             character.setInteractable(isInteractable);
         });
     }
+
+    public destroyCharacter(character: Character) {
+        const index = this._characters.indexOf(character);
+        if (index < 0) return;
+        this._characters.splice(index, 1);
+        character.destroy();
+    }
 }

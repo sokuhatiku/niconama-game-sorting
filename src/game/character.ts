@@ -130,4 +130,9 @@ export class Character {
             this.handlePointUpEvent({ point: point });
         }
     }
+
+    public destroy(): void {
+        this._currentMoving?.cancel();
+        this._entity.destroy();
+    }
 }
