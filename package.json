@@ -12,7 +12,7 @@
     "start": "akashic sandbox .",
     "export-zip": "rimraf game.zip && akashic-cli-export zip -o game.zip -s",
     "export-html": "rimraf game && akashic-cli-export html -o game",
-    "serve": "run-p -l start build:watch update:watch"
+    "develop": "run-p -l start build:watch update:watch"
   },
   "author": "",
   "license": "",
