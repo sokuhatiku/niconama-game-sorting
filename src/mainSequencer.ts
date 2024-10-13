@@ -32,7 +32,7 @@ export class MainSequencer {
 
     public onPhaseChanged: ((phase: PhaseName) => void) | null = null;
 
-    constructor(params: {
+    public constructor(params: {
         totalAvailableTimes: number
         gameCore: GameCore
     }) {

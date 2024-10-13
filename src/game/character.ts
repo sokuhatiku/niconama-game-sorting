@@ -1,14 +1,19 @@
 import { Tween, Timeline } from "@akashic-extension/akashic-timeline";
 
+export interface CharacterProfile {
+    sprite: g.ImageAsset,
+    goalAreaId: string,
+}
+
 export interface CharacterParameterObject {
     name?: string
     scene: g.Scene
     parent?: g.Scene | g.E
     timeline: Timeline
-    sprite: g.ImageAsset
+    profile: CharacterProfile
 }
 
-export class WanderingCharacter {
+export class Character {
     public onPointDown: ((ev: g.PointDownEvent) => void) | null = null;
     public onPointMove: ((ev: g.PointMoveEvent) => void) | null = null;
     public onPointUp: ((ev: g.PointUpEvent) => void) | null = null;
@@ -18,16 +23,17 @@ export class WanderingCharacter {
     private _currentMoving: Tween | null = null;
     private _handlingPlayer: string | null = null;
 
-    get entity(): g.E {
+    public get entity(): g.E {
         return this._entity;
     }
 
-    constructor(param: CharacterParameterObject) {
+    public constructor(params: CharacterParameterObject) {
+        const sprite = params.profile.sprite;
         const entity = new g.Sprite({
-            scene: param.scene,
-            src: param.sprite,
-            width: param.sprite.width,
-            height: param.sprite.height,
+            scene: params.scene,
+            src: sprite,
+            width: sprite.width,
+            height: sprite.height,
             touchable: true,
             local: true,
         });
@@ -100,12 +106,12 @@ export class WanderingCharacter {
             const duration = distance / speed * 1000;
 
             // 移動アニメーションを開始
-            this._currentMoving = param.timeline.create(entity).moveTo(targetX, targetY, duration);
+            this._currentMoving = params.timeline.create(entity).moveTo(targetX, targetY, duration);
 
         });
 
-        if (param.parent) {
-            param.parent.append(entity);
+        if (params.parent) {
+            params.parent.append(entity);
         }
     }
 

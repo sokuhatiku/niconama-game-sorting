@@ -19,6 +19,7 @@ export default tseslint.config(
         rules: {
             semi: ["error", "always"],
             quotes: ["error", "double"],
+            "@typescript-eslint/explicit-member-accessibility": "error",
         }
     }
 );

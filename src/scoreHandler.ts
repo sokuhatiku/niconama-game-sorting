@@ -15,18 +15,18 @@ interface GameState {
 class ScoreHandlerImpl implements ScoreHandler {
     private _score = 0;
 
-    get score(): number {
+    public get score(): number {
         return this._score;
     }
 
-    constructor() {
+    public constructor() {
         (g.game.vars as { gameState: GameState }).gameState = {
             score: 0,
             playThreshold: 0,
         };
     }
 
-    notice(point: number): void {
+    public notice(point: number): void {
         this._score = point;
 
         (g.game.vars as { gameState: GameState }).gameState = {

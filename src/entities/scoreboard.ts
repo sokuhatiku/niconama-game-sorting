@@ -11,11 +11,11 @@ export class Scoreboard {
 
     private _scoreUpdatedHandler?: (score: number) => void;
 
-    get entity(): g.E {
+    public get entity(): g.E {
         return this._entity;
     }
 
-    constructor(param: {
+    public constructor(param: {
         scene: g.Scene
         parent?: g.Scene | g.E
         font?: g.Font
@@ -85,16 +85,16 @@ export class Scoreboard {
         this.updateScore();
     }
 
-    get score(): number {
+    public get score(): number {
         return this._score;
     }
 
-    addCorrectPoint(): void {
+    public addCorrectPoint(): void {
         this._correctCount++;
         this.updateScore();
     }
 
-    addIncorrectPoint(): void {
+    public addIncorrectPoint(): void {
         this._incorrectCount++;
         this.updateScore();
     }

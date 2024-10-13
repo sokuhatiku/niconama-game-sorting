@@ -2,7 +2,7 @@ export class AppProgressBar {
     private readonly _rect: g.FilledRect;
     private readonly _scene: g.Scene;
 
-    constructor(scene: g.Scene) {
+    public constructor(scene: g.Scene) {
         this._scene = scene;
         const height = 20;
         this._rect = new g.FilledRect({

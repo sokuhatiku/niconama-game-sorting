@@ -1,6 +1,8 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { CharacterManager } from "./characterManager";
 import { AssetLoader } from "../assetLoader";
+import { createArea, Area } from "./area";
+import { CharacterProfile } from "./character";
 
 export class GameCore {
     private readonly _scene: g.Scene;
@@ -8,6 +10,18 @@ export class GameCore {
     private readonly _timeline: Timeline;
     private readonly _characterManager: CharacterManager;
     private readonly _root: g.E;
+
+    private readonly _characterProfiles: {
+        male: CharacterProfile,
+        female: CharacterProfile,
+    };
+
+    private readonly _areas: {
+        left: Area,
+        right: Area,
+        center: Area,
+    };
+
     private _active = false;
 
     private _cooldown = 0;
@@ -16,7 +30,7 @@ export class GameCore {
      * ゲームを初期化します。
      * 必用なマネージャーを生成し、必用なエンティティをシーンに追加します。
      */
-    constructor(params: {
+    public constructor(params: {
         scene: g.Scene
         timeline: Timeline
     }) {
@@ -30,6 +44,48 @@ export class GameCore {
             height: g.game.height,
             parent: this._scene,
         });
+
+        const areaRoot = new g.E({
+            scene: this._scene,
+            width: g.game.width,
+            height: g.game.height,
+            parent: this._root,
+        });
+
+        this._areas = {
+            left: createArea({
+                id: "left",
+                scene: this._scene,
+                rect:  { x: 38, y: 128, width: 301, height: 544 },
+                color: "rgba(200, 100, 100, 1)",
+                parent: areaRoot,
+            }),
+            right: createArea({
+                id: "right",
+                scene: this._scene,
+                rect: { x: 941, y: 128, width: 301, height: 544 },
+                color: "rgba(100, 100, 200, 1)",
+                parent: areaRoot,
+            }),
+            center: createArea({
+                id: "center",
+                scene: this._scene,
+                rect: { x: 339, y: 128, width: 602, height: 544 },
+                color: "rgba(200, 200, 200, 1)",
+                parent: areaRoot,
+            }),
+        };
+
+        this._characterProfiles = {
+            male : {
+                sprite: this._assetLoader.getImage("/image/male.png"),
+                goalAreaId: "right",
+            },
+            female: {
+                sprite: this._assetLoader.getImage("/image/female.png"),
+                goalAreaId: "left",
+            }
+        };
 
         this._characterManager = new CharacterManager({
             scene: this._scene,
@@ -71,12 +127,12 @@ export class GameCore {
         }
         this._cooldown = g.game.random.generate() * 5;
 
-        const image = this._assetLoader.getImage("/image/male.png");
+        const isMale = g.game.random.generate() > 0.5;
 
         this._characterManager.spawnCharacter({
             x: 0,
             y: 0,
-            sprite: image,
+            profile: isMale ? this._characterProfiles.male : this._characterProfiles.female,
         });
     }
 

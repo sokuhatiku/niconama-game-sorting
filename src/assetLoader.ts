@@ -19,7 +19,7 @@ export type AudioAssetName =
  * アセットを取得する操作をtype safeにするためのユーティリティクラス
  */
 export class AssetLoader {
-    constructor(private readonly _scene: g.Scene) {
+    public constructor(private readonly _scene: g.Scene) {
     }
 
     public getImage(asset: ImageAssetName): g.ImageAsset {

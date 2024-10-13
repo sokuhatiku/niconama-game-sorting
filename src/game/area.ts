@@ -1,16 +1,7 @@
 import { Character } from "./character";
 
-export interface Area {
-    get entity(): g.E
-
-    addCharacter(character: Character): void
-    removeCharacter(character: Character): void
-
-    contains(point: g.CommonOffset): boolean
-}
-
 export interface AreaParameterObject {
-    name?: string
+    id: string
     scene: g.Scene
     parent?: g.Scene | g.E
     rect: g.CommonArea
@@ -18,19 +9,25 @@ export interface AreaParameterObject {
 }
 
 export function createArea(param: AreaParameterObject): Area {
-    return new AreaImpl(param);
+    return new Area(param);
 }
 
-class AreaImpl implements Area {
+class Area  {
     private _entity: g.E;
     private _characters: Character[] = [];
     private _rect: g.CommonArea;
+    private _id: string;
 
-    get entity(): g.E {
+    public get entity(): g.E {
         return this._entity;
     }
 
-    constructor(param: AreaParameterObject) {
+    public get id(): string {
+        return this._id;
+    }
+
+    public constructor(param: AreaParameterObject) {
+        this._id = param.id;
         const entity = new g.FilledRect({
             scene: param.scene,
             x: param.rect.x,
@@ -45,13 +42,13 @@ class AreaImpl implements Area {
         this._rect = param.rect;
     }
 
-    contains(point: g.CommonOffset): boolean {
+    public contains(point: g.CommonOffset): boolean {
         const localPoint = this._entity.globalToLocal(point);
         return localPoint.x >= 0 && localPoint.x <= this._rect.width &&
             localPoint.y >= 0 && localPoint.y <= this._rect.height;
     }
 
-    addCharacter(character: Character): void {
+    public addCharacter(character: Character): void {
         this._characters.push(character);
         const worldPoint = character.entity.localToGlobal({ x: 0, y: 0 });
         this._entity.append(character.entity);
@@ -60,7 +57,7 @@ class AreaImpl implements Area {
         character.entity.modified();
     }
     
-    removeCharacter(character: Character): void {
+    public removeCharacter(character: Character): void {
         const index = this._characters.indexOf(character);
         if (index >= 0) {
             this._characters.splice(index, 1);

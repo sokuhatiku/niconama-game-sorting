@@ -20,17 +20,17 @@ export function createTimer(param: TimerParameterObject): Timer {
 }
 
 class TimerImpl implements Timer {
-    onTimeUp?: () => void;
+    public onTimeUp?: () => void;
 
     private _entity: g.Label;
     private _seconds = 0;
     private _isRunning = false;
 
-    get entity(): g.E {
+    public get entity(): g.E {
         return this._entity;
     }
 
-    constructor(param: TimerParameterObject) {
+    public constructor(param: TimerParameterObject) {
         const font = param.font ?? new g.DynamicFont({
             game: g.game,
             fontFamily: "sans-serif",
@@ -71,16 +71,16 @@ class TimerImpl implements Timer {
         this._entity = label;
     }
 
-    set(timeSeconds: number): void {
+    public set(timeSeconds: number): void {
         this._seconds = timeSeconds;
         this.updateLabel();
     }
 
-    start(): void {
+    public start(): void {
         this._isRunning = true;
     }
 
-    stop(): void {
+    public stop(): void {
         this._isRunning = false;
     }
 

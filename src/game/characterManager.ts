@@ -1,6 +1,5 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
-import { WanderingCharacter as Character } from "./character";
-import { ImageAsset } from "@akashic/akashic-engine";
+import { Character, CharacterProfile } from "./character";
 
 /**
  * 全てのキャラクターを管理するクラス
@@ -12,7 +11,7 @@ export class CharacterManager {
 
     private readonly _characters: Character[] = [];
 
-    constructor(params: {
+    public constructor(params: {
         scene: g.Scene
         parent?: g.E | g.Scene
         timeline: Timeline
@@ -32,13 +31,13 @@ export class CharacterManager {
     public spawnCharacter(params: {
         x: number, 
         y: number,
-        sprite: ImageAsset,
+        profile: CharacterProfile,
     }): void {
         console.log("spawnCharacter");
         const character = new Character({
             scene: this._scene,
             timeline: this._timeline,
-            sprite: params.sprite,
+            profile: params.profile,
         });
         this._root.append(character.entity);
         this._characters.push(character);
