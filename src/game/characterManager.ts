@@ -1,5 +1,5 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
-import { Character, createCharacter } from "./character";
+import { WanderingCharacter as Character } from "./character";
 import { ImageAsset } from "@akashic/akashic-engine";
 
 /**
@@ -20,8 +20,12 @@ export class CharacterManager {
         this._scene = params.scene;
         this._timeline = params.timeline;
         this._root = new g.E({
-            scene: this._scene,
-            parent: params.parent ?? this._scene,
+            scene: params.scene,
+            x: 0,
+            y: 0,
+            width: g.game.width,
+            height: g.game.height,
+            parent: params.parent ?? params.scene,
         });
     }
 
@@ -30,12 +34,13 @@ export class CharacterManager {
         y: number,
         sprite: ImageAsset,
     }): void {
-        const character = createCharacter({
+        console.log("spawnCharacter");
+        const character = new Character({
             scene: this._scene,
             timeline: this._timeline,
             sprite: params.sprite,
-            parent: this._root,
         });
+        this._root.append(character.entity);
         this._characters.push(character);
     }
 

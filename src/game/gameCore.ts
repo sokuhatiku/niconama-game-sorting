@@ -4,10 +4,10 @@ import { AssetLoader } from "../assetLoader";
 
 export class GameCore {
     private readonly _scene: g.Scene;
+    private readonly _assetLoader: AssetLoader;
     private readonly _timeline: Timeline;
     private readonly _characterManager: CharacterManager;
     private readonly _root: g.E;
-    private readonly _assetLoader: AssetLoader;
     private _active = false;
 
     private _cooldown = 0;
@@ -28,6 +28,7 @@ export class GameCore {
             scene: this._scene,
             width: g.game.width,
             height: g.game.height,
+            parent: this._scene,
         });
 
         this._characterManager = new CharacterManager({

@@ -8,24 +8,7 @@ export interface CharacterParameterObject {
     sprite: g.ImageAsset
 }
 
-export interface Character {
-    /**
-     * キャラクターのルートエンティティ
-     */
-    entity: g.E
-
-    onPointDown: ((ev: g.PointDownEvent) => void) | null
-    onPointMove: ((ev: g.PointMoveEvent) => void) | null
-    onPointUp: ((ev: g.PointUpEvent) => void) | null
-
-    setInteractable(isDraggable: boolean): void
-}
-
-export function createCharacter(param: CharacterParameterObject): Character {
-    return new CharacterImpl(param);
-}
-
-class CharacterImpl implements Character {
+export class WanderingCharacter {
     public onPointDown: ((ev: g.PointDownEvent) => void) | null = null;
     public onPointMove: ((ev: g.PointMoveEvent) => void) | null = null;
     public onPointUp: ((ev: g.PointUpEvent) => void) | null = null;
@@ -59,7 +42,6 @@ class CharacterImpl implements Character {
                 return;
             }
 
-            console.log(param.name, "touched by", ev.player?.id);
             this._handlingPlayer = ev.player?.id ?? null;
             this._isTouching = true;
             this._currentMoving?.cancel();
