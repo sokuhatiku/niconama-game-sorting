@@ -6,6 +6,7 @@ export interface AreaParameterObject {
     parent?: g.Scene | g.E
     rect: g.CommonArea
     color: string
+    updateTrigger: g.Trigger
 }
 
 export function createArea(param: AreaParameterObject): Area {
@@ -13,10 +14,13 @@ export function createArea(param: AreaParameterObject): Area {
 }
 
 export class Area  {
-    private _entity: g.E;
+    private _entity: g.FilledRect;
     private _characters: Character[] = [];
     private _rect: g.CommonArea;
     private _id: string;
+    private _color: string;
+    private _active = true;
+    private _innactiveTimer = 0;
 
     public get entity(): g.E {
         return this._entity;
@@ -24,6 +28,10 @@ export class Area  {
 
     public get id(): string {
         return this._id;
+    }
+
+    public get active(): boolean {
+        return this._active;
     }
 
     /**
@@ -35,6 +43,7 @@ export class Area  {
 
     public constructor(param: AreaParameterObject) {
         this._id = param.id;
+        this._color = param.color;
         const entity = new g.FilledRect({
             scene: param.scene,
             x: param.rect.x,
@@ -47,6 +56,15 @@ export class Area  {
         parent.append(entity);
         this._entity = entity;
         this._rect = param.rect;
+
+        param.updateTrigger.add(() => {
+            if(this._innactiveTimer > 0) {
+                this._innactiveTimer -= 1 / g.game.fps;
+                if(this._innactiveTimer <= 0) {
+                    this.setActive(true);
+                }
+            }
+        }, this);
     }
 
     public contains(point: g.CommonOffset): boolean {
@@ -73,5 +91,19 @@ export class Area  {
         character.entity.remove();
         character.entity.moveTo(worldPoint);
         character.entity.modified();
+    }
+
+    public setInnatcive(duration: number): void {
+        this._innactiveTimer = duration;
+        this.setActive(false);
+    }
+
+    private setActive(active: boolean): void {
+        if(this._active === active) {
+            return;
+        }
+        this._active = active;
+        this._entity.cssColor = active ? this._color : "black";
+        this._entity.modified();
     }
 }

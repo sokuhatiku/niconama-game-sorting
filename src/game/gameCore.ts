@@ -14,6 +14,8 @@ export class GameCore {
     private readonly _root: g.E;
     private readonly _scoreUpdatedTrigger: g.Trigger<number> = new g.Trigger<number>();
 
+    private readonly _updateTrigger: g.Trigger = new g.Trigger();
+
     private readonly _characterProfiles: {
         male: CharacterProfile,
         female: CharacterProfile,
@@ -66,6 +68,7 @@ export class GameCore {
                 rect:  { x: 38, y: 128, width: 301, height: 544 },
                 color: "rgba(200, 100, 100, 1)",
                 parent: areaRoot,
+                updateTrigger: this._updateTrigger,
             }),
             right: createArea({
                 id: "right",
@@ -73,6 +76,7 @@ export class GameCore {
                 rect: { x: 941, y: 128, width: 301, height: 544 },
                 color: "rgba(100, 100, 200, 1)",
                 parent: areaRoot,
+                updateTrigger: this._updateTrigger,
             }),
             center: createArea({
                 id: "center",
@@ -80,6 +84,7 @@ export class GameCore {
                 rect: { x: 339, y: 128, width: 602, height: 544 },
                 color: "rgba(200, 200, 200, 1)",
                 parent: areaRoot,
+                updateTrigger: this._updateTrigger,
             }),
         };
 
@@ -110,11 +115,18 @@ export class GameCore {
         });
 
         this._characterManager.onCharacterPlaced.add((ev) => {
-            console.log("onCharacterPlaced", ev.isCorrectArea);
-            if(ev.isCorrectArea){
+            const effective = ev.isCorrectArea && ev.area.active;
+            console.log("onCharacterPlaced", effective);
+            
+            if(effective){
                 this._scoreboard.addCorrectPoint();
             } else {
                 this._scoreboard.addIncorrectPoint();
+            }
+
+            if(!ev.area.active) {
+                // エリアが非活性であればその場でキャラを削除
+                this._characterManager.destroyCharacter(ev.character);
             }
         });
 
@@ -146,6 +158,8 @@ export class GameCore {
     public update() {
         if(!this._active) return;
 
+        this._updateTrigger.fire();
+
         if(this._cooldown > 0) {
             this._cooldown--;
             return;
@@ -171,6 +185,9 @@ export class GameCore {
             });
             // 出荷ボーナスをスコアに加算
             this._scoreboard.addSippingPoint();
+
+            // 5秒間はエリアを非活性化
+            area.setInnatcive(5);
         }
     }
 
