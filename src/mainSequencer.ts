@@ -11,9 +11,9 @@ type PhaseName = (typeof phases)[number]
 function defineTimeSchedule(totalTime: number): Map<PhaseName, number> {
     const timeSchedule = new Map<PhaseName, number>();
     timeSchedule.set("title", 0);
-    timeSchedule.set("introduction", 5);
-    timeSchedule.set("ready", 10);
-    timeSchedule.set("game", 15);
+    timeSchedule.set("introduction", 1);
+    timeSchedule.set("ready", 2);
+    timeSchedule.set("game", 3);
     timeSchedule.set("finish", totalTime - 15);
     timeSchedule.set("result", totalTime - 10);
     return timeSchedule;
