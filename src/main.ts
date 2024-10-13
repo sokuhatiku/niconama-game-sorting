@@ -27,6 +27,9 @@ export function main(param: GameMainParameterObject): void {
             scene: scene,
             timeline: timeline,
         });
+        gameCore.onScoreUpdated.add((score) => {
+            scoreHandler.notice(score);
+        });
     
         // アプリ全体のシーケンサー
         const sequencer = new MainSequencer({

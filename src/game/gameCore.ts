@@ -3,13 +3,16 @@ import { CharacterManager } from "./characterManager";
 import { AssetLoader } from "../assetLoader";
 import { createArea, Area } from "./area";
 import { CharacterProfile } from "./character";
+import { Scoreboard } from "./scoreboard";
 
 export class GameCore {
     private readonly _scene: g.Scene;
     private readonly _assetLoader: AssetLoader;
     private readonly _timeline: Timeline;
     private readonly _characterManager: CharacterManager;
+    private readonly _scoreboard: Scoreboard;
     private readonly _root: g.E;
+    private readonly _scoreUpdatedTrigger: g.Trigger<number> = new g.Trigger<number>();
 
     private readonly _characterProfiles: {
         male: CharacterProfile,
@@ -25,6 +28,10 @@ export class GameCore {
     private _active = false;
 
     private _cooldown = 0;
+
+    public get onScoreUpdated(): g.Trigger<number> {
+        return this._scoreUpdatedTrigger;
+    }
 
     /**
      * ゲームを初期化します。
@@ -79,11 +86,11 @@ export class GameCore {
         this._characterProfiles = {
             male : {
                 sprite: this._assetLoader.getImage("/image/male.png"),
-                goalAreaId: "right",
+                goalAreaId: "left",
             },
             female: {
                 sprite: this._assetLoader.getImage("/image/female.png"),
-                goalAreaId: "left",
+                goalAreaId: "right",
             }
         };
 
@@ -92,6 +99,23 @@ export class GameCore {
             parent: this._root,
             timeline: this._timeline,
             areas: [this._areas.center, this._areas.left, this._areas.right],
+        });
+
+        this._scoreboard = new Scoreboard({
+            scene: this._scene,
+            parent: this._root,
+        });
+        this._scoreboard.onScoreUpdated.add((score) => {
+            this._scoreUpdatedTrigger.fire(score);
+        });
+
+        this._characterManager.onCharacterPlaced.add((ev) => {
+            console.log("onCharacterPlaced", ev.isCorrectArea);
+            if(ev.isCorrectArea){
+                this._scoreboard.addCorrectPoint();
+            } else {
+                this._scoreboard.addIncorrectPoint();
+            }
         });
 
     }
@@ -145,6 +169,8 @@ export class GameCore {
                 area.removeCharacter(c);
                 this._characterManager.destroyCharacter(c);
             });
+            // 出荷ボーナスをスコアに加算
+            this._scoreboard.addSippingPoint();
         }
     }
 

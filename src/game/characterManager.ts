@@ -2,6 +2,12 @@ import { Timeline } from "@akashic-extension/akashic-timeline";
 import { Character, CharacterProfile } from "./character";
 import { Area } from "./area";
 
+export interface CharacterPlacedEvent{
+    isCorrectArea: boolean;
+    area: Area;
+    character: Character;
+}
+
 /**
  * 全てのキャラクターを管理するクラス
  */
@@ -12,6 +18,12 @@ export class CharacterManager {
     private readonly _root: g.E;
 
     private readonly _characters: Character[] = [];
+
+    private readonly _characterPlacedTrigger: g.Trigger<CharacterPlacedEvent> = new g.Trigger<CharacterPlacedEvent>();
+
+    public get onCharacterPlaced(): g.Trigger<CharacterPlacedEvent> {
+        return this._characterPlacedTrigger;
+    }
 
     public constructor(params: {
         scene: g.Scene
@@ -37,26 +49,31 @@ export class CharacterManager {
         y: number,
         profile: CharacterProfile,
     }): void {
-        console.log("spawnCharacter");
         const character = new Character({
             scene: this._scene,
             timeline: this._timeline,
             profile: params.profile,
         });
 
-        character.onPointDown = (ev) => {
+        character.onPointDown.add((ev) => {
             console.log("onPointDown", ev.point);
             const area = this.getCurrentAreaOf(character);
             area.removeCharacter(character);
             this._root.append(character.entity);
             character.entity.modified();
-        };
+        });
 
-        character.onPointUp = (ev) => {
+        character.onPointUp.add((ev) => {
             console.log("onPointUp", ev.point);
             const area = this.getOverlappedAreaOf(ev.point) ?? this.defaultArea;
             area.addCharacter(character);
-        };
+
+            this._characterPlacedTrigger.fire({
+                isCorrectArea: area.id === character.profile.goalAreaId,
+                area: area,
+                character: character,
+            });
+        });
 
         this._areas[0].entity.append(character.entity);
         this._characters.push(character);

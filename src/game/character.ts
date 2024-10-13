@@ -22,10 +22,21 @@ export interface PointMoveEvent extends PointEvent {
 }
 
 export class Character {
-    public onPointDown: ((ev: PointEvent) => void) | null = null;
-    public onPointMove: ((ev: PointMoveEvent) => void) | null = null;
-    public onPointUp: ((ev: PointEvent) => void) | null = null;
+    private readonly _pointDownTrigger: g.Trigger<PointEvent> = new g.Trigger<PointEvent>();
+    private readonly _pointMoveTrigger: g.Trigger<PointMoveEvent> = new g.Trigger<PointMoveEvent>();
+    private readonly _pointUpTrigger: g.Trigger<PointEvent> = new g.Trigger<PointEvent>();
 
+    public get onPointDown(): g.Trigger<PointEvent> {
+        return this._pointDownTrigger;
+    }
+    public get onPointMove(): g.Trigger<PointMoveEvent> {
+        return this._pointMoveTrigger;
+    }
+    public get onPointUp(): g.Trigger<PointEvent> {
+        return this._pointUpTrigger;
+    }
+
+    private readonly _profile: CharacterProfile;
     private readonly _entity: g.Sprite;
     private _isTouching = false;
     private _currentMoving: Tween | null = null;
@@ -34,7 +45,12 @@ export class Character {
         return this._entity;
     }
 
+    public get profile(): CharacterProfile {
+        return this._profile;
+    }
+
     public constructor(params: CharacterParameterObject) {
+        this._profile = params.profile;
         const sprite = params.profile.sprite;
         const entity = new g.Sprite({
             scene: params.scene,
@@ -96,7 +112,7 @@ export class Character {
         this._isTouching = true;
         this._currentMoving?.cancel();
 
-        this.onPointDown?.({point: this._entity.localToGlobal(ev.point)});
+        this._pointDownTrigger.fire({point: this._entity.localToGlobal(ev.point)});
     }
 
     private handlePointMoveEvent(ev: PointMoveEvent): void {
@@ -108,7 +124,7 @@ export class Character {
         this._entity.y += ev.prevDelta.y;
         this._entity.modified();
 
-        this.onPointMove?.({point: this._entity.localToGlobal(ev.point), prevDelta: ev.prevDelta});
+        this._pointMoveTrigger.fire({point: this._entity.localToGlobal(ev.point), prevDelta: ev.prevDelta});
     }
 
     private handlePointUpEvent(ev: PointEvent): void {
@@ -118,7 +134,7 @@ export class Character {
 
         this._isTouching = false;
 
-        this.onPointUp?.({point: this._entity.localToGlobal(ev.point)});
+        this._pointUpTrigger.fire({point: this._entity.localToGlobal(ev.point)});
     }
 
     public setInteractable(isDraggable: boolean): void {

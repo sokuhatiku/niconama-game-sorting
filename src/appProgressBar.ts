@@ -1,3 +1,6 @@
+/**
+ * アプリ全体の経過時間に対する進捗を示すプログレスバーを表示します。
+ */
 export class AppProgressBar {
     private readonly _rect: g.FilledRect;
     private readonly _scene: g.Scene;

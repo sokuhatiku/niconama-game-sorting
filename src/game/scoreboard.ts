@@ -3,26 +3,29 @@ export class Scoreboard {
 
     private _correctCountLabel: g.Label;
     private _qualityPointLabel: g.Label;
+    private _sippingCountLabel: g.Label;
     private _scoreLabel: g.Label;
 
     private _correctCount = 0;
     private _incorrectCount = 0;
+    private _sippingCount = 0;
     private _score = 0;
 
-    private _scoreUpdatedHandler?: (score: number) => void;
+    private _scoreUpdatedTrigger = new g.Trigger<number>();
 
     public get entity(): g.E {
         return this._entity;
+    }
+
+    public get onScoreUpdated(): g.Trigger<number> {
+        return this._scoreUpdatedTrigger;
     }
 
     public constructor(param: {
         scene: g.Scene
         parent?: g.Scene | g.E
         font?: g.Font
-        scoreCallback?: (score: number) => void
     }) {
-        this._scoreUpdatedHandler = param.scoreCallback;
-
         const root = new g.E({
             scene: param.scene,
             x: 0,
@@ -45,7 +48,7 @@ export class Scoreboard {
             font: font,
             text: "0",
             x: 0,
-            y: 0,
+            y: 48*0,
             width: g.game.width,
             height: 48,
         });
@@ -59,7 +62,7 @@ export class Scoreboard {
             font: font,
             text: "0",
             x: 0,
-            y: 48,
+            y: 48*1,
             width: g.game.width,
             height: 48,
         });
@@ -68,12 +71,26 @@ export class Scoreboard {
         root.append(incorrectPointLabel);
         this._qualityPointLabel = incorrectPointLabel;
 
+        const sippingPointLabel = new g.Label({
+            scene: param.scene,
+            font: font,
+            text: "0",
+            x: 0,
+            y: 48*2,
+            width: g.game.width,
+            height: 48,
+        });
+        sippingPointLabel.aligning(g.game.width, "right");
+        sippingPointLabel.invalidate();
+        root.append(sippingPointLabel);
+        this._sippingCountLabel = sippingPointLabel;
+
         const scoreLabel = new g.Label({
             scene: param.scene,
             font: font,
             text: "0",
             x: 0,
-            y: 96,
+            y: 48*3,
             width: g.game.width,
             height: 48,
         });
@@ -99,19 +116,26 @@ export class Scoreboard {
         this.updateScore();
     }
 
+    public addSippingPoint(): void {
+        this._sippingCount++;
+        this.updateScore();
+    }
+
     private updateScore(): void {
-        const baseScore = this._correctCount * 100;
-        const qualityScore = this._correctCount === 0 ? 100
+        const deliveryCount = this._correctCount + this._incorrectCount;
+        const quality = this._correctCount === 0 ? 100
             : Math.max(this._correctCount - this._incorrectCount, 0) / this._correctCount * 100;
-        const totalScore = Math.floor(baseScore * (qualityScore / 100));
+        const baseScore = this._correctCount * 100;
+        const totalScore = Math.floor(baseScore * (quality / 100));
 
         if (this._score !== totalScore){
             this._score = totalScore;
-            this._scoreUpdatedHandler?.(this._score);
+            this._scoreUpdatedTrigger.fire(this._score);
         }
 
-        const correctText = `納品:${String(this._correctCount)}`;
-        const qualityText = `品質:${qualityScore.toFixed(2)}%`;
+        const correctText = `納品:${String(deliveryCount)}`;
+        const qualityText = `品質:${quality.toFixed(2)}%`;
+        const sippingText = `出荷:${String(this._sippingCount)}`;
         const scoreText = `スコア:${String(this._score)}`;
 
         if (this._correctCountLabel.text !== correctText) {
@@ -121,6 +145,10 @@ export class Scoreboard {
         if (this._qualityPointLabel.text !== qualityText) {
             this._qualityPointLabel.text = qualityText;
             this._qualityPointLabel.invalidate();
+        }
+        if (this._sippingCountLabel.text !== sippingText) {
+            this._sippingCountLabel.text = sippingText;
+            this._sippingCountLabel.invalidate();
         }
         if (this._scoreLabel.text !== scoreText) {
             this._scoreLabel.text = scoreText;
