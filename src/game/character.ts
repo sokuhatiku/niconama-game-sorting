@@ -66,7 +66,7 @@ export class Character {
             local: true,
             parent: params.parent ?? params.scene,
         });
-        
+
         this._entity = entity;
 
         entity.onPointDown.add(this.handlePointDownEvent.bind(this));
@@ -91,12 +91,16 @@ export class Character {
             return;
         }
 
+
+        if (this._navPoints.length === 0) {
+            // 移動先がない場合はルートを再作成
+            this.reRoute();
+        }
+
         // 次の移動先を取得
         const nextPoint = this._navPoints.shift();
 
         if(!nextPoint){
-            // 移動先がない場合はルートを再作成
-            this.reRoute();
             return;
         }
 
@@ -141,7 +145,12 @@ export class Character {
         }
 
         const pos = this._entity.localToGlobal({ x: 0, y: 0 });
-        this._navPoints = this._navigator.getNextPath(pos, this._movingDirection, 1000);
+        this._navPoints = this._navigator.getNextPath({
+            startPosition: { x: pos.x, y: pos.y },
+            startDirection: this._movingDirection,
+            maxDistance: 300,
+            rect: { top: 0, left: 0, right: this._entity.width, bottom: this._entity.height }
+        });
     }
 
     private handlePointDownEvent(ev: PointEvent):void {

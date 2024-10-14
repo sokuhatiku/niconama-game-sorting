@@ -1,15 +1,19 @@
-import { Line, raycastLines, Vector } from "../utils/raycast";
+import { Line, Rect, rectRaycastLines, Vector } from "../utils/raycast";
+
+export interface GetNextPositionParameterObject {
+    startPosition: g.CommonOffset;
+    startDirection: g.CommonOffset;
+    maxDistance: number;
+    rect: g.CommonRect;
+}
 
 export interface PositionNavigator {
     getRandomPoint(): g.CommonOffset;
     /**
      * 指定した位置から指定した方向に指定した距離だけ進んだときの経路を取得します
-     * @param position 開始位置（グローバル）
-     * @param direction 進行方向（単位ベクトル）
-     * @param distance 進む距離
      * @returns 進んだ経路の座標リスト
      */
-    getNextPath(position:g.CommonOffset, direction:g.CommonOffset, distance: number):g.CommonOffset[];
+    getNextPath(params: GetNextPositionParameterObject):g.CommonOffset[];
 }
 
 export class RectNavigator implements PositionNavigator {
@@ -20,24 +24,28 @@ export class RectNavigator implements PositionNavigator {
     public constructor(rect: g.CommonArea) {
         this._rect = rect;
 
-        const extend = 100; // ギリギリの隙間を抜けられないようにするための線分に対する拡張
+        const extend = 5; // ギリギリの隙間を抜けられないようにするための線分に対する拡張
         // rectをセグメントに変換
+        // 当たり判定を取る線分には向きを持たせるので、一筆書きで囲むように、線分の左側が内向きになるようにする
         this._segments = [
-            {start: {x: rect.x - extend, y: rect.y}, end: {x: rect.x + rect.width + extend, y: rect.y}}, // top
+            {start: {x: rect.x + rect.width + extend, y: rect.y}, end: {x: rect.x - extend, y: rect.y}}, // top
             {start: {x: rect.x, y: rect.y - extend}, end: {x: rect.x, y: rect.y + rect.height + extend}}, // left
-            {start: {x: rect.x + rect.width, y: rect.y - extend}, end: {x: rect.x + rect.width, y: rect.y + rect.height + extend}}, // right
+            {start: {x: rect.x + rect.width, y: rect.y + rect.height + extend}, end: {x: rect.x + rect.width, y: rect.y - extend}}, // right
             {start: {x: rect.x - extend, y: rect.y + rect.height}, end: {x: rect.x + rect.width + extend, y: rect.y + rect.height}}, // bottom
         ];
     }
 
-    public getNextPath(startPosition: g.CommonOffset, startDirection: g.CommonOffset, maxDistance: number): g.CommonOffset[] {        
+    public getNextPath(params: GetNextPositionParameterObject): g.CommonOffset[] {        
         let totalDistance = 0;
         const points: g.CommonOffset[] = [];
 
-        let pos:Vector = {x: startPosition.x, y:startPosition.y};
-        let dir = normalize({x: startDirection.x, y: startDirection.y});
+        let pos:Vector = {x: params.startPosition.x, y:params.startPosition.y};
+        let dir = normalize({x: params.startDirection.x, y: params.startDirection.y});
+        const maxDistance = params.maxDistance;
+        const rect:Rect = {top: params.rect.top, left: params.rect.left, right: params.rect.right, bottom: params.rect.bottom};
+        
         while(totalDistance < maxDistance) {
-            const hit = raycastLines(this._segments, {position: pos, direction: dir}, maxDistance - totalDistance);
+            const hit = rectRaycastLines(this._segments, rect, {position: pos, direction: dir}, maxDistance - totalDistance, true);
 
             // 当たらなかったらそれまでのポイントに残りの距離分移動したポイントを追加して終了
             if(hit == null) {
@@ -59,9 +67,7 @@ export class RectNavigator implements PositionNavigator {
             // 進行方向を法線に応じて反射させる
             const dot = dir.x * hit.normal.x + dir.y * hit.normal.y;
             dir = {x: dir.x - 2 * dot * hit.normal.x, y: dir.y - 2 * dot * hit.normal.y};
-            const offset = scale(dir, 0.0001); // 同じ壁に衝突するのを防ぐため、進行方向にほんの少し進めておく
-            totalDistance += 0.0001;
-            pos = add(hit.position, offset);
+            pos = hit.position;
         }
 
         console.log(points);

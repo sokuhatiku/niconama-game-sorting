@@ -9,7 +9,11 @@ describe("RectNavigator", () => {
             const startDirection = { x: 1, y: 0 };
             const maxDistance = 50;
 
-            const path = navigator.getNextPath(startPosition, startDirection, maxDistance);
+            const path = navigator.getNextPath({
+                startPosition:startPosition,
+                startDirection:startDirection,
+                maxDistance:maxDistance, 
+                rect:{top:0, left:0, right:0, bottom:0}});
 
             expect(path).toEqual([
                 { x: 60, y: 10 }
@@ -23,7 +27,11 @@ describe("RectNavigator", () => {
             const startDirection = { x: 1, y: 0 };
             const maxDistance = 100;
 
-            const path = navigator.getNextPath(startPosition, startDirection, maxDistance);
+            const path = navigator.getNextPath({
+                startPosition:startPosition,
+                startDirection:startDirection,
+                maxDistance:maxDistance, 
+                rect:{top:0, left:0, right:0, bottom:0}});
 
             expect(path).toEqual([
                 { x: 100, y: 10 },
@@ -38,7 +46,11 @@ describe("RectNavigator", () => {
             const startDirection = { x: 1, y: 1 };
             const maxDistance = 200;
 
-            const path = navigator.getNextPath(startPosition, startDirection, maxDistance);
+            const path = navigator.getNextPath({
+                startPosition:startPosition,
+                startDirection:startDirection,
+                maxDistance:maxDistance, 
+                rect:{top:0, left:0, right:0, bottom:0}});
 
             expect(path.length).toBeGreaterThan(1);
         });
@@ -50,8 +62,12 @@ describe("RectNavigator", () => {
             const startDirection = { x: 1, y: 0 };
             const maxDistance = 0;
 
-            const path = navigator.getNextPath(startPosition, startDirection, maxDistance);
-
+            const path = navigator.getNextPath({
+                startPosition:startPosition,
+                startDirection:startDirection,
+                maxDistance:maxDistance, 
+                rect:{top:0, left:0, right:0, bottom:0}});
+                
             expect(path).toEqual([]);
         });
     });

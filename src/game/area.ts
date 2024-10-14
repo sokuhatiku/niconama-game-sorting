@@ -1,5 +1,5 @@
 import { Character } from "./character";
-import { PositionNavigator, RectNavigator } from "./positionNavigator";
+import { PositionNavigator, RectNavigator as RectAreaNavigator } from "./positionNavigator";
 
 export interface AreaParameterObject {
     id: string
@@ -63,13 +63,7 @@ export class Area  {
         this._entity = entity;
         this._rect = param.rect;
 
-        const colliderRect = {
-            x: param.rect.x,
-            y: param.rect.y,
-            width: param.rect.width - 32,
-            height: param.rect.height - 32,
-        };
-        this._navigator = new RectNavigator(colliderRect);
+        this._navigator = new RectAreaNavigator(param.rect);
 
         param.updateTrigger.add(() => {
             if(this._innactiveTimer > 0) {
