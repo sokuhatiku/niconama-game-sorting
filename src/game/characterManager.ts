@@ -25,6 +25,10 @@ export class CharacterManager {
         return this._characterPlacedTrigger;
     }
 
+    public get characters(): readonly Character[] {
+        return this._characters;
+    }
+
     public constructor(params: {
         scene: g.Scene
         parent?: g.E | g.Scene
@@ -45,14 +49,16 @@ export class CharacterManager {
     }
 
     public spawnCharacter(params: {
-        x: number, 
-        y: number,
+        position: g.CommonOffset,
         profile: CharacterProfile,
     }): void {
+        const area = this.defaultArea;
         const character = new Character({
             scene: this._scene,
             timeline: this._timeline,
             profile: params.profile,
+            spawnPoint: params.position,
+            firstMoveDestination: area.navigator.getRandomPoint(),
         });
 
         character.onPointDown.add((ev) => {
@@ -75,7 +81,7 @@ export class CharacterManager {
             });
         });
 
-        this._areas[0].entity.append(character.entity);
+        area.addCharacter(character);
         this._characters.push(character);
     }
 

@@ -1,4 +1,5 @@
 import { Character } from "./character";
+import { PositionNavigator, RectNavigator } from "./positionNavigator";
 
 export interface AreaParameterObject {
     id: string
@@ -21,6 +22,7 @@ export class Area  {
     private _color: string;
     private _active = true;
     private _innactiveTimer = 0;
+    private _navigator: PositionNavigator;
 
     public get entity(): g.E {
         return this._entity;
@@ -32,6 +34,10 @@ export class Area  {
 
     public get active(): boolean {
         return this._active;
+    }
+
+    public get navigator(): PositionNavigator {
+        return this._navigator;
     }
 
     /**
@@ -57,6 +63,14 @@ export class Area  {
         this._entity = entity;
         this._rect = param.rect;
 
+        const colliderRect = {
+            x: param.rect.x,
+            y: param.rect.y,
+            width: param.rect.width - 32,
+            height: param.rect.height - 32,
+        };
+        this._navigator = new RectNavigator(colliderRect);
+
         param.updateTrigger.add(() => {
             if(this._innactiveTimer > 0) {
                 this._innactiveTimer -= 1 / g.game.fps;
@@ -80,6 +94,7 @@ export class Area  {
         const newLocalPoint = this._entity.globalToLocal(worldPoint);
         character.entity.moveTo(newLocalPoint);
         character.entity.modified();
+        character.setNavigator(this._navigator);
     }
     
     public removeCharacter(character: Character): void {
@@ -91,6 +106,7 @@ export class Area  {
         character.entity.remove();
         character.entity.moveTo(worldPoint);
         character.entity.modified();
+        character.setNavigator(null);
     }
 
     public setInnatcive(duration: number): void {

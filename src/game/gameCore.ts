@@ -169,9 +169,9 @@ export class GameCore {
 
         const isMale = g.game.random.generate() > 0.5;
 
+        const spawnPoint: g.CommonOffset = g.game.random.generate() > 0.5 ? {x:g.game.width/2, y:0} : {x:g.game.width/2, y:g.game.height};
         this._characterManager.spawnCharacter({
-            x: 0,
-            y: 0,
+            position: spawnPoint,
             profile: isMale ? this._characterProfiles.male : this._characterProfiles.female,
         });
 

@@ -7,7 +7,7 @@
     "noImplicitAny": true,
     "module": "commonjs",
     "outDir": "script",
-    "types": [],
+    "types": ["jest"],
     "allowUmdGlobalAccess": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
@@ -19,6 +19,6 @@
   ],
   "include": [
     "src/**/*.ts",
-    "typings/console.d.ts",
+    "typings/console.d.ts", "spec/raycast.test.ts", "spec/positionNavigator.test.ts",
   ]
 }

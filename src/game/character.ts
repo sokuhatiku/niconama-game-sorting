@@ -1,16 +1,9 @@
 import { Tween, Timeline } from "@akashic-extension/akashic-timeline";
+import { PositionNavigator } from "./positionNavigator";
 
 export interface CharacterProfile {
     sprite: g.ImageAsset,
     goalAreaId: string,
-}
-
-export interface CharacterParameterObject {
-    name?: string
-    scene: g.Scene
-    parent?: g.Scene | g.E
-    timeline: Timeline
-    profile: CharacterProfile
 }
 
 export interface PointEvent {
@@ -25,6 +18,10 @@ export class Character {
     private readonly _pointDownTrigger: g.Trigger<PointEvent> = new g.Trigger<PointEvent>();
     private readonly _pointMoveTrigger: g.Trigger<PointMoveEvent> = new g.Trigger<PointMoveEvent>();
     private readonly _pointUpTrigger: g.Trigger<PointEvent> = new g.Trigger<PointEvent>();
+    private readonly _timeline: Timeline;
+    private _navPoints: g.CommonOffset[] = [];
+    private _movingDirection: g.CommonOffset = { x: 0, y: 0 };
+    private _navigator: PositionNavigator | null = null;
 
     public get onPointDown(): g.Trigger<PointEvent> {
         return this._pointDownTrigger;
@@ -49,8 +46,16 @@ export class Character {
         return this._profile;
     }
 
-    public constructor(params: CharacterParameterObject) {
+    public constructor(params: {
+        scene: g.Scene
+        parent?: g.Scene | g.E
+        timeline: Timeline
+        profile: CharacterProfile
+        spawnPoint: g.CommonOffset
+        firstMoveDestination: g.CommonOffset
+    }) {
         this._profile = params.profile;
+        this._timeline = params.timeline;
         const sprite = params.profile.sprite;
         const entity = new g.Sprite({
             scene: params.scene,
@@ -59,8 +64,9 @@ export class Character {
             height: sprite.height,
             touchable: true,
             local: true,
+            parent: params.parent ?? params.scene,
         });
-        entity.scale(1.5);
+        
         this._entity = entity;
 
         entity.onPointDown.add(this.handlePointDownEvent.bind(this));
@@ -72,36 +78,70 @@ export class Character {
                 return;
             }
 
-            if (this._currentMoving && !this._currentMoving.isFinished()) {
-                return;
-            }
-
-            // 1秒あたりの移動距離(px)
-            const speed = 100;
-
-            // 移動先の座標をランダムに決定
-            const parent = entity.parent;
-            const spaceWidth = (parent instanceof g.E ? parent.width : g.game.width) - entity.width;
-            const spaceHeight = (parent instanceof g.E ? parent.height : g.game.height) - entity.height;
-            const targetX = Math.floor(g.game.random.generate() * spaceWidth);
-            const targetY = Math.floor(g.game.random.generate() * spaceHeight);
-
-            // 現在の座標から目的地までの距離を計算
-            const distanceX = targetX - entity.x;
-            const distanceY = targetY - entity.y;
-            const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
-
-            // 移動にかかる時間を計算
-            const duration = distance / speed * 1000;
-
-            // 移動アニメーションを開始
-            this._currentMoving = params.timeline.create(entity).moveTo(targetX, targetY, duration);
-
+            this.moving();
         });
 
-        if (params.parent) {
-            params.parent.append(entity);
+        this.setPosition(params.spawnPoint);
+        this._navPoints.push(params.firstMoveDestination);
+    }
+
+    private moving(): void {
+        // 現在の移動処理が終了していない場合は何もしない
+        if (this._currentMoving && !this._currentMoving.isFinished()) {
+            return;
         }
+
+        // 次の移動先を取得
+        const nextPoint = this._navPoints.shift();
+
+        if(!nextPoint){
+            // 移動先がない場合はルートを再作成
+            this.reRoute();
+            return;
+        }
+
+        // 1秒あたりの移動距離(px)
+        const speed = 100;
+
+        // 現在の座標から目的地までの距離を計算
+        const currentPoint = this.currentPoint;
+        const distanceX = nextPoint.x - currentPoint.x;
+        const distanceY = nextPoint.y - currentPoint.y;
+        const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+        // 移動にかかる時間を計算
+        const duration = distance / speed * 1000;
+
+        // 移動方向を計算
+        this._movingDirection = { x: distanceX / distance, y: distanceY / distance };
+
+        // 移動アニメーションを開始
+        this._currentMoving = this.createMoveTween(nextPoint, duration);
+    }
+
+    private get currentPoint(): g.CommonOffset {
+        return this._entity.localToGlobal({ x: 0, y: 0 });
+    }
+
+    private createMoveTween(point: g.CommonOffset, duration:number): Tween {
+        // tweenを作る際には親のローカル座標での移動になるため変換が必要
+        const localPoint = (this._entity.parent instanceof g.E) ? this._entity.parent.globalToLocal(point) : point;
+        return this._timeline.create(this._entity).moveTo(localPoint.x, localPoint.y, duration);
+    }
+
+    private setPosition(point: g.CommonOffset): void {
+        const localPoint = (this._entity.parent instanceof g.E) ? this._entity.parent.globalToLocal(point) : point;
+        this._entity.moveTo(localPoint.x, localPoint.y);
+        this._entity.modified();
+    }
+
+    private reRoute(): void {
+        if (!this._navigator) {
+            return;
+        }
+
+        const pos = this._entity.localToGlobal({ x: 0, y: 0 });
+        this._navPoints = this._navigator.getNextPath(pos, this._movingDirection, 1000);
     }
 
     private handlePointDownEvent(ev: PointEvent):void {
@@ -135,6 +175,14 @@ export class Character {
         this._isTouching = false;
 
         this._pointUpTrigger.fire({point: this._entity.localToGlobal(ev.point)});
+    }
+
+    public setNavigator(navigator: PositionNavigator | null): void {
+        this._navigator = navigator;
+        if (navigator){
+            // 範囲内のランダムな位置に移動するように設定
+            this._navPoints = [navigator.getRandomPoint()];
+        }
     }
 
     public setInteractable(isDraggable: boolean): void {
