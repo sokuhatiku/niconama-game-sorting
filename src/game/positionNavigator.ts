@@ -8,7 +8,7 @@ export interface GetNextPositionParameterObject {
 }
 
 export interface PositionNavigator {
-    getRandomPoint(): g.CommonOffset;
+    getRandomPoint(rect: g.CommonRect): g.CommonOffset;
     /**
      * 指定した位置から指定した方向に指定した距離だけ進んだときの経路を取得します
      * @returns 進んだ経路の座標リスト
@@ -43,7 +43,7 @@ export class RectNavigator implements PositionNavigator {
         let dir = normalize({x: params.startDirection.x, y: params.startDirection.y});
         const maxDistance = params.maxDistance;
         const rect:Rect = {top: params.rect.top, left: params.rect.left, right: params.rect.right, bottom: params.rect.bottom};
-        
+
         while(totalDistance < maxDistance) {
             const hit = rectRaycastLines(this._segments, rect, {position: pos, direction: dir}, maxDistance - totalDistance, true);
 
@@ -74,10 +74,10 @@ export class RectNavigator implements PositionNavigator {
         return points;
     }
 
-    public getRandomPoint(): g.CommonOffset {
+    public getRandomPoint(rect: g.CommonRect): g.CommonOffset {
         return {
-            x: this._rect.x + g.game.random.generate() * this._rect.width,
-            y: this._rect.y + g.game.random.generate() * this._rect.height,
+            x: this._rect.x + g.game.random.generate() * (this._rect.width - (rect.left + rect.right)) + rect.left,
+            y: this._rect.y + g.game.random.generate() * (this._rect.height - (rect.top + rect.bottom)) + rect.top,
         };
     }
 }

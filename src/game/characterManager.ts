@@ -58,7 +58,6 @@ export class CharacterManager {
             timeline: this._timeline,
             profile: params.profile,
             spawnPoint: params.position,
-            firstMoveDestination: area.navigator.getRandomPoint(),
         });
 
         character.onPointDown.add((ev) => {

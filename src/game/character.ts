@@ -52,7 +52,6 @@ export class Character {
         timeline: Timeline
         profile: CharacterProfile
         spawnPoint: g.CommonOffset
-        firstMoveDestination: g.CommonOffset
     }) {
         this._profile = params.profile;
         this._timeline = params.timeline;
@@ -82,7 +81,6 @@ export class Character {
         });
 
         this.setPosition(params.spawnPoint);
-        this._navPoints.push(params.firstMoveDestination);
     }
 
     private moving(): void {
@@ -190,7 +188,7 @@ export class Character {
         this._navigator = navigator;
         if (navigator){
             // 範囲内のランダムな位置に移動するように設定
-            this._navPoints = [navigator.getRandomPoint()];
+            this._navPoints = [navigator.getRandomPoint({ top: 0, left: 0, right: this._entity.width, bottom: this._entity.height })];
         }
     }
 
