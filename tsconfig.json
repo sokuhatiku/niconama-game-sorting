@@ -15,10 +15,10 @@
     "strict": true,
   },
   "files": [
-    "node_modules/@akashic/akashic-engine/index.runtime.d.ts"
+    "node_modules/@akashic/akashic-engine/index.runtime.d.ts",
+    "typings/console.d.ts"
   ],
   "include": [
     "src/**/*.ts",
-    "typings/console.d.ts", "spec/raycast.test.ts", "spec/positionNavigator.test.ts",
   ]
 }

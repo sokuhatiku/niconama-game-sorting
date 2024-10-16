@@ -2,7 +2,7 @@
 	"width": 1280,
 	"height": 720,
 	"fps": 30,
-	"main": "./script/src/_bootstrap.js",
+	"main": "./script/_bootstrap.js",
 	"assets": {
 		"bgm": {
 			"type": "audio",
@@ -51,89 +51,79 @@
 			"height": 720,
 			"global": true
 		},
-		"raycast.test": {
-			"type": "script",
-			"path": "script/spec/raycast.test.js",
-			"global": true
-		},
 		"appProgressBar": {
 			"type": "script",
-			"path": "script/src/appProgressBar.js",
+			"path": "script/appProgressBar.js",
 			"global": true
 		},
 		"assetLoader": {
 			"type": "script",
-			"path": "script/src/assetLoader.js",
+			"path": "script/assetLoader.js",
 			"global": true
 		},
 		"timer": {
 			"type": "script",
-			"path": "script/src/entities/timer.js",
+			"path": "script/entities/timer.js",
 			"global": true
 		},
 		"area": {
 			"type": "script",
-			"path": "script/src/game/area.js",
+			"path": "script/game/area.js",
 			"global": true
 		},
 		"character": {
 			"type": "script",
-			"path": "script/src/game/character.js",
+			"path": "script/game/character.js",
 			"global": true
 		},
 		"characterManager": {
 			"type": "script",
-			"path": "script/src/game/characterManager.js",
+			"path": "script/game/characterManager.js",
 			"global": true
 		},
 		"gameCore": {
 			"type": "script",
-			"path": "script/src/game/gameCore.js",
+			"path": "script/game/gameCore.js",
 			"global": true
 		},
 		"positionNavigator": {
 			"type": "script",
-			"path": "script/src/game/positionNavigator.js",
+			"path": "script/game/positionNavigator.js",
 			"global": true
 		},
 		"scoreboard": {
 			"type": "script",
-			"path": "script/src/game/scoreboard.js",
+			"path": "script/game/scoreboard.js",
 			"global": true
 		},
 		"main": {
 			"type": "script",
-			"path": "script/src/main.js",
+			"path": "script/main.js",
 			"global": true
 		},
 		"mainSequencer": {
 			"type": "script",
-			"path": "script/src/mainSequencer.js",
+			"path": "script/mainSequencer.js",
 			"global": true
 		},
 		"parameterObject": {
 			"type": "script",
-			"path": "script/src/parameterObject.js",
+			"path": "script/parameterObject.js",
 			"global": true
 		},
 		"scoreHandler": {
 			"type": "script",
-			"path": "script/src/scoreHandler.js",
+			"path": "script/scoreHandler.js",
 			"global": true
 		},
 		"raycast": {
 			"type": "script",
-			"path": "script/src/utils/raycast.js",
+			"path": "script/utils/raycast.js",
 			"global": true
 		},
 		"_bootstrap": {
 			"type": "script",
-			"path": "script/src/_bootstrap.js",
-			"global": true
-		},
-		"positionNavigator.test": {
-			"type": "script",
-			"path": "script/spec/positionNavigator.test.js",
+			"path": "script/_bootstrap.js",
 			"global": true
 		}
 	},
