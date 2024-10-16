@@ -58,14 +58,13 @@ export class CharacterManager {
             timeline: this._timeline,
             profile: params.profile,
             spawnPoint: params.position,
+            parent: this._root,
         });
 
         character.onPointDown.add((ev) => {
             console.log("onPointDown", ev.point);
             const area = this.getCurrentAreaOf(character);
-            area.removeCharacter(character);
-            this._root.append(character.entity);
-            character.entity.modified();
+            area?.removeCharacter(character);
         });
 
         character.onPointUp.add((ev) => {
@@ -88,15 +87,13 @@ export class CharacterManager {
         return this._areas[0];
     }
 
-    private getCurrentAreaOf(character: Character): Area {
+    private getCurrentAreaOf(character: Character): Area | null {
         for (const area of this._areas) {
-            const areaChildren = area.entity.children;
-            if (!areaChildren) continue;
-            if (areaChildren.indexOf(character.entity) >= 0) {
+            if(area.containsCharacter(character)) {
                 return area;
             }
         }
-        return this.defaultArea;
+        return null;
     }
 
     private getOverlappedAreaOf(point: g.CommonOffset): Area | null {

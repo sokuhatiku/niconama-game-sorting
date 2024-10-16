@@ -77,13 +77,12 @@ export class Area  {
             localPoint.y >= 0 && localPoint.y <= this._rect.height;
     }
 
+    public containsCharacter(character: Character): boolean {
+        return this._characters.indexOf(character) >= 0;
+    }
+
     public addCharacter(character: Character): void {
         this._characters.push(character);
-        const worldPoint = character.entity.localToGlobal({ x: 0, y: 0 });
-        this._entity.append(character.entity);
-        const newLocalPoint = this._entity.globalToLocal(worldPoint);
-        character.entity.moveTo(newLocalPoint);
-        character.entity.modified();
         character.setNavigator(this._navigator);
     }
     
@@ -92,10 +91,6 @@ export class Area  {
         if (index >= 0) {
             this._characters.splice(index, 1);
         }
-        const worldPoint = character.entity.localToGlobal({ x: 0, y: 0 });
-        character.entity.remove();
-        character.entity.moveTo(worldPoint);
-        character.entity.modified();
         character.setNavigator(null);
     }
 
