@@ -8,7 +8,6 @@ export interface Area{
     get navigator(): PositionNavigator;
     get characters(): readonly Character[];
     contains(point: g.CommonOffset): boolean;
-    containsCharacter(character: Character): boolean;
     addCharacter(character: Character): void;
     removeCharacter(character: Character): void;
     setInnatcive(duration: number): void;
@@ -88,10 +87,6 @@ export class RectArea implements Area {
         const localPoint = this._entity.globalToLocal(point);
         return localPoint.x >= 0 && localPoint.x <= this._rect.width &&
             localPoint.y >= 0 && localPoint.y <= this._rect.height;
-    }
-
-    public containsCharacter(character: Character): boolean {
-        return this._characters.indexOf(character) >= 0;
     }
 
     public addCharacter(character: Character): void {
