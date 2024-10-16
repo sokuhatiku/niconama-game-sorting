@@ -12,7 +12,8 @@
     "start": "akashic sandbox .",
     "export-zip": "rimraf game.zip && akashic export zip -o game.zip -s",
     "export-html": "rimraf game && akashic export html -o game",
-    "develop": "run-p -l start build:watch update:watch"
+    "develop": "run-p -l start build:watch update:watch",
+    "test": "jest"
   },
   "author": "Sokuhatiku",
   "license": "MIT",
