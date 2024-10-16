@@ -4,7 +4,8 @@ import { AssetLoader } from "../assetLoader";
 import { Area } from "./area";
 import { CharacterProfile } from "./character";
 import { Scoreboard } from "./scoreboard";
-import { RectNavigator } from "./positionNavigator";
+import { RectNavigator } from "./rectNavigator";
+import { PolygonNavigator } from "./polygonNavigator";
 
 export class GameCore {
     private readonly _scene: g.Scene;
@@ -63,19 +64,22 @@ export class GameCore {
         });
 
         this._areas = {
-            center: this.createGoalArea({
-                id: "center",
-                area: { x: 320, y: 176, width: 640, height: 448 },
-                cssColor: "rgba(200, 200, 200, 1)",
+            center: createMainArea({
+                scene: this._scene,
+                updateTrigger: this._updateTrigger,
                 areaRoot
             }),
-            left: this.createGoalArea({
+            left: createGoalArea({
+                scene: this._scene,
+                updateTrigger: this._updateTrigger,
                 id: "left",
                 area: { x: 320, y: 272, width: 176, height: 256 },
                 cssColor: "rgba(200, 100, 100, 1)",
                 areaRoot
             }),
-            right: this.createGoalArea({
+            right: createGoalArea({
+                scene: this._scene,
+                updateTrigger: this._updateTrigger,
                 id: "right",
                 area: { x: 784, y: 272, width: 176, height: 256 },
                 cssColor: "rgba(100, 100, 200, 1)",
@@ -124,34 +128,6 @@ export class GameCore {
                 this._characterManager.destroyCharacter(ev.character);
             }
         });
-    }
-
-    private createGoalArea(params: { id: string; area: g.CommonArea; cssColor: string; areaRoot: g.E; }): Area {
-        const areaObj = new Area({
-            id: params.id,
-            scene: this._scene,
-            navigator: new RectNavigator(params.area),
-            parent: params.areaRoot,
-            updateTrigger: this._updateTrigger,
-        });
-        areaObj.entity.moveTo(params.area.x, params.area.y);
-        areaObj.entity.modified();
-        
-        const visual = new g.FilledRect({
-            scene: this._scene,
-            x: 0,
-            y: 0,
-            width: params.area.width,
-            height: params.area.height,
-            cssColor: params.cssColor,
-            parent: areaObj.entity,
-        });
-
-        areaObj.onActiveChanged.add((active) => {
-            visual.cssColor = active ? params.cssColor : "black";
-        });
-
-        return areaObj;
     }
 
     /**
@@ -217,4 +193,77 @@ export class GameCore {
     public get score(): number {
         return g.game.random.generate() * 100;
     }
+}
+
+function createMainArea(params: {
+    scene: g.Scene,
+    updateTrigger: g.Trigger,
+    areaRoot: g.E
+}): Area {
+    const navigator = new PolygonNavigator([
+        { x: 320, y: 176 },
+        { x: 320, y: 272 },
+        { x: 496, y: 272 },
+        { x: 496, y: 528 },
+        { x: 320, y: 528 },
+        { x: 320, y: 624 },
+        { x: 960, y: 624 },
+        { x: 960, y: 528 },
+        { x: 784, y: 528 },
+        { x: 784, y: 272 },
+        { x: 960, y: 272 },
+        { x: 960, y: 176 },
+    ], { x: 496, y: 176, width: 288, height: 448 });
+    const area = new Area({
+        id: "center",
+        scene: params.scene,
+        navigator: navigator,
+        parent: params.areaRoot,
+        updateTrigger: params.updateTrigger,
+    });
+    new g.FilledRect({
+        scene: params.scene,
+        x: 320,
+        y: 176,
+        width: 640,
+        height: 448,
+        cssColor: "rgba(200, 200, 200, 1)",
+        parent: area.entity,
+    });
+    return area;
+}
+
+function createGoalArea(params: {
+    scene: g.Scene,
+    id: string,
+    area: g.CommonArea,
+    cssColor: string,
+    areaRoot: g.E,
+    updateTrigger: g.Trigger,
+}): Area {
+    const areaObj = new Area({
+        id: params.id,
+        scene: params.scene,
+        navigator: new RectNavigator(params.area),
+        parent: params.areaRoot,
+        updateTrigger: params.updateTrigger,
+    });
+    areaObj.entity.moveTo(params.area.x, params.area.y);
+    areaObj.entity.modified();
+    
+    const visual = new g.FilledRect({
+        scene: params.scene,
+        x: 0,
+        y: 0,
+        width: params.area.width,
+        height: params.area.height,
+        cssColor: params.cssColor,
+        parent: areaObj.entity,
+    });
+
+    areaObj.onActiveChanged.add((active) => {
+        visual.cssColor = active ? params.cssColor : "black";
+    });
+
+    return areaObj;
 }

@@ -125,6 +125,16 @@
 			"type": "script",
 			"path": "script/_bootstrap.js",
 			"global": true
+		},
+		"rectNavigator": {
+			"type": "script",
+			"path": "script/game/rectNavigator.js",
+			"global": true
+		},
+		"polygonNavigator": {
+			"type": "script",
+			"path": "script/game/polygonNavigator.js",
+			"global": true
 		}
 	},
 	"environment": {
