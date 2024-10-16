@@ -99,7 +99,7 @@ export class CharacterManager {
     private getOverlappedAreaOf(point: g.CommonOffset): Area | null {
         for (const area of this._areas) {
             if (area === this.defaultArea) continue;
-            if (area.contains(point)) {
+            if (area.navigator.containsPoint(point)) {
                 return area;
             }
         }

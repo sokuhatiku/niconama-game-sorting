@@ -14,6 +14,7 @@ export interface PositionNavigator {
      * @returns 進んだ経路の座標リスト
      */
     getNextPath(params: GetNextPositionParameterObject):g.CommonOffset[];
+    containsPoint(point: g.CommonOffset): boolean;
 }
 
 export class RectNavigator implements PositionNavigator {
@@ -33,6 +34,10 @@ export class RectNavigator implements PositionNavigator {
             {start: {x: rect.x + rect.width, y: rect.y + rect.height + extend}, end: {x: rect.x + rect.width, y: rect.y - extend}}, // right
             {start: {x: rect.x - extend, y: rect.y + rect.height}, end: {x: rect.x + rect.width + extend, y: rect.y + rect.height}}, // bottom
         ];
+    }
+
+    public containsPoint(point: g.CommonOffset): boolean {
+        return point.x >= this._rect.x && point.x <= this._rect.x + this._rect.width && point.y >= this._rect.y && point.y <= this._rect.y + this._rect.height;
     }
 
     public getNextPath(params: GetNextPositionParameterObject): g.CommonOffset[] {        

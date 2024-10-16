@@ -178,7 +178,7 @@ export class GameCore {
         // 左右にいるエリアの判定実施
         for(const area of [this._areas.left, this._areas.right]) {
             if(area.characters.length < 10) continue;
-            // 10匹を超えている場合は全員削除する
+            // 10匹を超えている場合は出荷処理を実施
             const charactersToDestroy = area.characters.slice();
             charactersToDestroy.forEach((c) => {
                 area.removeCharacter(c);

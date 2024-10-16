@@ -7,7 +7,6 @@ export interface Area{
     get active(): boolean;
     get navigator(): PositionNavigator;
     get characters(): readonly Character[];
-    contains(point: g.CommonOffset): boolean;
     addCharacter(character: Character): void;
     removeCharacter(character: Character): void;
     setInnatcive(duration: number): void;
@@ -25,7 +24,6 @@ export interface AreaParameterObject {
 export class RectArea implements Area {
     private _entity: g.FilledRect;
     private _characters: Character[] = [];
-    private _rect: g.CommonArea;
     private _id: string;
     private _color: string;
     private _active = true;
@@ -69,7 +67,6 @@ export class RectArea implements Area {
         const parent = param.parent ?? param.scene;
         parent.append(entity);
         this._entity = entity;
-        this._rect = param.rect;
 
         this._navigator = new RectAreaNavigator(param.rect);
 
@@ -81,12 +78,6 @@ export class RectArea implements Area {
                 }
             }
         }, this);
-    }
-
-    public contains(point: g.CommonOffset): boolean {
-        const localPoint = this._entity.globalToLocal(point);
-        return localPoint.x >= 0 && localPoint.x <= this._rect.width &&
-            localPoint.y >= 0 && localPoint.y <= this._rect.height;
     }
 
     public addCharacter(character: Character): void {
