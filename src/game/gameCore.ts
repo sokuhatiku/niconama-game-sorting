@@ -200,6 +200,7 @@ function createMainArea(params: {
     updateTrigger: g.Trigger,
     areaRoot: g.E
 }): Area {
+    // ゴールエリアを避けるようにポリゴンナビゲーターを作成
     const navigator = new PolygonNavigator([
         { x: 320, y: 176 },
         { x: 320, y: 272 },
