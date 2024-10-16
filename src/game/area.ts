@@ -10,10 +10,6 @@ export interface AreaParameterObject {
     updateTrigger: g.Trigger
 }
 
-export function createArea(param: AreaParameterObject): Area {
-    return new Area(param);
-}
-
 export class Area  {
     private _entity: g.FilledRect;
     private _characters: Character[] = [];
