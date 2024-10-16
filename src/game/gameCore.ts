@@ -1,9 +1,10 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { CharacterManager } from "./characterManager";
 import { AssetLoader } from "../assetLoader";
-import { Area, RectArea } from "./area";
+import { Area } from "./area";
 import { CharacterProfile } from "./character";
 import { Scoreboard } from "./scoreboard";
+import { RectNavigator } from "./positionNavigator";
 
 export class GameCore {
     private readonly _scene: g.Scene;
@@ -62,29 +63,23 @@ export class GameCore {
         });
 
         this._areas = {
-            center: new RectArea({
+            center: this.createGoalArea({
                 id: "center",
-                scene: this._scene,
-                rect: { x: 320, y: 176, width: 640, height: 448 },
-                color: "rgba(200, 200, 200, 1)",
-                parent: areaRoot,
-                updateTrigger: this._updateTrigger,
+                area: { x: 320, y: 176, width: 640, height: 448 },
+                cssColor: "rgba(200, 200, 200, 1)",
+                areaRoot
             }),
-            left: new RectArea({
+            left: this.createGoalArea({
                 id: "left",
-                scene: this._scene,
-                rect:  { x: 320, y: 272, width: 176, height: 256 },
-                color: "rgba(200, 100, 100, 1)",
-                parent: areaRoot,
-                updateTrigger: this._updateTrigger,
+                area: { x: 320, y: 272, width: 176, height: 256 },
+                cssColor: "rgba(200, 100, 100, 1)",
+                areaRoot
             }),
-            right: new RectArea({
+            right: this.createGoalArea({
                 id: "right",
-                scene: this._scene,
-                rect: { x: 784, y: 272, width: 176, height: 256 },
-                color: "rgba(100, 100, 200, 1)",
-                parent: areaRoot,
-                updateTrigger: this._updateTrigger,
+                area: { x: 784, y: 272, width: 176, height: 256 },
+                cssColor: "rgba(100, 100, 200, 1)",
+                areaRoot
             }),
         };
 
@@ -129,7 +124,34 @@ export class GameCore {
                 this._characterManager.destroyCharacter(ev.character);
             }
         });
+    }
 
+    private createGoalArea(params: { id: string; area: g.CommonArea; cssColor: string; areaRoot: g.E; }): Area {
+        const areaObj = new Area({
+            id: params.id,
+            scene: this._scene,
+            navigator: new RectNavigator(params.area),
+            parent: params.areaRoot,
+            updateTrigger: this._updateTrigger,
+        });
+        areaObj.entity.moveTo(params.area.x, params.area.y);
+        areaObj.entity.modified();
+        
+        const visual = new g.FilledRect({
+            scene: this._scene,
+            x: 0,
+            y: 0,
+            width: params.area.width,
+            height: params.area.height,
+            cssColor: params.cssColor,
+            parent: areaObj.entity,
+        });
+
+        areaObj.onActiveChanged.add((active) => {
+            visual.cssColor = active ? params.cssColor : "black";
+        });
+
+        return areaObj;
     }
 
     /**
