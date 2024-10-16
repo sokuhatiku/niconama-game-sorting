@@ -1,6 +1,19 @@
 import { Character } from "./character";
 import { PositionNavigator, RectNavigator as RectAreaNavigator } from "./positionNavigator";
 
+export interface Area{
+    get entity(): g.E;
+    get id(): string;
+    get active(): boolean;
+    get navigator(): PositionNavigator;
+    get characters(): readonly Character[];
+    contains(point: g.CommonOffset): boolean;
+    containsCharacter(character: Character): boolean;
+    addCharacter(character: Character): void;
+    removeCharacter(character: Character): void;
+    setInnatcive(duration: number): void;
+}
+
 export interface AreaParameterObject {
     id: string
     scene: g.Scene
@@ -10,7 +23,7 @@ export interface AreaParameterObject {
     updateTrigger: g.Trigger
 }
 
-export class Area  {
+export class RectArea implements Area {
     private _entity: g.FilledRect;
     private _characters: Character[] = [];
     private _rect: g.CommonArea;

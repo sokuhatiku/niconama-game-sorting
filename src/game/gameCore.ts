@@ -1,7 +1,7 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { CharacterManager } from "./characterManager";
 import { AssetLoader } from "../assetLoader";
-import { Area } from "./area";
+import { Area, RectArea } from "./area";
 import { CharacterProfile } from "./character";
 import { Scoreboard } from "./scoreboard";
 
@@ -62,7 +62,15 @@ export class GameCore {
         });
 
         this._areas = {
-            left: new Area({
+            center: new RectArea({
+                id: "center",
+                scene: this._scene,
+                rect: { x: 320, y: 176, width: 640, height: 448 },
+                color: "rgba(200, 200, 200, 1)",
+                parent: areaRoot,
+                updateTrigger: this._updateTrigger,
+            }),
+            left: new RectArea({
                 id: "left",
                 scene: this._scene,
                 rect:  { x: 320, y: 272, width: 176, height: 256 },
@@ -70,19 +78,11 @@ export class GameCore {
                 parent: areaRoot,
                 updateTrigger: this._updateTrigger,
             }),
-            right: new Area({
+            right: new RectArea({
                 id: "right",
                 scene: this._scene,
                 rect: { x: 784, y: 272, width: 176, height: 256 },
                 color: "rgba(100, 100, 200, 1)",
-                parent: areaRoot,
-                updateTrigger: this._updateTrigger,
-            }),
-            center: new Area({
-                id: "center",
-                scene: this._scene,
-                rect: { x: 320, y: 176, width: 640, height: 448 },
-                color: "rgba(200, 200, 200, 1)",
                 parent: areaRoot,
                 updateTrigger: this._updateTrigger,
             }),
