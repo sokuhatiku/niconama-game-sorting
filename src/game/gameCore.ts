@@ -135,6 +135,10 @@ export class GameCore {
                 // エリアが非活性であればその場でキャラを削除
                 this._characterManager.destroyCharacter(ev.character);
             }
+            else{
+                // それ以外であればキャラを非アクティブに変更
+                ev.character.setInteractable(false);
+            }
         });
     }
 
