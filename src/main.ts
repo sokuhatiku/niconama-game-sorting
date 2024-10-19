@@ -37,8 +37,7 @@ export function main(param: GameMainParameterObject): void {
             gameCore: gameCore,
         });
 
-
-        const phaseDebugLabel = new g.Label({
+        const debugPhaseLabel = new g.Label({
             scene: scene,
             text: "phase",
             font: new g.DynamicFont({
@@ -52,11 +51,11 @@ export function main(param: GameMainParameterObject): void {
         });
         sequencer.onPhaseChanged = (phase): void => {
             console.log(`Phase changed: ${phase}`);
-            phaseDebugLabel.text = phase;
-            phaseDebugLabel.invalidate();
+            debugPhaseLabel.text = phase;
+            debugPhaseLabel.invalidate();
         };
 
-        const safearea = new g.Sprite({
+        const debugSafearea = new g.Sprite({
             scene: scene,
             src: assetLoader.getImage("/image/safearea.png"),
             x: 0,
@@ -67,7 +66,7 @@ export function main(param: GameMainParameterObject): void {
             parent: scene,
             touchable: false,
         });
-        scene.append(safearea);
+        scene.append(debugSafearea);
         const progressBar = new AppProgressBar(scene);
         
         // 毎フレームの処理
