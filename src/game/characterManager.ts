@@ -89,7 +89,7 @@ export class CharacterManager {
 
     private getCurrentAreaOf(character: Character): Area | null {
         for (const area of this._areas) {
-            if(area.characters.indexOf(character) >= 0) {
+            if(area.characters.includes(character)) {
                 return area;
             }
         }

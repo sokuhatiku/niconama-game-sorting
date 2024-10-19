@@ -1,4 +1,4 @@
-import { RectNavigator } from "../src/game/positionNavigator";
+import { RectNavigator } from "../src/game/RectNavigator";
 
 describe("RectNavigator", () => {
     describe("getNextPath", () => {
