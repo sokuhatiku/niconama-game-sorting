@@ -86,9 +86,19 @@
 			"path": "script/game/gameCore.js",
 			"global": true
 		},
+		"polygonNavigator": {
+			"type": "script",
+			"path": "script/game/polygonNavigator.js",
+			"global": true
+		},
 		"positionNavigator": {
 			"type": "script",
 			"path": "script/game/positionNavigator.js",
+			"global": true
+		},
+		"rectNavigator": {
+			"type": "script",
+			"path": "script/game/rectNavigator.js",
 			"global": true
 		},
 		"scoreboard": {
@@ -124,16 +134,6 @@
 		"_bootstrap": {
 			"type": "script",
 			"path": "script/_bootstrap.js",
-			"global": true
-		},
-		"rectNavigator": {
-			"type": "script",
-			"path": "script/game/rectNavigator.js",
-			"global": true
-		},
-		"polygonNavigator": {
-			"type": "script",
-			"path": "script/game/polygonNavigator.js",
 			"global": true
 		}
 	},

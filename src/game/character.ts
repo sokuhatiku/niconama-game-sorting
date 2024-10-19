@@ -2,7 +2,17 @@ import { Tween, Timeline } from "@akashic-extension/akashic-timeline";
 import { PositionNavigator } from "./positionNavigator";
 
 export interface CharacterProfile {
+    /**
+     * キャラクターのスプライト画像
+     */
     sprite: g.ImageAsset,
+    /**
+     * キャラクターの当たり判定は与えられたスプライトに依存しますが、この値を使って当たり判定の範囲を調整できます。
+     */
+    grabSizeOffset: g.CommonRect,
+    /**
+     * 配置されると得点になるエリアのID
+     */
     goalAreaId: string,
 }
 
@@ -34,12 +44,13 @@ export class Character {
     }
 
     private readonly _profile: CharacterProfile;
-    private readonly _entity: g.Sprite;
+    private readonly _rootEntity: g.Sprite;
+    private readonly _gragEntity: g.FilledRect;
     private _isTouching = false;
     private _currentMoving: Tween | null = null;
 
     public get entity(): g.E {
-        return this._entity;
+        return this._rootEntity;
     }
 
     public get profile(): CharacterProfile {
@@ -61,16 +72,30 @@ export class Character {
             src: sprite,
             width: sprite.width,
             height: sprite.height,
-            touchable: true,
+            touchable: false,
             local: true,
             parent: params.parent ?? params.scene,
         });
+        this._rootEntity = entity;
 
-        this._entity = entity;
+        const grabOffset = params.profile.grabSizeOffset;
+        const grabEntity = new g.FilledRect({
+            scene: params.scene,
+            x: 0 - grabOffset.left,
+            y: 0 - grabOffset.top,
+            width: sprite.width + grabOffset.left + grabOffset.right,
+            height: sprite.height + grabOffset.top + grabOffset.bottom,
+            cssColor: "rgba(255, 0, 0, 0)",
+            opacity: 0,
+            touchable: true,
+            local: true,
+            parent: entity,
+        });
+        this._gragEntity = grabEntity;
 
-        entity.onPointDown.add(this.handlePointDownEvent.bind(this));
-        entity.onPointMove.add(this.handlePointMoveEvent.bind(this));
-        entity.onPointUp.add(this.handlePointUpEvent.bind(this));
+        grabEntity.onPointDown.add(this.handlePointDownEvent.bind(this));
+        grabEntity.onPointMove.add(this.handlePointMoveEvent.bind(this));
+        grabEntity.onPointUp.add(this.handlePointUpEvent.bind(this));
 
         entity.onUpdate.add(() => {
             if (this._isTouching) {
@@ -122,19 +147,19 @@ export class Character {
     }
 
     private get currentPoint(): g.CommonOffset {
-        return this._entity.localToGlobal({ x: 0, y: 0 });
+        return this._rootEntity.localToGlobal({ x: 0, y: 0 });
     }
 
     private createMoveTween(point: g.CommonOffset, duration:number): Tween {
         // tweenを作る際には親のローカル座標での移動になるため変換が必要
-        const localPoint = (this._entity.parent instanceof g.E) ? this._entity.parent.globalToLocal(point) : point;
-        return this._timeline.create(this._entity).moveTo(localPoint.x, localPoint.y, duration);
+        const localPoint = (this._rootEntity.parent instanceof g.E) ? this._rootEntity.parent.globalToLocal(point) : point;
+        return this._timeline.create(this._rootEntity).moveTo(localPoint.x, localPoint.y, duration);
     }
 
     private setPosition(point: g.CommonOffset): void {
-        const localPoint = (this._entity.parent instanceof g.E) ? this._entity.parent.globalToLocal(point) : point;
-        this._entity.moveTo(localPoint.x, localPoint.y);
-        this._entity.modified();
+        const localPoint = (this._rootEntity.parent instanceof g.E) ? this._rootEntity.parent.globalToLocal(point) : point;
+        this._rootEntity.moveTo(localPoint.x, localPoint.y);
+        this._rootEntity.modified();
     }
 
     private reRoute(): void {
@@ -142,24 +167,24 @@ export class Character {
             return;
         }
 
-        const pos = this._entity.localToGlobal({ x: 0, y: 0 });
+        const pos = this._rootEntity.localToGlobal({ x: 0, y: 0 });
         this._navPoints = this._navigator.getNextPath({
             startPosition: { x: pos.x, y: pos.y },
             startDirection: this._movingDirection,
             maxDistance: 300,
-            rect: { top: 0, left: 0, right: this._entity.width, bottom: this._entity.height }
+            rect: { top: 0, left: 0, right: this._rootEntity.width, bottom: this._rootEntity.height }
         });
     }
 
     private handlePointDownEvent(ev: PointEvent):void {
-        if (!this._entity.touchable) {
+        if (!this._gragEntity.touchable) {
             return;
         }
 
         this._isTouching = true;
         this._currentMoving?.cancel();
 
-        this._pointDownTrigger.fire({point: this._entity.localToGlobal(ev.point)});
+        this._pointDownTrigger.fire({point: this._gragEntity.localToGlobal(ev.point)});
     }
 
     private handlePointMoveEvent(ev: PointMoveEvent): void {
@@ -167,11 +192,11 @@ export class Character {
             return;
         }
 
-        this._entity.x += ev.prevDelta.x;
-        this._entity.y += ev.prevDelta.y;
-        this._entity.modified();
+        this._rootEntity.x += ev.prevDelta.x;
+        this._rootEntity.y += ev.prevDelta.y;
+        this._rootEntity.modified();
 
-        this._pointMoveTrigger.fire({point: this._entity.localToGlobal(ev.point), prevDelta: ev.prevDelta});
+        this._pointMoveTrigger.fire({point: this._rootEntity.localToGlobal(ev.point), prevDelta: ev.prevDelta});
     }
 
     private handlePointUpEvent(ev: PointEvent): void {
@@ -181,29 +206,29 @@ export class Character {
 
         this._isTouching = false;
 
-        this._pointUpTrigger.fire({point: this._entity.localToGlobal(ev.point)});
+        this._pointUpTrigger.fire({point: this._rootEntity.localToGlobal(ev.point)});
     }
 
     public setNavigator(navigator: PositionNavigator | null): void {
         this._navigator = navigator;
         if (navigator){
             // 範囲内のランダムな位置に移動するように設定
-            this._navPoints = [navigator.getRandomPoint({ top: 0, left: 0, right: this._entity.width, bottom: this._entity.height })];
+            this._navPoints = [navigator.getRandomPoint({ top: 0, left: 0, right: this._rootEntity.width, bottom: this._rootEntity.height })];
         }
     }
 
     public setInteractable(isDraggable: boolean): void {
-        this._entity.touchable = isDraggable;
-        this._entity.opacity = isDraggable ? 1 : 0.5;
-        this._entity.invalidate();
+        this._gragEntity.touchable = isDraggable;
+        this._rootEntity.opacity = isDraggable ? 1 : 0.5;
+        this._rootEntity.invalidate();
         if(this._isTouching) {
-            const point = this._entity.localToGlobal({ x: 0, y: 0 });
+            const point = this._rootEntity.localToGlobal({ x: 0, y: 0 });
             this.handlePointUpEvent({ point: point });
         }
     }
 
     public destroy(): void {
         this._currentMoving?.cancel();
-        this._entity.destroy();
+        this._rootEntity.destroy();
     }
 }
