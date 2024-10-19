@@ -5,7 +5,11 @@ export interface CharacterProfile {
     /**
      * キャラクターのスプライト画像
      */
-    sprite: g.ImageAsset,
+    activeSprite: g.ImageAsset,
+    /**
+     * キャラクターが非アクティブ状態の差分スプライト画像
+     */
+    inactiveSprite: g.ImageAsset,
     /**
      * キャラクターの当たり判定は与えられたスプライトに依存しますが、この値を使って当たり判定の範囲を調整できます。
      */
@@ -66,7 +70,7 @@ export class Character {
     }) {
         this._profile = params.profile;
         this._timeline = params.timeline;
-        const sprite = params.profile.sprite;
+        const sprite = params.profile.activeSprite;
         const entity = new g.Sprite({
             scene: params.scene,
             src: sprite,
@@ -219,9 +223,10 @@ export class Character {
 
     public setInteractable(isDraggable: boolean): void {
         this._gragEntity.touchable = isDraggable;
-        this._rootEntity.opacity = isDraggable ? 1 : 0.5;
+        this._rootEntity.src = isDraggable ? this._profile.activeSprite : this._profile.inactiveSprite;
         this._rootEntity.invalidate();
-        if(this._isTouching) {
+
+        if(!isDraggable && this._isTouching) {
             const point = this._rootEntity.localToGlobal({ x: 0, y: 0 });
             this.handlePointUpEvent({ point: point });
         }

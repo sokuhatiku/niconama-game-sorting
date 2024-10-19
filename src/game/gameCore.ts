@@ -89,12 +89,14 @@ export class GameCore {
 
         this._characterProfiles = {
             male : {
-                sprite: this._assetLoader.getImage("/image/male.png"),
+                activeSprite: this._assetLoader.getImage("/image/male_active.png"),
+                inactiveSprite: this._assetLoader.getImage("/image/male_inactive.png"),
                 grabSizeOffset: { top: 2, left: 0, right: -6, bottom: 2 },
                 goalAreaId: this._areas.left.id,
             },
             female: {
-                sprite: this._assetLoader.getImage("/image/female.png"),
+                activeSprite: this._assetLoader.getImage("/image/female_active.png"),
+                inactiveSprite: this._assetLoader.getImage("/image/female_inactive.png"),
                 grabSizeOffset: { top: 2, left: 0, right: -6, bottom: 2 },
                 goalAreaId: this._areas.right.id,
             }

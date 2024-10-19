@@ -4,8 +4,10 @@
  */
 export type ImageAssetName = 
     "/image/safearea.png" |
-    "/image/male.png" |
-    "/image/female.png"
+    "/image/male_active.png" |
+    "/image/male_inactive.png" |
+    "/image/female_active.png" |
+    "/image/female_inactive.png";
 
 /**
  * ゲームで利用可能な音声アセットのリスト
@@ -13,7 +15,7 @@ export type ImageAssetName =
  */
 export type AudioAssetName = 
     "/audio/bgm" |
-    "/audio/whistle"
+    "/audio/whistle";
 
 /**
  * アセットを取得する操作をtype safeにするためのユーティリティクラス
