@@ -15,7 +15,8 @@ export class CharacterManager {
     private readonly _scene: g.Scene;
     private readonly _timeline: Timeline;
     private readonly _areas: Area[];
-    private readonly _root: g.E;
+    private readonly _baseLayer: g.E;
+    private readonly _pickUpLayer: g.E;
 
     private readonly _characters: Character[] = [];
 
@@ -31,21 +32,16 @@ export class CharacterManager {
 
     public constructor(params: {
         scene: g.Scene
-        parent?: g.E | g.Scene
+        baseLayer: g.E
+        pickUpLayer: g.E
         timeline: Timeline,
         areas: Area[],
     }) {
         this._scene = params.scene;
         this._timeline = params.timeline;
         this._areas = params.areas;
-        this._root = new g.E({
-            scene: params.scene,
-            x: 0,
-            y: 0,
-            width: g.game.width,
-            height: g.game.height,
-            parent: params.parent ?? params.scene,
-        });
+        this._baseLayer = params.baseLayer;
+        this._pickUpLayer = params.pickUpLayer;
     }
 
     public spawnCharacter(params: {
@@ -58,13 +54,14 @@ export class CharacterManager {
             timeline: this._timeline,
             profile: params.profile,
             spawnPoint: params.position,
-            parent: this._root,
+            parent: this._baseLayer,
         });
 
         character.onPointDown.add((ev) => {
             console.log("onPointDown", ev.point);
             const area = this.getCurrentAreaOf(character);
             area?.removeCharacter(character);
+            this._pickUpLayer.append(character.entity);
         });
 
         character.onPointUp.add((ev) => {
@@ -77,6 +74,7 @@ export class CharacterManager {
                 area: area,
                 character: character,
             });
+            this._baseLayer.append(character.entity);
         });
 
         area.addCharacter(character);
