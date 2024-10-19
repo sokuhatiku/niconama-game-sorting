@@ -109,14 +109,6 @@ export class GameCore {
             areas: [this._areas.center, this._areas.left, this._areas.right],
         });
 
-        this._scoreboard = new Scoreboard({
-            scene: this._scene,
-            parent: this._root,
-        });
-        this._scoreboard.onScoreUpdated.add((score) => {
-            this._scoreUpdatedTrigger.fire(score);
-        });
-
         this._characterManager.onCharacterPlaced.add((ev) => {
             if(ev.area == this._areas.center){ 
                 return;
@@ -139,6 +131,14 @@ export class GameCore {
                 // それ以外であればキャラを非アクティブに変更
                 ev.character.setInteractable(false);
             }
+        });
+
+        this._scoreboard = new Scoreboard({
+            scene: this._scene,
+            parent: this._root,
+        });
+        this._scoreboard.onScoreUpdated.add((score) => {
+            this._scoreUpdatedTrigger.fire(score);
         });
     }
 
