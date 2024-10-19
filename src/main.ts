@@ -37,36 +37,6 @@ export function main(param: GameMainParameterObject): void {
             gameCore: gameCore,
         });
 
-        const debugPhaseLabel = new g.Label({
-            scene: scene,
-            text: "phase",
-            font: new g.DynamicFont({
-                game: g.game,
-                fontFamily: "sans-serif",
-                size: 20,
-            }),
-            x: 0,
-            y: 0,
-            parent: scene,
-        });
-        sequencer.onPhaseChanged = (phase): void => {
-            console.log(`Phase changed: ${phase}`);
-            debugPhaseLabel.text = phase;
-            debugPhaseLabel.invalidate();
-        };
-
-        const debugSafearea = new g.Sprite({
-            scene: scene,
-            src: assetLoader.getImage("/image/safearea.png"),
-            x: 0,
-            y: 0,
-            width: g.game.width,
-            height: g.game.height,
-            opacity: 0.5,
-            parent: scene,
-            touchable: false,
-        });
-        scene.append(debugSafearea);
         const progressBar = new AppProgressBar(scene);
         
         // 毎フレームの処理
@@ -75,7 +45,42 @@ export function main(param: GameMainParameterObject): void {
             scoreHandler.notice(gameCore.score);
             progressBar.setProgress(sequencer.progress);
         });
+
+        prepareDebugUi({ scene, sequencer, assetLoader });
     });
 
     g.game.pushScene(scene);
+}
+
+function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequencer: MainSequencer, assetLoader: AssetLoader}): void {
+    const debugPhaseLabel = new g.Label({
+        scene: scene,
+        text: "phase",
+        font: new g.DynamicFont({
+            game: g.game,
+            fontFamily: "sans-serif",
+            size: 20,
+        }),
+        x: 0,
+        y: 0,
+        parent: scene,
+    });
+    sequencer.onPhaseChanged = (phase): void => {
+        console.log(`Phase changed: ${phase}`);
+        debugPhaseLabel.text = phase;
+        debugPhaseLabel.invalidate();
+    };
+
+    const debugSafearea = new g.Sprite({
+        scene: scene,
+        src: assetLoader.getImage("/image/safearea.png"),
+        x: 0,
+        y: 0,
+        width: g.game.width,
+        height: g.game.height,
+        opacity: 0.5,
+        parent: scene,
+        touchable: false,
+    });
+    scene.append(debugSafearea);
 }
