@@ -118,6 +118,10 @@ export class GameCore {
         });
 
         this._characterManager.onCharacterPlaced.add((ev) => {
+            if(ev.area == this._areas.center){ 
+                return;
+            }
+
             const effective = ev.isCorrectArea && ev.area.active;
             console.log("onCharacterPlaced", effective);
             
