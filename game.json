@@ -149,6 +149,11 @@
 			"width": 32,
 			"height": 32,
 			"global": true
+		},
+		"layers": {
+			"type": "script",
+			"path": "script/utils/layers.js",
+			"global": true
 		}
 	},
 	"environment": {

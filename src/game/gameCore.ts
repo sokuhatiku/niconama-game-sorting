@@ -6,6 +6,7 @@ import { CharacterProfile } from "./character";
 import { Scoreboard } from "./scoreboard";
 import { RectNavigator } from "./rectNavigator";
 import { PolygonNavigator } from "./polygonNavigator";
+import { Layers } from "../utils/layers";
 
 export class GameCore {
     private readonly _scene: g.Scene;
@@ -13,7 +14,6 @@ export class GameCore {
     private readonly _timeline: Timeline;
     private readonly _characterManager: CharacterManager;
     private readonly _scoreboard: Scoreboard;
-    private readonly _root: g.E;
     private readonly _scoreUpdatedTrigger: g.Trigger<number> = new g.Trigger<number>();
 
     private readonly _updateTrigger: g.Trigger = new g.Trigger();
@@ -28,6 +28,8 @@ export class GameCore {
         right: Area,
         center: Area,
     };
+
+    private _layers: Layers;
 
     private _active = false;
 
@@ -44,30 +46,18 @@ export class GameCore {
     public constructor(params: {
         scene: g.Scene
         timeline: Timeline
+        layers: Layers
     }) {
         this._scene = params.scene;
         this._assetLoader = new AssetLoader(this._scene);
         this._timeline = params.timeline;
-
-        this._root = new g.E({
-            scene: this._scene,
-            width: g.game.width,
-            height: g.game.height,
-            parent: this._scene,
-        });
-
-        const areaRoot = new g.E({
-            scene: this._scene,
-            width: g.game.width,
-            height: g.game.height,
-            parent: this._root,
-        });
+        this._layers = params.layers;
 
         this._areas = {
             center: createMainArea({
                 scene: this._scene,
                 updateTrigger: this._updateTrigger,
-                areaRoot
+                parent: this._layers.gameBackground,
             }),
             left: createGoalArea({
                 scene: this._scene,
@@ -75,7 +65,7 @@ export class GameCore {
                 id: "left",
                 area: { x: 320, y: 272, width: 176, height: 256 },
                 cssColor: "rgba(200, 100, 100, 1)",
-                areaRoot
+                parent: this._layers.gameBackground,
             }),
             right: createGoalArea({
                 scene: this._scene,
@@ -83,7 +73,7 @@ export class GameCore {
                 id: "right",
                 area: { x: 784, y: 272, width: 176, height: 256 },
                 cssColor: "rgba(100, 100, 200, 1)",
-                areaRoot
+                parent: this._layers.gameBackground,
             }),
         };
 
@@ -104,7 +94,7 @@ export class GameCore {
 
         this._characterManager = new CharacterManager({
             scene: this._scene,
-            parent: this._root,
+            parent: this._layers.gameForeground,
             timeline: this._timeline,
             areas: [this._areas.center, this._areas.left, this._areas.right],
         });
@@ -115,7 +105,6 @@ export class GameCore {
             }
 
             const effective = ev.isCorrectArea && ev.area.active;
-            console.log("onCharacterPlaced", effective);
             
             if(effective){
                 this._scoreboard.addCorrectPoint();
@@ -135,7 +124,7 @@ export class GameCore {
 
         this._scoreboard = new Scoreboard({
             scene: this._scene,
-            parent: this._root,
+            parent: this._layers.gameUi,
         });
         this._scoreboard.onScoreUpdated.add((score) => {
             this._scoreUpdatedTrigger.fire(score);
@@ -210,7 +199,7 @@ export class GameCore {
 function createMainArea(params: {
     scene: g.Scene,
     updateTrigger: g.Trigger,
-    areaRoot: g.E
+    parent: g.E
 }): Area {
     // ゴールエリアを避けるようにポリゴンナビゲーターを作成
     const navigator = new PolygonNavigator([
@@ -231,7 +220,7 @@ function createMainArea(params: {
         id: "center",
         scene: params.scene,
         navigator: navigator,
-        parent: params.areaRoot,
+        parent: params.parent,
         updateTrigger: params.updateTrigger,
     });
     new g.FilledRect({
@@ -251,14 +240,14 @@ function createGoalArea(params: {
     id: string,
     area: g.CommonArea,
     cssColor: string,
-    areaRoot: g.E,
+    parent: g.E,
     updateTrigger: g.Trigger,
 }): Area {
     const areaObj = new Area({
         id: params.id,
         scene: params.scene,
         navigator: new RectNavigator(params.area),
-        parent: params.areaRoot,
+        parent: params.parent,
         updateTrigger: params.updateTrigger,
     });
     areaObj.entity.moveTo(params.area.x, params.area.y);

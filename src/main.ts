@@ -5,6 +5,7 @@ import { Timeline } from "@akashic-extension/akashic-timeline";
 import { MainSequencer } from "./mainSequencer";
 import { AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
+import { Layers } from "./utils/layers";
 
 export function main(param: GameMainParameterObject): void {
     let time = 60;
@@ -19,6 +20,16 @@ export function main(param: GameMainParameterObject): void {
     const assetLoader = new AssetLoader(scene);
 
     scene.onLoad.add(() => {
+        // レイヤー
+        const layers:Layers = {
+            gameBackground: createLayerEntity(scene),
+            gameForeground: createLayerEntity(scene),
+            gamePickups: createLayerEntity(scene),
+            gameParticles: createLayerEntity(scene),
+            gameUi: createLayerEntity(scene),
+            debugUi: createLayerEntity(scene),
+        };
+
         // アニメーション用のタイムライン
         const timeline = new Timeline(scene);
 
@@ -26,6 +37,7 @@ export function main(param: GameMainParameterObject): void {
         const gameCore = new GameCore({
             scene: scene,
             timeline: timeline,
+            layers: layers,
         });
         gameCore.onScoreUpdated.add((score) => {
             scoreHandler.notice(score);
@@ -50,6 +62,18 @@ export function main(param: GameMainParameterObject): void {
     });
 
     g.game.pushScene(scene);
+}
+
+function createLayerEntity(scene: g.Scene): g.E {
+    const entity = new g.E({
+        scene: scene,
+        width: g.game.width,
+        height: g.game.height,
+        x: 0,
+        y: 0,
+        parent: scene,
+    });
+    return entity;
 }
 
 function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequencer: MainSequencer, assetLoader: AssetLoader}): void {
