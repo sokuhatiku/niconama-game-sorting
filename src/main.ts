@@ -3,7 +3,7 @@ import { createScoreHandler } from "./scoreHandler";
 import { GameCore } from "./game/gameCore";
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { MainSequencer } from "./mainSequencer";
-import { AssetLoader } from "./assetLoader";
+import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
 import { Layers } from "./utils/layers";
 
@@ -16,10 +16,14 @@ export function main(param: GameMainParameterObject): void {
     const scoreHandler = createScoreHandler();
     const scene = new g.Scene({
         game: g.game,
+        assetPaths: [...allAssets],
     });
     const assetLoader = new AssetLoader(scene);
 
     scene.onLoad.add(() => {
+        const bgm = assetLoader.getAudio("/audio/bgm");
+        bgm.loop = true;
+        bgm.play();
         // レイヤー
         const layers:Layers = {
             gameBackground: createLayerEntity(scene),

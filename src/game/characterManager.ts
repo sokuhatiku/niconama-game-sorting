@@ -1,6 +1,7 @@
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { Character, CharacterProfile } from "./character";
 import { Area } from "./area";
+import { AssetLoader } from "../assetLoader";
 
 export interface CharacterPlacedEvent{
     isCorrectArea: boolean;
@@ -17,6 +18,8 @@ export class CharacterManager {
     private readonly _areas: Area[];
     private readonly _baseLayer: g.E;
     private readonly _pickUpLayer: g.E;
+    private readonly _pickSound: g.AudioAsset;
+    private readonly _putSound: g.AudioAsset;
 
     private readonly _characters: Character[] = [];
 
@@ -42,6 +45,10 @@ export class CharacterManager {
         this._areas = params.areas;
         this._baseLayer = params.baseLayer;
         this._pickUpLayer = params.pickUpLayer;
+
+        const assetLoader = new AssetLoader(this._scene);
+        this._pickSound = assetLoader.getAudio("/audio/pick");
+        this._putSound = assetLoader.getAudio("/audio/put");
     }
 
     public spawnCharacter(params: {
@@ -62,6 +69,7 @@ export class CharacterManager {
             const area = this.getCurrentAreaOf(character);
             area?.removeCharacter(character);
             this._pickUpLayer.append(character.entity);
+            this._pickSound.play();
         });
 
         character.onPointUp.add((ev) => {
@@ -75,6 +83,7 @@ export class CharacterManager {
                 character: character,
             });
             this._baseLayer.append(character.entity);
+            this._putSound.play();
         });
 
         area.addCharacter(character);

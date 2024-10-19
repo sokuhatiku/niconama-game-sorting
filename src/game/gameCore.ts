@@ -7,12 +7,14 @@ import { Scoreboard } from "./scoreboard";
 import { RectNavigator } from "./rectNavigator";
 import { PolygonNavigator } from "./polygonNavigator";
 import { Layers } from "../utils/layers";
+import { ParticleSystem } from "./particleSystem";
 
 export class GameCore {
     private readonly _scene: g.Scene;
     private readonly _assetLoader: AssetLoader;
     private readonly _timeline: Timeline;
     private readonly _characterManager: CharacterManager;
+    private readonly _particleSystem: ParticleSystem;
     private readonly _scoreboard: Scoreboard;
     private readonly _scoreUpdatedTrigger: g.Trigger<number> = new g.Trigger<number>();
 
@@ -33,7 +35,7 @@ export class GameCore {
 
     private _active = false;
 
-    private _cooldown = 0;
+    private _spawnCooldown = 0;
 
     public get onScoreUpdated(): g.Trigger<number> {
         return this._scoreUpdatedTrigger;
@@ -92,6 +94,12 @@ export class GameCore {
             }
         };
 
+        this._particleSystem = new ParticleSystem({
+            scene: this._scene,
+            timeline: this._timeline,
+            parent: this._layers.gameParticles,
+        });
+
         this._characterManager = new CharacterManager({
             scene: this._scene,
             baseLayer: this._layers.gameForeground,
@@ -109,6 +117,10 @@ export class GameCore {
             
             if(effective){
                 this._scoreboard.addCorrectPoint();
+                this._particleSystem.spawnPlusParticle({
+                    x: ev.character.entity.x,
+                    y: ev.character.entity.y,
+                });
             } else {
                 this._scoreboard.addIncorrectPoint();
             }
@@ -161,11 +173,11 @@ export class GameCore {
 
         this._updateTrigger.fire();
 
-        if(this._cooldown > 0) {
-            this._cooldown--;
+        if(this._spawnCooldown > 0) {
+            this._spawnCooldown--;
             return;
         }
-        this._cooldown = g.game.random.generate() * 5;
+        this._spawnCooldown = g.game.random.generate() * 5;
 
         const isMale = g.game.random.generate() > 0.5;
 

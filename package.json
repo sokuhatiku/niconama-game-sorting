@@ -13,7 +13,8 @@
     "export-zip": "rimraf game.zip && akashic export zip -o game.zip -s",
     "export-html": "rimraf game && akashic export html -o game",
     "develop": "run-p -l start build:watch update:watch",
-    "test": "jest"
+    "test": "jest",
+    "audioconv": "complete-audio"
   },
   "author": "Sokuhatiku",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "@akashic-extension/akashic-timeline": "^3.2.1",
     "@akashic/akashic-cli": "^2.17.23",
     "@akashic/akashic-engine": "^3.6.0",
+    "@akashic/complete-audio": "^2.0.1",
     "@eslint/js": "^9.12.0",
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.13",

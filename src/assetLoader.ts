@@ -1,21 +1,36 @@
-/**
- * ゲームで利用可能な画像アセットのリスト
- * 全てグローバルアセットである想定
- */
-export type ImageAssetName = 
-    "/image/safearea.png" |
-    "/image/male_active.png" |
-    "/image/male_inactive.png" |
-    "/image/female_active.png" |
-    "/image/female_inactive.png";
+const imageAssets = [
+    "/image/safearea.png",
+    "/image/male_active.png",
+    "/image/male_inactive.png",
+    "/image/female_active.png",
+    "/image/female_inactive.png",
+    "/image/point.png",
+] as const;
+
+const audioAssets = [
+    "/audio/bgm",
+    "/audio/whistle",
+    "/audio/pick",
+    "/audio/put",
+] as const;
+
 
 /**
- * ゲームで利用可能な音声アセットのリスト
+ * ゲームで利用可能な画像アセットのリテラル型
  * 全てグローバルアセットである想定
  */
-export type AudioAssetName = 
-    "/audio/bgm" |
-    "/audio/whistle";
+export type ImageAssetName = typeof imageAssets[number];
+
+/**
+ * ゲームで利用可能な音声アセットのリテラル型
+ * 全てグローバルアセットである想定
+ */
+export type AudioAssetName = typeof audioAssets[number];
+
+export const allAssets = [
+    ...imageAssets,
+    ...audioAssets,
+] as const;
 
 /**
  * アセットを取得する操作をtype safeにするためのユーティリティクラス

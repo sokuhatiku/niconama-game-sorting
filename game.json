@@ -14,8 +14,7 @@
 					".m4a",
 					".ogg"
 				]
-			},
-			"global": true
+			}
 		},
 		"whistle": {
 			"type": "audio",
@@ -27,15 +26,43 @@
 					".m4a",
 					".ogg"
 				]
-			},
-			"global": true
+			}
 		},
 		"safearea": {
 			"type": "image",
 			"path": "image/safearea.png",
 			"width": 1280,
-			"height": 720,
-			"global": true
+			"height": 720
+		},
+		"male_active": {
+			"type": "image",
+			"path": "image/male_active.png",
+			"width": 32,
+			"height": 32
+		},
+		"female_active": {
+			"type": "image",
+			"path": "image/female_active.png",
+			"width": 32,
+			"height": 32
+		},
+		"male_inactive": {
+			"type": "image",
+			"path": "image/male_inactive.png",
+			"width": 32,
+			"height": 32
+		},
+		"female_inactive": {
+			"type": "image",
+			"path": "image/female_inactive.png",
+			"width": 32,
+			"height": 32
+		},
+		"point": {
+			"type": "image",
+			"path": "image/point.png",
+			"width": 16,
+			"height": 16
 		},
 		"appProgressBar": {
 			"type": "script",
@@ -70,6 +97,11 @@
 		"gameCore": {
 			"type": "script",
 			"path": "script/game/gameCore.js",
+			"global": true
+		},
+		"particleSystem": {
+			"type": "script",
+			"path": "script/game/particleSystem.js",
 			"global": true
 		},
 		"polygonNavigator": {
@@ -112,6 +144,11 @@
 			"path": "script/scoreHandler.js",
 			"global": true
 		},
+		"layers": {
+			"type": "script",
+			"path": "script/utils/layers.js",
+			"global": true
+		},
 		"raycast": {
 			"type": "script",
 			"path": "script/utils/raycast.js",
@@ -122,38 +159,29 @@
 			"path": "script/_bootstrap.js",
 			"global": true
 		},
-		"male_active": {
-			"type": "image",
-			"path": "image/male_active.png",
-			"width": 32,
-			"height": 32,
-			"global": true
+		"pick": {
+			"type": "audio",
+			"path": "audio/pick",
+			"systemId": "sound",
+			"duration": 124,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
 		},
-		"female_active": {
-			"type": "image",
-			"path": "image/female_active.png",
-			"width": 32,
-			"height": 32,
-			"global": true
-		},
-		"male_inactive": {
-			"type": "image",
-			"path": "image/male_inactive.png",
-			"width": 32,
-			"height": 32,
-			"global": true
-		},
-		"female_inactive": {
-			"type": "image",
-			"path": "image/female_inactive.png",
-			"width": 32,
-			"height": 32,
-			"global": true
-		},
-		"layers": {
-			"type": "script",
-			"path": "script/utils/layers.js",
-			"global": true
+		"put": {
+			"type": "audio",
+			"path": "audio/put",
+			"systemId": "sound",
+			"duration": 99,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
 		}
 	},
 	"environment": {
