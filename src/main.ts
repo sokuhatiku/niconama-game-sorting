@@ -21,9 +21,8 @@ export function main(param: GameMainParameterObject): void {
     const assetLoader = new AssetLoader(scene);
 
     scene.onLoad.add(() => {
-        const bgm = assetLoader.getAudio("/audio/bgm");
-        bgm.loop = true;
-        bgm.play();
+        // const bgm = assetLoader.getAudio("/audio/bgm");
+        // bgm.play();
         // レイヤー
         const layers:Layers = {
             gameBackground: createLayerEntity(scene),

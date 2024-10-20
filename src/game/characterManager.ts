@@ -16,6 +16,7 @@ export class CharacterManager {
     private readonly _scene: g.Scene;
     private readonly _timeline: Timeline;
     private readonly _areas: Area[];
+    private readonly _movableArea: g.CommonArea;
     private readonly _baseLayer: g.E;
     private readonly _pickUpLayer: g.E;
     private readonly _pickSound: g.AudioAsset;
@@ -39,10 +40,12 @@ export class CharacterManager {
         pickUpLayer: g.E
         timeline: Timeline,
         areas: Area[],
+        movableArea: g.CommonArea,
     }) {
         this._scene = params.scene;
         this._timeline = params.timeline;
         this._areas = params.areas;
+        this._movableArea = params.movableArea;
         this._baseLayer = params.baseLayer;
         this._pickUpLayer = params.pickUpLayer;
 
@@ -62,6 +65,7 @@ export class CharacterManager {
             profile: params.profile,
             spawnPoint: params.position,
             parent: this._baseLayer,
+            movableArea: this._movableArea,
         });
 
         character.onPointDown.add((ev) => {

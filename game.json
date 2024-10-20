@@ -159,11 +159,11 @@
 			"path": "script/_bootstrap.js",
 			"global": true
 		},
-		"pick": {
+		"put": {
 			"type": "audio",
-			"path": "audio/pick",
+			"path": "audio/put",
 			"systemId": "sound",
-			"duration": 124,
+			"duration": 99,
 			"hint": {
 				"extensions": [
 					".m4a",
@@ -171,11 +171,11 @@
 				]
 			}
 		},
-		"put": {
+		"pick": {
 			"type": "audio",
-			"path": "audio/put",
+			"path": "audio/pick",
 			"systemId": "sound",
-			"duration": 99,
+			"duration": 1087,
 			"hint": {
 				"extensions": [
 					".m4a",

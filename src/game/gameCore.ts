@@ -106,6 +106,7 @@ export class GameCore {
             pickUpLayer: this._layers.gamePickups,
             timeline: this._timeline,
             areas: [this._areas.center, this._areas.left, this._areas.right],
+            movableArea: { x: 320, y: 176, width: 640, height: 448 },
         });
 
         this._characterManager.onCharacterPlaced.add((ev) => {
