@@ -14,7 +14,8 @@
 					".m4a",
 					".ogg"
 				]
-			}
+			},
+			"loop": true
 		},
 		"whistle": {
 			"type": "audio",
@@ -182,6 +183,16 @@
 					".ogg"
 				]
 			}
+		},
+		"title": {
+			"type": "script",
+			"path": "script/title.js",
+			"global": true
+		},
+		"description": {
+			"type": "script",
+			"path": "script/description.js",
+			"global": true
 		}
 	},
 	"environment": {

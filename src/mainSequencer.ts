@@ -1,4 +1,6 @@
+import { Description } from "./description";
 import { GameCore } from "./game/gameCore";
+import { Title } from "./title";
 
 const phases = ["init", "title", "introduction", "ready", "game", "finish", "result"] as const;
 type PhaseName = (typeof phases)[number]
@@ -11,9 +13,9 @@ type PhaseName = (typeof phases)[number]
 function defineTimeSchedule(totalTime: number): Map<PhaseName, number> {
     const timeSchedule = new Map<PhaseName, number>();
     timeSchedule.set("title", 0);
-    timeSchedule.set("introduction", 1);
-    timeSchedule.set("ready", 2);
-    timeSchedule.set("game", 3);
+    timeSchedule.set("introduction", 3);
+    timeSchedule.set("ready", 10);
+    timeSchedule.set("game", 13);
     timeSchedule.set("finish", totalTime - 15);
     timeSchedule.set("result", totalTime - 10);
     return timeSchedule;
@@ -25,20 +27,31 @@ function defineTimeSchedule(totalTime: number): Map<PhaseName, number> {
 export class MainSequencer {
     private readonly _totalAvailableTimes: number;
     private readonly _gameCore: GameCore;
+    private readonly _title: Title;
+    private readonly _description: Description;
 
     private readonly _timeSchedule = new Map<PhaseName, number>([]);
     private readonly _updatables: { update: () => void }[] = [];
     private _currentPhase: PhaseName = phases[0];
 
-    public onPhaseChanged: ((phase: PhaseName) => void) | null = null;
+    private readonly _phaseChangedTrigger: g.Trigger<PhaseName> = new g.Trigger<PhaseName>();
+    public get onPhaseChanged(): g.Trigger<PhaseName>
+    {
+         return this._phaseChangedTrigger;
+    }
 
     public constructor(params: {
         totalAvailableTimes: number
         gameCore: GameCore
+        title: Title
+        description: Description
     }) {
         this._totalAvailableTimes = params.totalAvailableTimes;
         this._gameCore = params.gameCore;
         this._updatables.push(this._gameCore);
+
+        this._title = params.title;
+        this._description = params.description;
 
         this._timeSchedule = defineTimeSchedule(params.totalAvailableTimes);
     }
@@ -74,10 +87,14 @@ export class MainSequencer {
     private changePhase(phase: PhaseName): void {
         switch(phase) {
             case "title":
+                this._title.show();
                 break;
             case "introduction":
+                this._title.hide();
+                this._description.show();
                 break;
             case "ready":
+                this._description.hide();
                 break;
             case "game":
                 this._gameCore.setActive(true);
@@ -89,7 +106,7 @@ export class MainSequencer {
                 break;
         }
 
-        this.onPhaseChanged?.(phase);
+        this._phaseChangedTrigger.fire(phase);
     }
 
     public get progress(): number {

@@ -6,6 +6,8 @@ import { MainSequencer } from "./mainSequencer";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
 import { Layers } from "./utils/layers";
+import { Title } from "./title";
+import { Description } from "./description";
 
 export function main(param: GameMainParameterObject): void {
     let time = 60;
@@ -21,8 +23,8 @@ export function main(param: GameMainParameterObject): void {
     const assetLoader = new AssetLoader(scene);
 
     scene.onLoad.add(() => {
-        // const bgm = assetLoader.getAudio("/audio/bgm");
-        // bgm.play();
+        const bgm = assetLoader.getAudio("/audio/bgm");
+        const bgmPlay = bgm.play();
         // レイヤー
         const layers:Layers = {
             gameBackground: createLayerEntity(scene),
@@ -45,11 +47,31 @@ export function main(param: GameMainParameterObject): void {
         gameCore.onScoreUpdated.add((score) => {
             scoreHandler.notice(score);
         });
+
+        const font = new g.DynamicFont({
+            game: g.game,
+            fontFamily: "sans-serif",
+            size: 64
+        });
+
+        const title = new Title({
+            scene: scene,
+            font: font,
+        });
+        title.hide();
+
+        const description = new Description({
+            scene: scene,
+            font: font,
+        });
+        description.hide();
     
         // アプリ全体のシーケンサー
         const sequencer = new MainSequencer({
             totalAvailableTimes: time,
             gameCore: gameCore,
+            title: title,
+            description: description,
         });
 
         const progressBar = new AppProgressBar(scene);
@@ -59,6 +81,14 @@ export function main(param: GameMainParameterObject): void {
             sequencer.update();
             scoreHandler.notice(gameCore.score);
             progressBar.setProgress(sequencer.progress);
+        });
+
+        const finishSound = assetLoader.getAudio("/audio/whistle");
+        sequencer.onPhaseChanged.add(phase => {
+            if (phase === "finish"){
+                finishSound.play();
+                bgmPlay.stop();
+            }
         });
 
         prepareDebugUi({ scene, sequencer, assetLoader });
@@ -92,11 +122,11 @@ function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequ
         y: 0,
         parent: scene,
     });
-    sequencer.onPhaseChanged = (phase): void => {
+    sequencer.onPhaseChanged.add(phase=> {
         console.log(`Phase changed: ${phase}`);
         debugPhaseLabel.text = phase;
         debugPhaseLabel.invalidate();
-    };
+    });
 
     const debugSafearea = new g.Sprite({
         scene: scene,

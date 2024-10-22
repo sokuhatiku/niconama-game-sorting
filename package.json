@@ -10,8 +10,7 @@
     "update:watch": "chokidar audio image -c \"npm run update\"",
     "lint": "eslint src -c eslint.config.mjs --fix",
     "start": "akashic sandbox .",
-    "export-zip": "rimraf game.zip && akashic export zip -o game.zip -s",
-    "export-html": "rimraf game && akashic export html -o game",
+    "export": "akashic export zip --nicolive --force",
     "develop": "run-p -l start build:watch update:watch",
     "test": "jest",
     "audioconv": "complete-audio"
