@@ -6,8 +6,8 @@ import { MainSequencer } from "./mainSequencer";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
 import { Layers } from "./utils/layers";
-import { Title } from "./title";
-import { Description } from "./description";
+import { Title } from "./phases/title";
+import { Description } from "./phases/description";
 
 export function main(param: GameMainParameterObject): void {
     let time = 60;

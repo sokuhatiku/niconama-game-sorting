@@ -1,6 +1,6 @@
-import { Description } from "./description";
+import { Description } from "./phases/description";
 import { GameCore } from "./game/gameCore";
-import { Title } from "./title";
+import { Title } from "./phases/title";
 
 const phases = ["init", "title", "introduction", "ready", "game", "finish", "result"] as const;
 type PhaseName = (typeof phases)[number]

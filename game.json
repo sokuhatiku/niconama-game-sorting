@@ -186,12 +186,12 @@
 		},
 		"title": {
 			"type": "script",
-			"path": "script/title.js",
+			"path": "script/phases/title.js",
 			"global": true
 		},
 		"description": {
 			"type": "script",
-			"path": "script/description.js",
+			"path": "script/phases/description.js",
 			"global": true
 		}
 	},

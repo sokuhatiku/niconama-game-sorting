@@ -60,6 +60,21 @@ export class Description{
         });
         description3.aligning(g.game.width, "center");
         description3.invalidate();
+
+        const description4 = new g.Label({
+            scene: params.scene,
+            font: params.font,
+            text: "（スマホとかだと難しいかも）",
+            fontSize: 20,
+            textColor: "black",
+            x: g.game.width / 2,
+            y: g.game.height / 2 + 150,
+            anchorX: 0.5,
+            anchorY: 0.5,
+            parent: this._root
+        });
+        description4.aligning(g.game.width, "center");
+        description4.invalidate();
     }
 
     public show() {
