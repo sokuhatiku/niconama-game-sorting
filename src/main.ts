@@ -12,9 +12,9 @@ import { GamePhase } from "./game/gamePhase";
 import { DoNothingPhase } from "./doNothingPhase";
 
 export function main(param: GameMainParameterObject): void {
-    let time = 60;
+    let applicationTimeLimit = Infinity;
     if (param.sessionParameter.totalTimeLimit) {
-        time = param.sessionParameter.totalTimeLimit;
+        applicationTimeLimit = param.sessionParameter.totalTimeLimit;
     }
 
     const scoreHandler = createScoreHandler();
@@ -71,7 +71,7 @@ export function main(param: GameMainParameterObject): void {
     
         // アプリ全体のシーケンサー
         const sequencer = new PhaseSequencer({
-            totalSeconds: time,
+            totalSeconds: applicationTimeLimit,
             phases: [
                 { phase: titlePhase, dulation: 3 },
                 { phase: descriptionPhase, dulation: 3 },

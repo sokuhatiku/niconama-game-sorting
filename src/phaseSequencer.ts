@@ -26,6 +26,14 @@ export class PhaseSequencer {
     }) {
         this._totalSeconds = params.totalSeconds;
         this._phases = params.phases;
+
+        let aggregated = 0;
+        for( const phase of this._phases) {
+            aggregated += phase.dulation;
+        }
+        if(aggregated > this._totalSeconds) {
+            throw new Error(`The sum of the duration of the phases(${aggregated.toString()}) exceeds the total duration(${this._totalSeconds.toString()}).`);
+        }
     }
 
     private calcCurrentPhaseIndex(elapsedSeconds: number): number {
