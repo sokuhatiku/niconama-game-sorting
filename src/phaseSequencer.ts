@@ -39,7 +39,7 @@ export class PhaseSequencer {
             aggregatedSeconds += phase.dulation;
         }
         if(aggregatedSeconds > params.timeLimitSeconds) {
-            throw new Error(`The sum of the duration of the phases(${aggregatedSeconds.toString()}) exceeds the total duration(${this._totalSeconds.toString()}).`);
+            throw new Error(`The sum of the duration of the phases(${aggregatedSeconds.toString()}) exceeds the total duration(${params.timeLimitSeconds.toString()}).`);
         }
 
         this._totalSeconds = aggregatedSeconds;
