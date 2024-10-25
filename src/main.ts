@@ -71,7 +71,7 @@ export function main(param: GameMainParameterObject): void {
     
         // アプリ全体のシーケンサー
         const sequencer = new PhaseSequencer({
-            totalSeconds: applicationTimeLimit,
+            timeLimitSeconds: applicationTimeLimit,
             phases: [
                 { phase: titlePhase, dulation: 3 },
                 { phase: descriptionPhase, dulation: 3 },
@@ -88,7 +88,7 @@ export function main(param: GameMainParameterObject): void {
         scene.onUpdate.add((): void => {
             sequencer.update();
             scoreHandler.notice(gameCore.score);
-            progressBar.setProgress(sequencer.totalProgress);
+            progressBar.setProgress(sequencer.currentPhaseProgress);
         });
 
         const finishSound = assetLoader.getAudio("/audio/whistle");

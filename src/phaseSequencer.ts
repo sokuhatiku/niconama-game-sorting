@@ -10,8 +10,16 @@ export class PhaseSequencer {
 
     private _currentPhaseIndex = -1;
 
+    
+    private _totalProgress = 0;
+    private _currentPhaseProgress = 0;
+
     public get totalProgress(): number {
-        return (g.game.age / g.game.fps) / this._totalSeconds;
+        return this._totalProgress;
+    }
+
+    public get currentPhaseProgress(): number {
+        return this._currentPhaseProgress;
     }
 
     private readonly _phaseChangedTrigger: g.Trigger<string> = new g.Trigger<string>();
@@ -21,19 +29,20 @@ export class PhaseSequencer {
     }
 
     public constructor(params: {
-        totalSeconds: number,
+        timeLimitSeconds: number,
         phases: { phase: Phase, dulation: number }[],
     }) {
-        this._totalSeconds = params.totalSeconds;
         this._phases = params.phases;
 
-        let aggregated = 0;
+        let aggregatedSeconds = 0;
         for( const phase of this._phases) {
-            aggregated += phase.dulation;
+            aggregatedSeconds += phase.dulation;
         }
-        if(aggregated > this._totalSeconds) {
-            throw new Error(`The sum of the duration of the phases(${aggregated.toString()}) exceeds the total duration(${this._totalSeconds.toString()}).`);
+        if(aggregatedSeconds > params.timeLimitSeconds) {
+            throw new Error(`The sum of the duration of the phases(${aggregatedSeconds.toString()}) exceeds the total duration(${this._totalSeconds.toString()}).`);
         }
+
+        this._totalSeconds = aggregatedSeconds;
     }
 
     private calcCurrentPhaseIndex(elapsedSeconds: number): number {
@@ -50,6 +59,7 @@ export class PhaseSequencer {
 
     public update(): void {
         const totalElapsedSeconds = g.game.age / g.game.fps;
+        const totalProgress = totalElapsedSeconds / this._totalSeconds;
         const currentPhaseIndex = this.calcCurrentPhaseIndex(totalElapsedSeconds);
         if(currentPhaseIndex != this._currentPhaseIndex) {
             this.changePhase(currentPhaseIndex);
@@ -58,11 +68,15 @@ export class PhaseSequencer {
         const currentPhase = this._phases[this._currentPhaseIndex];
         const currentElapsedFrames =  g.game.age - this._phases.slice(0, this._currentPhaseIndex).reduce((acc, phase) => acc + phase.dulation * g.game.fps, 0);
         const currentElapsedSeconds = currentElapsedFrames / g.game.fps;
+        const currentProgress = currentElapsedSeconds / currentPhase.dulation;
+
+        this._totalProgress = totalProgress;
+        this._currentPhaseProgress = currentProgress;
 
         currentPhase.phase.update({
             elapsedSeconds: currentElapsedSeconds,
             elapsedFrames: currentElapsedFrames,
-            progress: currentElapsedSeconds / currentPhase.dulation
+            progress: currentProgress
         });
 
     }
