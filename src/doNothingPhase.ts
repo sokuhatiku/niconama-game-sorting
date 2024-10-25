@@ -1,0 +1,20 @@
+import { Phase } from "./phase";
+
+export class DoNothingPhase implements Phase {
+
+    public constructor(name: string) {
+        this.name = name;
+    }
+
+    public enter(): void {
+        // do nothing
+    }
+    public update(): void {
+        // do nothing
+    }
+    public exit(): void {
+        // do nothing
+    }
+    public readonly name;
+    
+}

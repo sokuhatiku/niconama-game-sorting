@@ -2,12 +2,14 @@ import { GameMainParameterObject } from "./parameterObject";
 import { createScoreHandler } from "./scoreHandler";
 import { GameCore } from "./game/gameCore";
 import { Timeline } from "@akashic-extension/akashic-timeline";
-import { MainSequencer } from "./mainSequencer";
+import { PhaseSequencer } from "./phaseSequencer";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
 import { Layers } from "./utils/layers";
-import { Title } from "./phases/title";
-import { Description } from "./phases/description";
+import { TitlePhase } from "./titlePhase";
+import { DescriptionPhase } from "./descriptionPhase";
+import { GamePhase } from "./game/gamePhase";
+import { DoNothingPhase } from "./doNothingPhase";
 
 export function main(param: GameMainParameterObject): void {
     let time = 60;
@@ -47,6 +49,9 @@ export function main(param: GameMainParameterObject): void {
         gameCore.onScoreUpdated.add((score) => {
             scoreHandler.notice(score);
         });
+        const gamePhase = new GamePhase({
+            gameCore: gameCore,
+        });
 
         const font = new g.DynamicFont({
             game: g.game,
@@ -54,24 +59,27 @@ export function main(param: GameMainParameterObject): void {
             size: 64
         });
 
-        const title = new Title({
+        const titlePhase = new TitlePhase({
             scene: scene,
             font: font,
         });
-        title.hide();
 
-        const description = new Description({
+        const descriptionPhase = new DescriptionPhase({
             scene: scene,
             font: font,
         });
-        description.hide();
     
         // アプリ全体のシーケンサー
-        const sequencer = new MainSequencer({
-            totalAvailableTimes: time,
-            gameCore: gameCore,
-            title: title,
-            description: description,
+        const sequencer = new PhaseSequencer({
+            totalSeconds: time,
+            phases: [
+                { phase: titlePhase, dulation: 3 },
+                { phase: descriptionPhase, dulation: 3 },
+                { phase: new DoNothingPhase("ready"), dulation: 3 },
+                { phase: gamePhase, dulation: 60 },
+                { phase: new DoNothingPhase("finish"), dulation: 3 },
+                { phase: new DoNothingPhase("result"), dulation: 6 },
+            ],
         });
 
         const progressBar = new AppProgressBar(scene);
@@ -80,7 +88,7 @@ export function main(param: GameMainParameterObject): void {
         scene.onUpdate.add((): void => {
             sequencer.update();
             scoreHandler.notice(gameCore.score);
-            progressBar.setProgress(sequencer.progress);
+            progressBar.setProgress(sequencer.totalProgress);
         });
 
         const finishSound = assetLoader.getAudio("/audio/whistle");
@@ -109,7 +117,7 @@ function createLayerEntity(scene: g.Scene): g.E {
     return entity;
 }
 
-function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequencer: MainSequencer, assetLoader: AssetLoader}): void {
+function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequencer: PhaseSequencer, assetLoader: AssetLoader}): void {
     const debugPhaseLabel = new g.Label({
         scene: scene,
         text: "phase",

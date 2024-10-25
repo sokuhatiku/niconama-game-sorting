@@ -130,11 +130,6 @@
 			"path": "script/main.js",
 			"global": true
 		},
-		"mainSequencer": {
-			"type": "script",
-			"path": "script/mainSequencer.js",
-			"global": true
-		},
 		"parameterObject": {
 			"type": "script",
 			"path": "script/parameterObject.js",
@@ -184,14 +179,34 @@
 				]
 			}
 		},
-		"title": {
+		"gamePhase": {
 			"type": "script",
-			"path": "script/phases/title.js",
+			"path": "script/game/gamePhase.js",
 			"global": true
 		},
-		"description": {
+		"doNothingPhase": {
 			"type": "script",
-			"path": "script/phases/description.js",
+			"path": "script/doNothingPhase.js",
+			"global": true
+		},
+		"descriptionPhase": {
+			"type": "script",
+			"path": "script/descriptionPhase.js",
+			"global": true
+		},
+		"phase": {
+			"type": "script",
+			"path": "script/phase.js",
+			"global": true
+		},
+		"phaseSequencer": {
+			"type": "script",
+			"path": "script/phaseSequencer.js",
+			"global": true
+		},
+		"titlePhase": {
+			"type": "script",
+			"path": "script/titlePhase.js",
 			"global": true
 		}
 	},
@@ -202,7 +217,7 @@
 				"ranking"
 			],
 			"preferredSessionParameters": {
-				"totalTimeLimit": 82
+				"totalTimeLimit": 78
 			}
 		}
 	},

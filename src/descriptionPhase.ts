@@ -1,4 +1,6 @@
-export class Description{
+import { Phase } from "./phase";
+
+export class DescriptionPhase implements Phase {
 
     private readonly _root: g.E;
 
@@ -75,13 +77,17 @@ export class Description{
         });
         description4.aligning(g.game.width, "center");
         description4.invalidate();
-    }
 
-    public show() {
-        this._root.show();
-    }
-
-    public hide() {
         this._root.hide();
     }
+    public enter(): void {
+        this._root.show();
+    }
+    public update(): void {
+        // do nothing
+    }
+    public exit(): void {
+        this._root.hide();
+    }
+    public readonly name = "description";
 }

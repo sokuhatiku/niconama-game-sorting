@@ -1,4 +1,6 @@
-export class Title{
+import { Phase } from "./phase";
+
+export class TitlePhase implements Phase {
 
     private readonly _titleText: g.Label;
 
@@ -20,13 +22,22 @@ export class Title{
         });
         this._titleText.aligning(g.game.width, "center");
         this._titleText.invalidate();
+
+        this._titleText.hide();
     }
 
-    public show() {
+    public enter(): void {
         this._titleText.show();
     }
 
-    public hide() {
+    public update(): void {
+        // do nothing
+    }
+
+    public exit(): void {
         this._titleText.hide();
     }
+
+    public readonly name = "title";
+
 }
