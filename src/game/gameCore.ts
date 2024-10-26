@@ -8,6 +8,7 @@ import { RectNavigator } from "./rectNavigator";
 import { PolygonNavigator } from "./polygonNavigator";
 import { Layers } from "../utils/layers";
 import { ParticleSystem } from "./particleSystem";
+import { ShippingArea } from "./shippingArea";
 
 export class GameCore {
     private readonly _scene: g.Scene;
@@ -109,34 +110,33 @@ export class GameCore {
             movableArea: { x: 320, y: 176, width: 640, height: 448 },
         });
 
-        this._characterManager.onCharacterPlaced.add((ev) => {
-            if(ev.area == this._areas.center){ 
+        this._characterManager.onCharacterPlaced.add(({area, character, isCorrectArea}) => {
+            // 出荷エリアではない場合は何もしない
+            if(!(area instanceof ShippingArea)){
                 return;
             }
 
-            const effective = ev.isCorrectArea && ev.area.active;
-            
-            if(effective){
+            if(isCorrectArea && area.active){
                 this._scoreboard.addCorrectPoint();
                 this._particleSystem.spawnPlusParticle({
-                    x: ev.character.entity.x,
-                    y: ev.character.entity.y,
+                    x: character.entity.x,
+                    y: character.entity.y,
                 });
             } else {
                 this._scoreboard.addIncorrectPoint();
             }
 
-            if(!ev.area.active) {
+            if(!area.active) {
                 // エリアが非活性であればその場でキャラを削除
-                this._characterManager.destroyCharacter(ev.character);
+                this._characterManager.destroyCharacter(character);
             }
             else{
                 // エリアが活性であればキャラを非アクティブに変更
-                ev.character.setInteractable(false);
+                character.setInteractable(false);
 
                 // エリアに10匹以上いる場合は出荷を開始
-                if(ev.area.characters.length >= 10){
-                    this.startShipping(ev.area);   
+                if(area.characters.length >= 10){
+                    this.startShipping(area);   
                 }
             }
         });
@@ -198,7 +198,7 @@ export class GameCore {
         return this._scoreboard.summary;
     }
 
-    private startShipping(area: Area){
+    private startShipping(area: ShippingArea){
         const charactersToDestroy = area.characters.slice();
         charactersToDestroy.forEach((c) => {
             area.removeCharacter(c);
@@ -259,28 +259,17 @@ function createGoalArea(params: {
     parent: g.E,
     updateTrigger: g.Trigger,
 }): Area {
-    const areaObj = new Area({
+    const areaObj = new ShippingArea({
         id: params.id,
         scene: params.scene,
         navigator: new RectNavigator(params.area),
         parent: params.parent,
         updateTrigger: params.updateTrigger,
-    });
-    areaObj.entity.moveTo(params.area.x, params.area.y);
-    areaObj.entity.modified();
-    
-    const visual = new g.FilledRect({
-        scene: params.scene,
-        x: 0,
-        y: 0,
+        x: params.area.x,
+        y: params.area.y,
         width: params.area.width,
         height: params.area.height,
         cssColor: params.cssColor,
-        parent: areaObj.entity,
-    });
-
-    areaObj.onActiveChanged.add((active) => {
-        visual.cssColor = active ? params.cssColor : "black";
     });
 
     return areaObj;

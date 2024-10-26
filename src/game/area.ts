@@ -13,14 +13,7 @@ export class Area {
     private _entity: g.E;
     private _characters: Character[] = [];
     private _id: string;
-    private _active = true;
-    private _innactiveTimer = 0;
     private _navigator: PositionNavigator;
-
-    private _activeTrigger: g.Trigger<boolean> = new g.Trigger();
-    public get onActiveChanged(): g.Trigger<boolean> {
-        return this._activeTrigger;
-    }
 
     public get entity(): g.E {
         return this._entity;
@@ -28,10 +21,6 @@ export class Area {
 
     public get id(): string {
         return this._id;
-    }
-
-    public get active(): boolean {
-        return this._active;
     }
 
     public get navigator(): PositionNavigator {
@@ -53,15 +42,6 @@ export class Area {
         });
 
         this._navigator = param.navigator;
-
-        param.updateTrigger.add(() => {
-            if(this._innactiveTimer > 0) {
-                this._innactiveTimer -= 1 / g.game.fps;
-                if(this._innactiveTimer <= 0) {
-                    this.setActive(true);
-                }
-            }
-        }, this);
     }
 
     public addCharacter(character: Character): void {
@@ -75,19 +55,5 @@ export class Area {
             this._characters.splice(index, 1);
         }
         character.setNavigator(null);
-    }
-
-    public setInnatcive(duration: number): void {
-        this._innactiveTimer = duration;
-        this.setActive(false);
-        this._activeTrigger.fire(false);
-    }
-
-    private setActive(active: boolean): void {
-        if(this._active === active) {
-            return;
-        }
-        this._active = active;
-        this._activeTrigger.fire(active);
     }
 }

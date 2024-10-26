@@ -219,6 +219,11 @@
 			"type": "script",
 			"path": "script/entities/circleGauge.js",
 			"global": true
+		},
+		"shippingArea": {
+			"type": "script",
+			"path": "script/game/shippingArea.js",
+			"global": true
 		}
 	},
 	"environment": {
