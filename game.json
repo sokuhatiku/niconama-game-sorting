@@ -224,6 +224,18 @@
 			"type": "script",
 			"path": "script/game/shippingArea.js",
 			"global": true
+		},
+		"double_shipping_bonus": {
+			"type": "image",
+			"path": "image/double_shipping_bonus.png",
+			"width": 100,
+			"height": 39
+		},
+		"shipping": {
+			"type": "image",
+			"path": "image/shipping.png",
+			"width": 82,
+			"height": 19
 		}
 	},
 	"environment": {

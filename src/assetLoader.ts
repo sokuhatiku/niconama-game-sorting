@@ -6,6 +6,8 @@ const imageAssets = [
     "/image/female_inactive.png",
     "/image/point.png",
     "/image/circle_gauge_parts.png",
+    "/image/double_shipping_bonus.png",
+    "/image/shipping.png",
 ] as const;
 
 const audioAssets = [

@@ -1,6 +1,6 @@
+import { AssetLoader } from "../assetLoader";
 import { CircleGauge } from "../entities/circleGauge";
 import { Area, AreaParameterObject } from "./area";
-import { PositionNavigator } from "./positionNavigator";
 
 export interface ShippingAreaParameterObject extends AreaParameterObject {
     x: number
@@ -15,6 +15,7 @@ export class ShippingArea extends Area {
     private readonly _root: g.E;
     private readonly _coverRect: g.FilledRect;
     private readonly _gauge: CircleGauge;
+    private readonly _shippingLabel: g.FrameSprite;
 
     private _active = true;
     public get active(): boolean {
@@ -57,6 +58,25 @@ export class ShippingArea extends Area {
             parent: this._root,
         });
 
+        const assetLoader = new AssetLoader(param.scene);
+        const shippingLabelAsset = assetLoader.getImage("/image/shipping.png");
+        this._shippingLabel = new g.FrameSprite({
+            x: param.width / 2,
+            y: param.height / 2 - 64,
+            anchorX: 0.5,
+            anchorY: 0.5,
+            scene: param.scene,
+            parent: this._root,
+            width: shippingLabelAsset.width,
+            height: shippingLabelAsset.height * 2,
+            src: shippingLabelAsset,
+            srcWidth: shippingLabelAsset.width / 2,
+            srcHeight: shippingLabelAsset.height,
+            frames: [0, 1],
+            loop: true,
+        });
+        this._shippingLabel.hide();
+
         this._root.onUpdate.add(() => {
             if(this._innactiveTimer > 0) {
                 this._innactiveTimer -= (1 / g.game.fps);
@@ -86,6 +106,13 @@ export class ShippingArea extends Area {
         this._active = active;
         this._coverRect.cssColor = active ? this._cssColor : "black";
         this._activeTrigger.fire(active);
+        if(active) {
+            this._shippingLabel.hide();
+        }
+        else {
+            this._shippingLabel.show();
+            this._shippingLabel.start();
+        }
     }
     
 }
