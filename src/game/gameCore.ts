@@ -195,7 +195,7 @@ export class GameCore {
     }
 
     public get score(): number {
-        return g.game.random.generate() * 100;
+        return this._scoreboard.summary;
     }
 
     private startShipping(area: Area){

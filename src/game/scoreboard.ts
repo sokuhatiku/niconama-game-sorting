@@ -102,7 +102,10 @@ export class Scoreboard {
         this.updateScore();
     }
 
-    public get score(): number {
+    /**
+     * 各種得点・減点要素をすべて加味した、スカラー値としてのスコア量を返します
+     */
+    public get summary(): number {
         return this._score;
     }
 
