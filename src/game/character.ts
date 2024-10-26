@@ -300,6 +300,8 @@ export class Character {
 
     public destroy(): void {
         this._currentMoving?.cancel();
+        this._rootEntity.hide();
+        this._rootEntity.invalidate();
         this._rootEntity.destroy();
     }
 }

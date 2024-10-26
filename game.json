@@ -65,6 +65,30 @@
 			"width": 16,
 			"height": 16
 		},
+		"put": {
+			"type": "audio",
+			"path": "audio/put",
+			"systemId": "sound",
+			"duration": 99,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"pick": {
+			"type": "audio",
+			"path": "audio/pick",
+			"systemId": "sound",
+			"duration": 1087,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
 		"appProgressBar": {
 			"type": "script",
 			"path": "script/appProgressBar.js",
@@ -73,6 +97,16 @@
 		"assetLoader": {
 			"type": "script",
 			"path": "script/assetLoader.js",
+			"global": true
+		},
+		"descriptionPhase": {
+			"type": "script",
+			"path": "script/descriptionPhase.js",
+			"global": true
+		},
+		"doNothingPhase": {
+			"type": "script",
+			"path": "script/doNothingPhase.js",
 			"global": true
 		},
 		"timer": {
@@ -98,6 +132,11 @@
 		"gameCore": {
 			"type": "script",
 			"path": "script/game/gameCore.js",
+			"global": true
+		},
+		"gamePhase": {
+			"type": "script",
+			"path": "script/game/gamePhase.js",
 			"global": true
 		},
 		"particleSystem": {
@@ -135,9 +174,24 @@
 			"path": "script/parameterObject.js",
 			"global": true
 		},
+		"phase": {
+			"type": "script",
+			"path": "script/phase.js",
+			"global": true
+		},
+		"phaseSequencer": {
+			"type": "script",
+			"path": "script/phaseSequencer.js",
+			"global": true
+		},
 		"scoreHandler": {
 			"type": "script",
 			"path": "script/scoreHandler.js",
+			"global": true
+		},
+		"titlePhase": {
+			"type": "script",
+			"path": "script/titlePhase.js",
 			"global": true
 		},
 		"layers": {
@@ -153,60 +207,6 @@
 		"_bootstrap": {
 			"type": "script",
 			"path": "script/_bootstrap.js",
-			"global": true
-		},
-		"put": {
-			"type": "audio",
-			"path": "audio/put",
-			"systemId": "sound",
-			"duration": 99,
-			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
-			}
-		},
-		"pick": {
-			"type": "audio",
-			"path": "audio/pick",
-			"systemId": "sound",
-			"duration": 1087,
-			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
-			}
-		},
-		"gamePhase": {
-			"type": "script",
-			"path": "script/game/gamePhase.js",
-			"global": true
-		},
-		"doNothingPhase": {
-			"type": "script",
-			"path": "script/doNothingPhase.js",
-			"global": true
-		},
-		"descriptionPhase": {
-			"type": "script",
-			"path": "script/descriptionPhase.js",
-			"global": true
-		},
-		"phase": {
-			"type": "script",
-			"path": "script/phase.js",
-			"global": true
-		},
-		"phaseSequencer": {
-			"type": "script",
-			"path": "script/phaseSequencer.js",
-			"global": true
-		},
-		"titlePhase": {
-			"type": "script",
-			"path": "script/titlePhase.js",
 			"global": true
 		}
 	},
