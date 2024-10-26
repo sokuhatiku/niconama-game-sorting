@@ -68,11 +68,12 @@ export function main(param: GameMainParameterObject): void {
         const descriptionPhase = new DescriptionPhase({
             scene: scene,
             font: font,
+            layer: layers.gameUi,
         });
 
         const resultPhase = new ResultPhase({
             scene: scene,
-            scoreLayer: layers.gameUi,
+            layer: layers.gameUi,
             font: font,
         });
     
@@ -81,7 +82,7 @@ export function main(param: GameMainParameterObject): void {
             timeLimitSeconds: applicationTimeLimit,
             phases: [
                 { phase: titlePhase, dulation: 3 },
-                { phase: descriptionPhase, dulation: 3 },
+                { phase: descriptionPhase, dulation: 10 },
                 { phase: new DoNothingPhase("ready"), dulation: 3 },
                 { phase: gamePhase, dulation: 60 },
                 { phase: new DoNothingPhase("finish"), dulation: 3 },

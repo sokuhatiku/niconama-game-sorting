@@ -7,17 +7,17 @@ export class ResultPhase implements Phase {
 
     public constructor(params: {
         scene: g.Scene
-        scoreLayer: g.E
+        layer: g.E
         font: g.Font
     }){
         const background = new g.FilledRect({
             scene: params.scene,
-            cssColor: "rgba(255, 255, 255, 0.5)",
+            cssColor: "rgba(255, 255, 255, 0.9)",
             x: g.game.width * 0.1,
-            y: g.game.height * 0.1,
+            y: g.game.height * 0.2,
             width: g.game.width * 0.8,
-            height: g.game.height * 0.8,
-            parent: params.scoreLayer,
+            height: g.game.height * 0.6,
+            parent: params.layer,
         });
         this._background = background;
 

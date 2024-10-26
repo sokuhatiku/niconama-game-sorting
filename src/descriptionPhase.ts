@@ -1,93 +1,64 @@
 import { Phase } from "./phase";
+import * as al from "@akashic-extension/akashic-label";
 
 export class DescriptionPhase implements Phase {
 
-    private readonly _root: g.E;
+    private readonly _background: g.E;
 
     public constructor(params: {
         scene: g.Scene
         font: g.Font
+        layer: g.E
     }) {
-        this._root = new g.E({
+        const background = new g.FilledRect({
             scene: params.scene,
-            width: g.game.width,
-            height: g.game.height,
-            x: g.game.width / 2,
-            y: g.game.height / 2,
-            anchorX: 0.5,
-            anchorY: 0.5,
-            parent: params.scene
+            cssColor: "rgba(255, 255, 255, 0.9)",
+            x: g.game.width * 0.1,
+            y: g.game.height * 0.2,
+            width: g.game.width * 0.8,
+            height: g.game.height * 0.6,
+            parent: params.layer,
         });
-        const description1 = new g.Label({
+        this._background = background;
+
+        const text = `
+        ～ルール説明～
+
+        カプセル魚くんには雌雄があります。
+        オスを左、メスを右のエリアに仕分けてください。
+        10匹仕分けると出荷されます。
+        出荷中のエリアにはカプセル魚くんを入れないで下さい。
+        （色々調整中、現状スマホとかだと無理ゲーかも）
+
+        ～上級者向けヒント～
+        左右のエリアを同時に出荷すると出荷時間が短縮されます。
+        `;
+
+        new al.Label({
             scene: params.scene,
+            text: text,
             font: params.font,
-            text: "オス（上が青）を右に、メス（上が赤）を左に仕分けてね",
             fontSize: 30,
-            textColor: "black",
-            x: g.game.width / 2,
-            y: g.game.height / 2,
-            anchorX: 0.5,
-            anchorY: 0.5,
-            parent: this._root
+            x: background.width * 0.05,
+            y: background.height * 0.05,
+            width: background.width * 0.9,
+            height: background.height * 0.9,
+            lineBreak: true,
+            textAlign: "center",
+            parent: background,
         });
-        description1.aligning(g.game.width, "center");
-        description1.invalidate();
 
-        const description2 = new g.Label({
-            scene: params.scene,
-            font: params.font,
-            text: "10匹仕分けると出荷中になるから、",
-            fontSize: 30,
-            textColor: "black",
-            x: g.game.width / 2,
-            y: g.game.height / 2 + 50,
-            anchorX: 0.5,
-            anchorY: 0.5,
-            parent: this._root
-        });
-        description2.aligning(g.game.width, "center");
-        description2.invalidate();
 
-        const description3 = new g.Label({
-            scene: params.scene,
-            font: params.font,
-            text: "出荷中は仕分けないよう注意してね",
-            fontSize: 30,
-            textColor: "black",
-            x: g.game.width / 2,
-            y: g.game.height / 2 + 100,
-            anchorX: 0.5,
-            anchorY: 0.5,
-            parent: this._root
-        });
-        description3.aligning(g.game.width, "center");
-        description3.invalidate();
-
-        const description4 = new g.Label({
-            scene: params.scene,
-            font: params.font,
-            text: "（スマホとかだと難しいかも）",
-            fontSize: 20,
-            textColor: "black",
-            x: g.game.width / 2,
-            y: g.game.height / 2 + 150,
-            anchorX: 0.5,
-            anchorY: 0.5,
-            parent: this._root
-        });
-        description4.aligning(g.game.width, "center");
-        description4.invalidate();
-
-        this._root.hide();
+        background.hide();
     }
     public enter(): void {
-        this._root.show();
+        this._background.show();
     }
     public update(): void {
         // do nothing
     }
     public exit(): void {
-        this._root.hide();
+        this._background.hide();
     }
     public readonly name = "description";
 }
