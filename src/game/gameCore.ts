@@ -89,13 +89,13 @@ export class GameCore {
             male : {
                 activeSprite: this._assetLoader.getImage("/image/male_active.png"),
                 inactiveSprite: this._assetLoader.getImage("/image/male_inactive.png"),
-                grabSizeOffset: { top: 2, left: 0, right: -6, bottom: 2 },
+                grabSizeOffset: { top: 4, left: 2, right: -4, bottom: 4 },
                 goalAreaId: this._areas.left.id,
             },
             female: {
                 activeSprite: this._assetLoader.getImage("/image/female_active.png"),
                 inactiveSprite: this._assetLoader.getImage("/image/female_inactive.png"),
-                grabSizeOffset: { top: 2, left: 0, right: -6, bottom: 2 },
+                grabSizeOffset: { top: 4, left: 2, right: -4, bottom: 4 },
                 goalAreaId: this._areas.right.id,
             }
         };
