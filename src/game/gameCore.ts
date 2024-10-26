@@ -21,6 +21,11 @@ export class GameCore {
 
     private readonly _updateTrigger: g.Trigger = new g.Trigger();
 
+    private readonly statistics = {
+        maleCount: 0,
+        femaleCount: 0,
+    };
+
     private readonly _characterProfiles: {
         male: CharacterProfile,
         female: CharacterProfile,
@@ -185,7 +190,30 @@ export class GameCore {
         }
         this._spawnCooldown = g.game.random.generate() * 5;
 
-        const isMale = g.game.random.generate() > 0.5;
+        // スポーン処理
+
+        // ゲーム盤上のカプセル魚くんが60匹以上にならないように制限
+        if(this._characterManager.characters.length >= 60){
+            return;
+        }
+
+        // 偏りを一定範囲内に収める
+        let isMale: boolean;
+        if(this.statistics.maleCount - this.statistics.femaleCount > 10){
+            isMale = false;
+        }
+        else if(this.statistics.femaleCount - this.statistics.maleCount > 10){
+            isMale = true;
+        }
+        else{
+            isMale = g.game.random.generate() > 0.5;
+        }
+        if(isMale){
+            this.statistics.maleCount++;
+        }
+        else{
+            this.statistics.femaleCount++;
+        }
 
         const spawnPoint: g.CommonOffset = g.game.random.generate() > 0.5 ? {x:g.game.width/2, y:0} : {x:g.game.width/2, y:g.game.height};
         this._characterManager.spawnCharacter({
