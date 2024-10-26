@@ -16,10 +16,11 @@ export class ShippingArea extends Area {
     private readonly _coverRect: g.FilledRect;
     private readonly _gauge: CircleGauge;
     private readonly _shippingLabel: g.FrameSprite;
+    private readonly _doubleShippingBonusLabel: g.FrameSprite;
 
     private _active = true;
-    public get active(): boolean {
-        return this._active;
+    public get isShipping(): boolean {
+        return !this._active;
     }
 
     private _activeTrigger: g.Trigger<boolean> = new g.Trigger();
@@ -29,6 +30,8 @@ export class ShippingArea extends Area {
 
     private _innactiveTotalTimer = 0;
     private _innactiveTimer = 0;
+
+    private _shippingBonus = false;
 
     public constructor(param: ShippingAreaParameterObject) {
         super(param);
@@ -77,11 +80,31 @@ export class ShippingArea extends Area {
         });
         this._shippingLabel.hide();
 
+        const doubleShippingBonusLabelAsset = assetLoader.getImage("/image/double_shipping_bonus.png");
+        this._doubleShippingBonusLabel = new g.FrameSprite({
+            x: param.width / 2,
+            y: param.height / 2 + 70,
+            anchorX: 0.5,
+            anchorY: 0.5,
+            scene: param.scene,
+            parent: this._root,
+            width: doubleShippingBonusLabelAsset.width,
+            height: doubleShippingBonusLabelAsset.height * 2,
+            src: doubleShippingBonusLabelAsset,
+            srcWidth: doubleShippingBonusLabelAsset.width / 2,
+            srcHeight: doubleShippingBonusLabelAsset.height,
+            frames: [0, 1],
+            loop: true,
+        });
+        this._doubleShippingBonusLabel.hide();
+
         this._root.onUpdate.add(() => {
             if(this._innactiveTimer > 0) {
-                this._innactiveTimer -= (1 / g.game.fps);
+                const multiplier = this._shippingBonus ? 5 : 1;
+                this._innactiveTimer -= (1 / g.game.fps) * multiplier;
                 if(this._innactiveTimer <= 0) {
                     this.setActive(true);
+                    this._shippingBonus = false;
                     this._gauge.setAmount(0);
                 }
                 else{
@@ -92,7 +115,7 @@ export class ShippingArea extends Area {
     }
 
 
-    public setInnatcive(duration: number): void {
+    public startShipping(duration: number): void {
         this._innactiveTotalTimer = duration;
         this._innactiveTimer = duration;
         this.setActive(false);
@@ -108,10 +131,26 @@ export class ShippingArea extends Area {
         this._activeTrigger.fire(active);
         if(active) {
             this._shippingLabel.hide();
+            this._doubleShippingBonusLabel.hide();
         }
         else {
             this._shippingLabel.show();
             this._shippingLabel.start();
+            if(this._shippingBonus) {
+                this._doubleShippingBonusLabel.show();
+                this._doubleShippingBonusLabel.start();
+            }
+        }
+    }
+
+    /**
+     * 次の出荷が終わるまでの間のボーナスを設定します
+     */
+    public setOneTimeBonus() {
+        this._shippingBonus = true;
+        if(this._innactiveTimer > 0) {
+            this._doubleShippingBonusLabel.show();
+            this._doubleShippingBonusLabel.start();
         }
     }
     

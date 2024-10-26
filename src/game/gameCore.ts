@@ -27,8 +27,8 @@ export class GameCore {
     };
 
     private readonly _areas: {
-        left: Area,
-        right: Area,
+        left: ShippingArea,
+        right: ShippingArea,
         center: Area,
     };
 
@@ -62,7 +62,7 @@ export class GameCore {
                 updateTrigger: this._updateTrigger,
                 parent: this._layers.gameBackground,
             }),
-            left: createGoalArea({
+            left: shippingArea({
                 scene: this._scene,
                 updateTrigger: this._updateTrigger,
                 id: "left",
@@ -70,7 +70,7 @@ export class GameCore {
                 cssColor: "rgba(200, 100, 100, 1)",
                 parent: this._layers.gameBackground,
             }),
-            right: createGoalArea({
+            right: shippingArea({
                 scene: this._scene,
                 updateTrigger: this._updateTrigger,
                 id: "right",
@@ -116,7 +116,7 @@ export class GameCore {
                 return;
             }
 
-            if(isCorrectArea && area.active){
+            if(isCorrectArea && !area.isShipping){
                 this._scoreboard.addCorrectPoint();
                 this._particleSystem.spawnPlusParticle({
                     x: character.entity.x,
@@ -126,8 +126,8 @@ export class GameCore {
                 this._scoreboard.addIncorrectPoint();
             }
 
-            if(!area.active) {
-                // エリアが非活性であればその場でキャラを削除
+            if(area.isShipping) {
+                // エリアが出荷中であればその場でキャラを削除
                 this._characterManager.destroyCharacter(character);
             }
             else{
@@ -208,7 +208,13 @@ export class GameCore {
         this._scoreboard.addSippingPoint();
 
         // 5秒間はエリアを非活性化
-        area.setInnatcive(5);
+        area.startShipping(5);
+
+        if(this._areas.left.isShipping && this._areas.right.isShipping){
+            // 両方のエリアが活性であれば出荷ボーナスを付与
+            this._areas.left.setOneTimeBonus();
+            this._areas.right.setOneTimeBonus();
+        }
     }
 }
 
@@ -251,14 +257,14 @@ function createMainArea(params: {
     return area;
 }
 
-function createGoalArea(params: {
+function shippingArea(params: {
     scene: g.Scene,
     id: string,
     area: g.CommonArea,
     cssColor: string,
     parent: g.E,
     updateTrigger: g.Trigger,
-}): Area {
+}): ShippingArea {
     const areaObj = new ShippingArea({
         id: params.id,
         scene: params.scene,
