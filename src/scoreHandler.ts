@@ -30,7 +30,7 @@ class ScoreHandlerImpl implements ScoreHandler {
         this._score = point;
 
         (g.game.vars as { gameState: GameState }).gameState = {
-            score: 0,
+            score: point,
             playThreshold: 0,
         };
     }

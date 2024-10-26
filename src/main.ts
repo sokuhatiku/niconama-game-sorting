@@ -49,6 +49,7 @@ export function main(param: GameMainParameterObject): void {
         });
         gameCore.onScoreUpdated.add((score) => {
             scoreHandler.notice(score);
+            resultPhase.setScore(gameCore.score);
         });
         const gamePhase = new GamePhase({
             gameCore: gameCore,
@@ -95,8 +96,6 @@ export function main(param: GameMainParameterObject): void {
         // 毎フレームの処理
         scene.onUpdate.add((): void => {
             sequencer.update();
-            scoreHandler.notice(gameCore.score);
-            resultPhase.setScore(gameCore.score);
             progressBar.setProgress(sequencer.currentPhaseProgress);
         });
 
