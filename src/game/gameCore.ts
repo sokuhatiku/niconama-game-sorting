@@ -10,6 +10,9 @@ import { Layers } from "../utils/layers";
 import { ParticleSystem } from "./particleSystem";
 import { ShippingArea } from "./shippingArea";
 
+/**
+ * ゲームのコアロジックを管理するクラスです。
+ */
 export class GameCore {
     private readonly _scene: g.Scene;
     private readonly _assetLoader: AssetLoader;
@@ -67,7 +70,7 @@ export class GameCore {
                 updateTrigger: this._updateTrigger,
                 parent: this._layers.gameBackground,
             }),
-            left: shippingArea({
+            left: createShippingArea({
                 scene: this._scene,
                 updateTrigger: this._updateTrigger,
                 id: "left",
@@ -75,7 +78,7 @@ export class GameCore {
                 cssColor: "rgba(200, 100, 100, 1)",
                 parent: this._layers.gameBackground,
             }),
-            right: shippingArea({
+            right: createShippingArea({
                 scene: this._scene,
                 updateTrigger: this._updateTrigger,
                 id: "right",
@@ -136,10 +139,10 @@ export class GameCore {
                 this._characterManager.destroyCharacter(character);
             }
             else{
-                // エリアが活性であればキャラを非アクティブに変更
+                // キャラを非アクティブに変更
                 character.setInteractable(false);
 
-                // エリアに10匹以上いる場合は出荷を開始
+                // エリアに10匹以上キャラがいる場合は出荷を開始
                 if(area.characters.length >= 10){
                     this.startShipping(area);   
                 }
@@ -197,7 +200,7 @@ export class GameCore {
             return;
         }
 
-        // 偏りを一定範囲内に収める
+        // 雌雄の偏りを一定範囲内に収める
         let isMale: boolean;
         if(this.statistics.maleCount - this.statistics.femaleCount > 10){
             isMale = false;
@@ -232,14 +235,14 @@ export class GameCore {
             area.removeCharacter(c);
             this._characterManager.destroyCharacter(c);
         });
-        // 出荷ボーナスをスコアに加算
+        // 出荷ポイントをスコアに加算
         this._scoreboard.addSippingPoint();
 
-        // 5秒間はエリアを非活性化
+        // 5秒間出荷中状態にする
         area.startShipping(5);
 
         if(this._areas.left.isShipping && this._areas.right.isShipping){
-            // 両方のエリアが活性であれば出荷ボーナスを付与
+            // 両方のエリアが出荷中状態になっていたらダブル出荷ボーナスを付与
             this._areas.left.setOneTimeBonus();
             this._areas.right.setOneTimeBonus();
         }
@@ -285,7 +288,7 @@ function createMainArea(params: {
     return area;
 }
 
-function shippingArea(params: {
+function createShippingArea(params: {
     scene: g.Scene,
     id: string,
     area: g.CommonArea,
