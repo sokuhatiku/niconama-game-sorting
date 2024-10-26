@@ -156,5 +156,6 @@ function prepareDebugUi({ scene, sequencer, assetLoader }: {scene: g.Scene, sequ
         parent: scene,
         touchable: false,
     });
+    debugSafearea.hide();
     scene.append(debugSafearea);
 }
