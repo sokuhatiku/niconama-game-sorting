@@ -118,7 +118,8 @@ export class CharacterManager {
     }
 
     public setAllCharactersInteractable(isInteractable: boolean): void {
-        this._characters.forEach(character => {
+        const charactersToDeactivate = this._characters.filter(c => c.isInteractable);
+        charactersToDeactivate.forEach(character => {
             character.setInteractable(isInteractable);
         });
     }

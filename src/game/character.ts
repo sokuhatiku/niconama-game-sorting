@@ -65,6 +65,10 @@ export class Character {
         return this._profile;
     }
 
+    public get isInteractable(): boolean {
+        return this._grabEntity.touchable;
+    }
+
     public constructor(params: {
         scene: g.Scene
         parent?: g.Scene | g.E
