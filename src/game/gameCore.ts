@@ -133,6 +133,20 @@ export class GameCore {
             else{
                 // それ以外であればキャラを非アクティブに変更
                 ev.character.setInteractable(false);
+
+                if(ev.area.characters.length >= 10){
+                    // エリアに10匹以上いる場合は出荷を開始
+                    const charactersToDestroy = ev.area.characters.slice();
+                    charactersToDestroy.forEach((c) => {
+                        ev.area.removeCharacter(c);
+                        this._characterManager.destroyCharacter(c);
+                    });
+                    // 出荷ボーナスをスコアに加算
+                    this._scoreboard.addSippingPoint();
+    
+                    // 5秒間はエリアを非活性化
+                    ev.area.setInnatcive(5);
+                }
             }
         });
 
@@ -187,22 +201,6 @@ export class GameCore {
             position: spawnPoint,
             profile: isMale ? this._characterProfiles.male : this._characterProfiles.female,
         });
-
-        // 左右にいるエリアの判定実施
-        for(const area of [this._areas.left, this._areas.right]) {
-            if(area.characters.length < 10) continue;
-            // 10匹を超えている場合は出荷処理を実施
-            const charactersToDestroy = area.characters.slice();
-            charactersToDestroy.forEach((c) => {
-                area.removeCharacter(c);
-                this._characterManager.destroyCharacter(c);
-            });
-            // 出荷ボーナスをスコアに加算
-            this._scoreboard.addSippingPoint();
-
-            // 5秒間はエリアを非活性化
-            area.setInnatcive(5);
-        }
     }
 
     public get score(): number {
