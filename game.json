@@ -236,6 +236,11 @@
 			"path": "image/shipping.png",
 			"width": 82,
 			"height": 19
+		},
+		"resultPhase": {
+			"type": "script",
+			"path": "script/resultPhase.js",
+			"global": true
 		}
 	},
 	"environment": {

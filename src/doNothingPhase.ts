@@ -1,5 +1,8 @@
 import { Phase } from "./phase";
 
+/**
+ * 何もしないダミー用のフェーズ
+ */
 export class DoNothingPhase implements Phase {
 
     public constructor(name: string) {

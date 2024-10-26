@@ -10,6 +10,7 @@ import { TitlePhase } from "./titlePhase";
 import { DescriptionPhase } from "./descriptionPhase";
 import { GamePhase } from "./game/gamePhase";
 import { DoNothingPhase } from "./doNothingPhase";
+import { ResultPhase } from "./resultPhase";
 
 export function main(param: GameMainParameterObject): void {
     let applicationTimeLimit = Infinity;
@@ -68,6 +69,12 @@ export function main(param: GameMainParameterObject): void {
             scene: scene,
             font: font,
         });
+
+        const resultPhase = new ResultPhase({
+            scene: scene,
+            scoreLayer: layers.gameUi,
+            font: font,
+        });
     
         // アプリ全体のシーケンサー
         const sequencer = new PhaseSequencer({
@@ -78,7 +85,7 @@ export function main(param: GameMainParameterObject): void {
                 { phase: new DoNothingPhase("ready"), dulation: 3 },
                 { phase: gamePhase, dulation: 60 },
                 { phase: new DoNothingPhase("finish"), dulation: 3 },
-                { phase: new DoNothingPhase("result"), dulation: 6 },
+                { phase: resultPhase, dulation: 6 },
             ],
         });
 
@@ -88,6 +95,7 @@ export function main(param: GameMainParameterObject): void {
         scene.onUpdate.add((): void => {
             sequencer.update();
             scoreHandler.notice(gameCore.score);
+            resultPhase.setScore(gameCore.score);
             progressBar.setProgress(sequencer.currentPhaseProgress);
         });
 
