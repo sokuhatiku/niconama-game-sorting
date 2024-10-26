@@ -5,6 +5,7 @@ const imageAssets = [
     "/image/female_active.png",
     "/image/female_inactive.png",
     "/image/point.png",
+    "/image/circle_gauge_parts.png",
 ] as const;
 
 const audioAssets = [
@@ -12,6 +13,9 @@ const audioAssets = [
     "/audio/whistle",
     "/audio/pick",
     "/audio/put",
+] as const;
+
+const textAssets = [
 ] as const;
 
 
@@ -27,9 +31,12 @@ export type ImageAssetName = typeof imageAssets[number];
  */
 export type AudioAssetName = typeof audioAssets[number];
 
+export type TextAssetName = typeof textAssets[number];
+
 export const allAssets = [
     ...imageAssets,
     ...audioAssets,
+    ...textAssets,
 ] as const;
 
 /**
@@ -45,5 +52,9 @@ export class AssetLoader {
 
     public getAudio(asset: AudioAssetName): g.AudioAsset {
         return this._scene.asset.getAudio(asset);
+    }
+
+    public getText(asset: TextAssetName): g.TextAsset {
+        return this._scene.asset.getText(asset);
     }
 }

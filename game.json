@@ -208,6 +208,17 @@
 			"type": "script",
 			"path": "script/_bootstrap.js",
 			"global": true
+		},
+		"circle_gauge_parts": {
+			"type": "image",
+			"path": "image/circle_gauge_parts.png",
+			"width": 32,
+			"height": 64
+		},
+		"circleGauge": {
+			"type": "script",
+			"path": "script/entities/circleGauge.js",
+			"global": true
 		}
 	},
 	"environment": {

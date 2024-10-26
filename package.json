@@ -7,7 +7,7 @@
     "build": "rimraf ./script && tsc && akashic scan asset script",
     "build:watch": "chokidar \"src/**/*.ts\" -c \"npm run build\"",
     "update": "akashic scan asset && akashic-cli-scan globalScripts",
-    "update:watch": "chokidar audio image -c \"npm run update\"",
+    "update:watch": "chokidar audio image text -c \"npm run update\"",
     "lint": "eslint src -c eslint.config.mjs --fix",
     "start": "akashic sandbox .",
     "export": "akashic export zip --nicolive --force",
