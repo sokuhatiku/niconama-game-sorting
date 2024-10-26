@@ -39,7 +39,7 @@ export class PhaseSequencer {
             aggregatedSeconds += phase.dulation;
         }
         if(aggregatedSeconds > params.timeLimitSeconds) {
-            throw new Error(`The sum of the duration of the phases(${aggregatedSeconds.toString()}) exceeds the total duration(${params.timeLimitSeconds.toString()}).`);
+            console.warn(`シーケンス全体の所要時間（${aggregatedSeconds.toString()}秒）が、与えられた制限時間（${params.timeLimitSeconds.toString()}秒）を超えています。これにより、ゲームプレイ中に中断される可能性があります。`);
         }
 
         this._totalSeconds = aggregatedSeconds;
