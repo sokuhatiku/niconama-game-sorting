@@ -21,5 +21,5 @@ export class GamePhase implements Phase {
         this._gameCore.setActive(false);
     }
     public readonly name = "game";
-    
+
 }

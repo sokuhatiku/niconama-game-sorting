@@ -144,7 +144,7 @@ export class GameCore {
 
                 // エリアに10匹以上キャラがいる場合は出荷を開始
                 if(area.characters.length >= 10){
-                    this.startShipping(area);   
+                    this.startShipping(area);
                 }
             }
         });

@@ -147,7 +147,7 @@ export class Character {
         if(!nextPoint){
             return;
         }
-    
+
         // 移動先が移動可能エリアの外の場合は再ルート
         // (ナビゲータが正常なら起こらないはずではあるが、起きたとしても戻れるようにしておく)
         if(!isAreaContainsPoint(this._movableArea, nextPoint)){

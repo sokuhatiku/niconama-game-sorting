@@ -153,5 +153,5 @@ export class ShippingArea extends Area {
             this._doubleShippingBonusLabel.start();
         }
     }
-    
+
 }

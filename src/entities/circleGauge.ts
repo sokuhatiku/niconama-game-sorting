@@ -76,7 +76,6 @@ export class CircleGauge {
     }
 
     public setAmount(amount: number): void {
-        
         // leftSideは0度から180度までの範囲の回転
         const leftSideAngle = Math.min(0.5, Math.max(0, amount)) * 360;
         this._leftSide.angle = leftSideAngle;

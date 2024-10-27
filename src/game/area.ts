@@ -48,7 +48,7 @@ export class Area {
         this._characters.push(character);
         character.setNavigator(this._navigator);
     }
-    
+
     public removeCharacter(character: Character): void {
         const index = this._characters.indexOf(character);
         if (index >= 0) {
