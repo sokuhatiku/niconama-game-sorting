@@ -13,7 +13,8 @@
     "export": "akashic export zip --nicolive --force",
     "develop": "run-p -l start build:watch update:watch",
     "test": "jest",
-    "audioconv": "complete-audio"
+    "audioconv": "complete-audio",
+    "setup-dummy": "node ./setup/setup-dummy.cjs"
   },
   "author": "Sokuhatiku",
   "license": "MIT",
