@@ -7,6 +7,9 @@ export default tseslint.config(
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     {
+        files: [
+            "src/**/*.ts",
+        ],
         languageOptions: {
             parserOptions: {
                 project: ["tsconfig.json", "tsconfig.jest.json"],
@@ -21,6 +24,6 @@ export default tseslint.config(
             semi: ["error", "always"],
             quotes: ["error", "double"],
             "@typescript-eslint/explicit-member-accessibility": "error",
-        }
-    }
+        },
+    },
 );
