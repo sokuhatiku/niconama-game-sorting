@@ -1,4 +1,4 @@
-/* eslint-disable */ 
+/* eslint-disable */
 export interface GameMainParameterObject extends g.GameMainParameterObject {
 	sessionParameter: {
 		mode?: string;
