@@ -8,6 +8,8 @@ const imageAssets = [
     "/image/circle_gauge_parts.png",
     "/image/double_shipping_bonus.png",
     "/image/shipping.png",
+	"/image/checkmark.png",
+	"/image/crossmark.png",
 ] as const;
 
 const audioAssets = [

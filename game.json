@@ -241,6 +241,18 @@
 			"type": "script",
 			"path": "script/resultPhase.js",
 			"global": true
+		},
+		"checkmark": {
+			"type": "image",
+			"path": "image/checkmark.png",
+			"width": 16,
+			"height": 16
+		},
+		"crossmark": {
+			"type": "image",
+			"path": "image/crossmark.png",
+			"width": 16,
+			"height": 16
 		}
 	},
 	"environment": {
@@ -255,16 +267,16 @@
 		}
 	},
 	"globalScripts": [
-		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/index.js",
 		"node_modules/@akashic-extension/akashic-label/lib/DefaultRubyParser.js",
 		"node_modules/@akashic-extension/akashic-label/lib/FragmentDrawInfo.js",
 		"node_modules/@akashic-extension/akashic-label/lib/Label.js",
 		"node_modules/@akashic-extension/akashic-label/lib/RubyParser.js",
-		"node_modules/@akashic-extension/akashic-label/lib/index.js"
+		"node_modules/@akashic-extension/akashic-label/lib/index.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
 	],
 	"moduleMainScripts": {
 		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js",

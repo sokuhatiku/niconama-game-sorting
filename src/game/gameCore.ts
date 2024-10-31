@@ -126,12 +126,16 @@ export class GameCore {
 
             if(isCorrectArea && !area.isShipping){
                 this._scoreboard.addCorrectPoint();
-                this._particleSystem.spawnPlusParticle({
+                this._particleSystem.spawnOKParticle({
                     x: character.entity.x,
                     y: character.entity.y,
                 });
             } else {
                 this._scoreboard.addIncorrectPoint();
+				this._particleSystem.spawnNGParticle({
+					x: character.entity.x,
+					y: character.entity.y,
+				});
             }
 
             if(area.isShipping) {
