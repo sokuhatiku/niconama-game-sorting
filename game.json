@@ -253,6 +253,30 @@
 			"path": "image/crossmark.png",
 			"width": 16,
 			"height": 16
+		},
+		"ok": {
+			"type": "audio",
+			"path": "audio/ok",
+			"systemId": "sound",
+			"duration": 192,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"ng": {
+			"type": "audio",
+			"path": "audio/ng",
+			"systemId": "sound",
+			"duration": 373,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
 		}
 	},
 	"environment": {

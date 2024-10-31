@@ -11,6 +11,11 @@ export class ParticleSystem {
 		ng: g.ImageAsset;
 	};
 
+	private readonly _audios: {
+		ok: g.AudioAsset;
+		ng: g.AudioAsset;
+	};
+
     public constructor(params: {
         scene: g.Scene
         timeline: Timeline
@@ -24,6 +29,11 @@ export class ParticleSystem {
 		this._sprites = {
 			ok: assetLoader.getImage("/image/checkmark.png"),
 			ng: assetLoader.getImage("/image/crossmark.png"),
+		};
+
+		this._audios = {
+			ok: assetLoader.getAudio("/audio/ok"),
+			ng: assetLoader.getAudio("/audio/ng"),
 		};
     }
 
@@ -43,6 +53,7 @@ export class ParticleSystem {
 			scaleY: 2,
 			touchable: false,
         });
+		this._audios.ok.play();
 
         this._timeline.create(entity)
 			.moveY(params.y - 50, 500, Easing.easeOutQuint)
@@ -68,6 +79,7 @@ export class ParticleSystem {
 			scaleY: 2,
 			touchable: false,
 		});
+		this._audios.ng.play();
 
 		this._timeline.create(entity)
 			.every((e, p) => {

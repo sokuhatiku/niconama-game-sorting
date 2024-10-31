@@ -6,6 +6,8 @@ necessalyFiles = {
         "pick",
         "put",
         "whistle",
+        "ok",
+        "ng",
     ]
 }
 

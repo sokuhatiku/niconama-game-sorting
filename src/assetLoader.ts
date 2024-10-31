@@ -17,6 +17,8 @@ const audioAssets = [
     "/audio/whistle",
     "/audio/pick",
     "/audio/put",
+	"/audio/ok",
+	"/audio/ng",
 ] as const;
 
 const textAssets = [
