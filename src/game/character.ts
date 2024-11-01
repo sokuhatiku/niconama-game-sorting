@@ -267,7 +267,6 @@ export class Character {
 			x: globalPoint.x + this._grabPoint.x,
 			y: globalPoint.y + this._grabPoint.y,
 		};
-		console.log("globalPoint", globalPoint);
 
 		// 移動可能エリア外に出ないように調整する
 		let collectedGlobalPoint: g.CommonOffset;
