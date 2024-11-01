@@ -99,21 +99,6 @@
 			"path": "script/assetLoader.js",
 			"global": true
 		},
-		"descriptionPhase": {
-			"type": "script",
-			"path": "script/descriptionPhase.js",
-			"global": true
-		},
-		"doNothingPhase": {
-			"type": "script",
-			"path": "script/doNothingPhase.js",
-			"global": true
-		},
-		"timer": {
-			"type": "script",
-			"path": "script/entities/timer.js",
-			"global": true
-		},
 		"area": {
 			"type": "script",
 			"path": "script/game/area.js",
@@ -132,11 +117,6 @@
 		"gameCore": {
 			"type": "script",
 			"path": "script/game/gameCore.js",
-			"global": true
-		},
-		"gamePhase": {
-			"type": "script",
-			"path": "script/game/gamePhase.js",
 			"global": true
 		},
 		"particleSystem": {
@@ -174,11 +154,6 @@
 			"path": "script/parameterObject.js",
 			"global": true
 		},
-		"phase": {
-			"type": "script",
-			"path": "script/phase.js",
-			"global": true
-		},
 		"phaseSequencer": {
 			"type": "script",
 			"path": "script/phaseSequencer.js",
@@ -187,11 +162,6 @@
 		"scoreHandler": {
 			"type": "script",
 			"path": "script/scoreHandler.js",
-			"global": true
-		},
-		"titlePhase": {
-			"type": "script",
-			"path": "script/titlePhase.js",
 			"global": true
 		},
 		"layers": {
@@ -215,11 +185,6 @@
 			"width": 32,
 			"height": 64
 		},
-		"circleGauge": {
-			"type": "script",
-			"path": "script/entities/circleGauge.js",
-			"global": true
-		},
 		"shippingArea": {
 			"type": "script",
 			"path": "script/game/shippingArea.js",
@@ -236,11 +201,6 @@
 			"path": "image/shipping.png",
 			"width": 82,
 			"height": 19
-		},
-		"resultPhase": {
-			"type": "script",
-			"path": "script/resultPhase.js",
-			"global": true
 		},
 		"checkmark": {
 			"type": "image",
@@ -277,6 +237,46 @@
 					".ogg"
 				]
 			}
+		},
+		"circleGauge": {
+			"type": "script",
+			"path": "script/components/circleGauge.js",
+			"global": true
+		},
+		"timer": {
+			"type": "script",
+			"path": "script/components/timer.js",
+			"global": true
+		},
+		"descriptionPhase": {
+			"type": "script",
+			"path": "script/phases/descriptionPhase.js",
+			"global": true
+		},
+		"doNothingPhase": {
+			"type": "script",
+			"path": "script/phases/doNothingPhase.js",
+			"global": true
+		},
+		"gamePhase": {
+			"type": "script",
+			"path": "script/phases/gamePhase.js",
+			"global": true
+		},
+		"phase": {
+			"type": "script",
+			"path": "script/phases/phase.js",
+			"global": true
+		},
+		"resultPhase": {
+			"type": "script",
+			"path": "script/phases/resultPhase.js",
+			"global": true
+		},
+		"titlePhase": {
+			"type": "script",
+			"path": "script/phases/titlePhase.js",
+			"global": true
 		}
 	},
 	"environment": {

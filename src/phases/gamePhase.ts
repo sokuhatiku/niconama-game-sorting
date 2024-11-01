@@ -1,5 +1,5 @@
-import { Phase } from "../phase";
-import { GameCore } from "./gameCore";
+import { Phase } from "./phase";
+import { GameCore } from "../game/gameCore";
 
 export class GamePhase implements Phase {
 	private readonly _gameCore: GameCore;

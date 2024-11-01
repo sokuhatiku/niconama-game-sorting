@@ -6,11 +6,11 @@ import { PhaseSequencer } from "./phaseSequencer";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
 import { Layers } from "./utils/layers";
-import { TitlePhase } from "./titlePhase";
-import { DescriptionPhase } from "./descriptionPhase";
-import { GamePhase } from "./game/gamePhase";
-import { DoNothingPhase } from "./doNothingPhase";
-import { ResultPhase } from "./resultPhase";
+import { TitlePhase } from "./phases/titlePhase";
+import { DescriptionPhase } from "./phases/descriptionPhase";
+import { GamePhase } from "./phases/gamePhase";
+import { DoNothingPhase } from "./phases/doNothingPhase";
+import { ResultPhase } from "./phases/resultPhase";
 
 export function main(param: GameMainParameterObject): void {
 	let applicationTimeLimit = Infinity;

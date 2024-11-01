@@ -1,5 +1,5 @@
 import { AssetLoader } from "../assetLoader";
-import { CircleGauge } from "../entities/circleGauge";
+import { CircleGauge } from "../components/circleGauge";
 import { Area, AreaParameterObject } from "./area";
 
 export interface ShippingAreaParameterObject extends AreaParameterObject {
