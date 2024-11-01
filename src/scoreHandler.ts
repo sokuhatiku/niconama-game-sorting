@@ -1,18 +1,9 @@
-export interface ScoreHandler {
-	notice(point: number): void;
-	get score(): number;
-}
-
-export function createScoreHandler(): ScoreHandler {
-	return new ScoreHandlerImpl();
-}
-
 interface GameState {
 	score: number;
 	playThreshold: number;
 }
 
-class ScoreHandlerImpl implements ScoreHandler {
+export class ScoreHandler {
 	private _score = 0;
 
 	public get score(): number {

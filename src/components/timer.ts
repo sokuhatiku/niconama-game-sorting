@@ -5,21 +5,7 @@ export interface TimerParameterObject {
 	font?: g.Font;
 }
 
-export interface Timer {
-	get entity(): g.E;
-
-	set(timeSeconds: number): void;
-	start(): void;
-	stop(): void;
-
-	onTimeUp?: () => void;
-}
-
-export function createTimer(param: TimerParameterObject): Timer {
-	return new TimerImpl(param);
-}
-
-class TimerImpl implements Timer {
+export class Timer {
 	public onTimeUp?: () => void;
 
 	private _entity: g.Label;

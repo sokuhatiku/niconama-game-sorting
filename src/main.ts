@@ -1,5 +1,5 @@
 import { GameMainParameterObject } from "./parameterObject";
-import { createScoreHandler } from "./scoreHandler";
+import { ScoreHandler } from "./scoreHandler";
 import { GameCore } from "./game/gameCore";
 import { Timeline } from "@akashic-extension/akashic-timeline";
 import { PhaseSequencer } from "./phaseSequencer";
@@ -18,7 +18,7 @@ export function main(param: GameMainParameterObject): void {
 		applicationTimeLimit = param.sessionParameter.totalTimeLimit;
 	}
 
-	const scoreHandler = createScoreHandler();
+	const scoreHandler = new ScoreHandler();
 	const scene = new g.Scene({
 		game: g.game,
 		assetPaths: [...allAssets],
