@@ -130,12 +130,12 @@ export class Scoreboard {
 		const deliveryCount = this._correctCount + this._incorrectCount;
 		const quality =
 			this._correctCount === 0
-				? 100
+				? 0
 				: (Math.max(this._correctCount - this._incorrectCount, 0) /
 						this._correctCount) *
 					100;
 		const baseScore = this._correctCount * 100;
-		const totalScore = Math.floor(baseScore * (quality / 100));
+		const totalScore = Math.floor((baseScore * quality) / 100);
 
 		if (this._score !== totalScore) {
 			this._score = totalScore;
