@@ -277,6 +277,11 @@
 			"type": "script",
 			"path": "script/phases/titlePhase.js",
 			"global": true
+		},
+		"grabbableEntity": {
+			"type": "script",
+			"path": "script/game/grabbableEntity.js",
+			"global": true
 		}
 	},
 	"environment": {

@@ -1,5 +1,6 @@
 import { Tween, Timeline } from "@akashic-extension/akashic-timeline";
 import { PositionNavigator } from "./positionNavigator";
+import { GrabbableEntity } from "./grabbableEntity";
 
 export interface CharacterProfile {
 	/**
@@ -30,17 +31,15 @@ export interface PointMoveEvent extends PointEvent {
 }
 
 export class Character {
-	private readonly _pointDownTrigger: g.Trigger<PointEvent> =
-		new g.Trigger<PointEvent>();
-	private readonly _pointMoveTrigger: g.Trigger<PointMoveEvent> =
-		new g.Trigger<PointMoveEvent>();
-	private readonly _pointUpTrigger: g.Trigger<PointEvent> =
-		new g.Trigger<PointEvent>();
 	private readonly _timeline: Timeline;
 	private _navPoints: g.CommonOffset[] = [];
 	private _movingDirection: g.CommonOffset = { x: 0, y: 0 };
 	private _navigator: PositionNavigator | null = null;
+	private readonly _grabEntity: GrabbableEntity;
 
+	private _pointDownTrigger = new g.Trigger<PointEvent>();
+	private _pointMoveTrigger = new g.Trigger<PointMoveEvent>();
+	private _pointUpTrigger = new g.Trigger<PointEvent>();
 	public get onPointDown(): g.Trigger<PointEvent> {
 		return this._pointDownTrigger;
 	}
@@ -54,11 +53,7 @@ export class Character {
 	private readonly _profile: CharacterProfile;
 	private readonly _movableArea: g.CommonArea;
 	private readonly _rootEntity: g.Sprite;
-	private readonly _grabEntity: g.FilledRect;
-	private _isTouching = false;
-	private _grabPoint: g.CommonOffset = { x: 0, y: 0 };
 	private _currentMoving: Tween | null = null;
-	private _grabPointMatrix: g.Matrix = new g.PlainMatrix();
 
 	public get entity(): g.E {
 		return this._rootEntity;
@@ -69,7 +64,7 @@ export class Character {
 	}
 
 	public get isInteractable(): boolean {
-		return this._grabEntity.touchable;
+		return this._grabEntity.grabbable;
 	}
 
 	public constructor(params: {
@@ -103,27 +98,30 @@ export class Character {
 		});
 		this._rootEntity = entity;
 
-		const grabOffset = params.profile.grabSizeOffset;
-		const grabEntity = new g.FilledRect({
+		const grabEntity = new GrabbableEntity({
 			scene: params.scene,
-			x: 0 - grabOffset.left,
-			y: 0 - grabOffset.top,
-			width: sprite.width + grabOffset.left + grabOffset.right,
-			height: sprite.height + grabOffset.top + grabOffset.bottom,
-			cssColor: "rgba(255, 0, 0, 0)",
-			opacity: 0,
-			touchable: true,
-			local: true,
-			parent: entity,
+			grabRoot: entity,
+			size: { width: sprite.width, height: sprite.height },
+			offset: { x: sprite.width * 0.5, y: sprite.height * 0.5 },
+			moveCallback: (worldPoint) => {
+				this.setPosition(worldPoint);
+			},
+		});
+		grabEntity.onPointDown.add((ev) => {
+			this._currentMoving?.cancel();
+			this._pointDownTrigger.fire(ev);
+		});
+		grabEntity.onPointMove.add((ev) => {
+			this._pointMoveTrigger.fire(ev);
+		});
+		grabEntity.onPointUp.add((ev) => {
+			this._pointUpTrigger.fire(ev);
 		});
 		this._grabEntity = grabEntity;
 
-		grabEntity.onPointDown.add(this.handlePointDownEvent.bind(this));
-		grabEntity.onPointMove.add(this.handlePointMoveEvent.bind(this));
-		grabEntity.onPointUp.add(this.handlePointUpEvent.bind(this));
 
 		entity.onUpdate.add(() => {
-			if (this._isTouching) {
+			if (this._grabEntity.grabbing) {
 				return;
 			}
 
@@ -196,10 +194,11 @@ export class Character {
 	}
 
 	private setPosition(point: g.CommonOffset): void {
+		const modifiedPoint = {x: point.x - this._rootEntity.width * 0.5, y: point.y - this._rootEntity.height * 0.5};
 		const localPoint =
 			this._rootEntity.parent instanceof g.E
-				? this._rootEntity.parent.globalToLocal(point)
-				: point;
+				? this._rootEntity.parent.globalToLocal(modifiedPoint)
+				: modifiedPoint;
 		this._rootEntity.moveTo(localPoint.x, localPoint.y);
 		this._rootEntity.modified();
 	}
@@ -239,95 +238,6 @@ export class Character {
 		];
 	}
 
-	private handlePointDownEvent(ev: PointEvent): void {
-		if (!this._grabEntity.touchable) {
-			return;
-		}
-
-		this._isTouching = true;
-		this._grabPointMatrix = this._grabEntity.getMatrix().clone();
-		this._grabPoint = this._grabEntity.localToGlobal({ x: 0, y: 0 });
-		const globalGrabPoint = this._grabEntity.localToGlobal(ev.point);
-		this._currentMoving?.cancel();
-
-		this._pointDownTrigger.fire({ point: globalGrabPoint });
-	}
-
-	private handlePointMoveEvent(ev: PointMoveEvent): void {
-		if (!this._isTouching) {
-			return;
-		}
-
-		// グローバルなマウスの現在座標
-		let globalPoint = this._grabPointMatrix.multiplyPoint({
-			x: 0 + ev.startDelta.x,
-			y: 0 + ev.startDelta.y,
-		});
-		globalPoint = {
-			x: globalPoint.x + this._grabPoint.x,
-			y: globalPoint.y + this._grabPoint.y,
-		};
-
-		// 移動可能エリア外に出ないように調整する
-		let collectedGlobalPoint: g.CommonOffset;
-		if (!isAreaContainsPoint(this._movableArea, globalPoint)) {
-			collectedGlobalPoint = {
-				x: Math.min(
-					Math.max(this._movableArea.x, globalPoint.x),
-					this._movableArea.x + this._movableArea.width,
-				),
-				y: Math.min(
-					Math.max(this._movableArea.y, globalPoint.y),
-					this._movableArea.y + this._movableArea.height,
-				),
-			};
-		} else {
-			collectedGlobalPoint = globalPoint;
-		}
-
-		const localNextPoint =
-			this._rootEntity.parent instanceof g.E
-				? this._rootEntity.parent.globalToLocal({
-						x: collectedGlobalPoint.x,
-						y: collectedGlobalPoint.y,
-					})
-				: collectedGlobalPoint;
-
-		this._rootEntity.x = localNextPoint.x;
-		this._rootEntity.y = localNextPoint.y;
-		this._rootEntity.modified();
-
-		this._pointMoveTrigger.fire({
-			point: collectedGlobalPoint,
-			prevDelta: ev.prevDelta,
-			startDelta: ev.startDelta,
-		});
-	}
-
-	private handlePointUpEvent(ev: PointEvent): void {
-		if (!this._isTouching) {
-			return;
-		}
-
-		let releasePoint = this._rootEntity.localToGlobal(ev.point);
-		if (!isAreaContainsPoint(this._movableArea, releasePoint)) {
-			releasePoint = {
-				x: Math.min(
-					Math.max(this._movableArea.x, releasePoint.x),
-					this._movableArea.x + this._movableArea.width,
-				),
-				y: Math.min(
-					Math.max(this._movableArea.y, releasePoint.y),
-					this._movableArea.y + this._movableArea.height,
-				),
-			};
-		}
-
-		this._isTouching = false;
-
-		this._pointUpTrigger.fire({ point: releasePoint });
-	}
-
 	public setNavigator(navigator: PositionNavigator | null): void {
 		this._navigator = navigator;
 		if (navigator) {
@@ -336,16 +246,12 @@ export class Character {
 	}
 
 	public setInteractable(isDraggable: boolean): void {
-		this._grabEntity.touchable = isDraggable;
 		this._rootEntity.src = isDraggable
 			? this._profile.activeSprite
 			: this._profile.inactiveSprite;
 		this._rootEntity.invalidate();
 
-		if (!isDraggable && this._isTouching) {
-			const point = this._rootEntity.localToGlobal({ x: 0, y: 0 });
-			this.handlePointUpEvent({ point: point });
-		}
+		this._grabEntity.grabbable = isDraggable;
 	}
 
 	public destroy(): void {
