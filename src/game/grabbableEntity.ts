@@ -113,7 +113,7 @@ export class GrabbableEntity {
 		this._pointMoveTrigger.fire({point: globalPoint, prevDelta: this._prevGlobalDelta, startDelta: this._startGlobalDelta});
 	}
 
-	private handlePointUp(ev: PointUpEvent): void {
+	private handlePointUp(_ev: PointUpEvent): void {
 		if (!this._grabbing) {
 			return;
 		}

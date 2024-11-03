@@ -25,6 +25,7 @@ export default tseslint.config(
             semi: ["error", "always"],
             quotes: ["error", "double"],
             "@typescript-eslint/explicit-member-accessibility": "error",
+            "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
         },
     },
     eslintConfigPrettier,
