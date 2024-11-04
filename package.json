@@ -15,8 +15,8 @@
     "develop": "run-p -l start build:watch update:watch",
     "test": "jest",
     "audioconv": "complete-audio",
-    "setup-dummy": "node ./setup/setup-dummy.cjs",
-    "prepare": "husky"
+    "prepare-dummy": "node ./setup/setup-dummy.cjs",
+    "prepare-git": "husky"
   },
   "author": "Sokuhatiku",
   "license": "MIT",
