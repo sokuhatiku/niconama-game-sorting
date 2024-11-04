@@ -130,7 +130,7 @@ export class GameCore {
 			pickUpLayer: this._layers.gamePickups,
 			timeline: this._timeline,
 			areas: [this._areas.center, this._areas.left, this._areas.right],
-			movableArea: { x: 320, y: 176, width: 640, height: 448 },
+			movableArea: { x: 320, y: 128, width: 640, height: 544 },
 		});
 
 		this._characterManager.onCharacterPlaced.add(
@@ -282,20 +282,20 @@ function createMainArea(params: {
 	// ゴールエリアを避けるようにポリゴンナビゲーターを作成
 	const navigator = new PolygonNavigator(
 		[
-			{ x: 320, y: 176 },
+			{ x: 320, y: 128 },
 			{ x: 320, y: 272 },
 			{ x: 496, y: 272 },
 			{ x: 496, y: 528 },
 			{ x: 320, y: 528 },
-			{ x: 320, y: 624 },
-			{ x: 960, y: 624 },
+			{ x: 320, y: 672 },
+			{ x: 960, y: 672 },
 			{ x: 960, y: 528 },
 			{ x: 784, y: 528 },
 			{ x: 784, y: 272 },
 			{ x: 960, y: 272 },
-			{ x: 960, y: 176 },
+			{ x: 960, y: 128 },
 		],
-		{ x: 496, y: 176, width: 288, height: 448 },
+		{ x: 496, y: 128, width: 288, height: 544 },
 	);
 	const area = new Area({
 		id: "center",
@@ -307,9 +307,9 @@ function createMainArea(params: {
 	new g.FilledRect({
 		scene: params.scene,
 		x: 320,
-		y: 176,
+		y: 128,
 		width: 640,
-		height: 448,
+		height: 544,
 		cssColor: "rgba(200, 200, 200, 1)",
 		parent: area.entity,
 	});
