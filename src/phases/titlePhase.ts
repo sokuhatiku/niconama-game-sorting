@@ -1,4 +1,4 @@
-import { Phase } from "./phase";
+import { Phase } from ".";
 
 export class TitlePhase implements Phase {
 	private readonly _titleText: g.Label;

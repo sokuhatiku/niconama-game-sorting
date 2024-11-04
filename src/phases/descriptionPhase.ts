@@ -1,4 +1,4 @@
-import { Phase } from "./phase";
+import { Phase } from ".";
 import * as al from "@akashic-extension/akashic-label";
 
 export class DescriptionPhase implements Phase {

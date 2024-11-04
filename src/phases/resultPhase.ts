@@ -1,4 +1,4 @@
-import { Phase } from "./phase";
+import { Phase } from ".";
 
 export class ResultPhase implements Phase {
 	private _background: g.FilledRect;

@@ -1,4 +1,4 @@
-import { Phase } from "./phases/phase";
+import { Phase } from "./phases";
 
 /**
  * ニコ生ゲームが始まってから終わるまでのシーケンスを管理するクラス

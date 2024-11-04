@@ -10,10 +10,7 @@
 			"systemId": "sound",
 			"duration": 32000,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			},
 			"loop": true
 		},
@@ -23,10 +20,7 @@
 			"systemId": "sound",
 			"duration": 3816,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			}
 		},
 		"safearea": {
@@ -71,10 +65,7 @@
 			"systemId": "sound",
 			"duration": 99,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			}
 		},
 		"pick": {
@@ -83,10 +74,7 @@
 			"systemId": "sound",
 			"duration": 1087,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			}
 		},
 		"appProgressBar": {
@@ -164,11 +152,6 @@
 			"path": "script/scoreHandler.js",
 			"global": true
 		},
-		"layers": {
-			"type": "script",
-			"path": "script/utils/layers.js",
-			"global": true
-		},
 		"raycast": {
 			"type": "script",
 			"path": "script/utils/raycast.js",
@@ -220,10 +203,7 @@
 			"systemId": "sound",
 			"duration": 192,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			}
 		},
 		"ng": {
@@ -232,10 +212,7 @@
 			"systemId": "sound",
 			"duration": 373,
 			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
+				"extensions": [".m4a", ".ogg"]
 			}
 		},
 		"circleGauge": {
@@ -263,11 +240,6 @@
 			"path": "script/phases/gamePhase.js",
 			"global": true
 		},
-		"phase": {
-			"type": "script",
-			"path": "script/phases/phase.js",
-			"global": true
-		},
 		"resultPhase": {
 			"type": "script",
 			"path": "script/phases/resultPhase.js",
@@ -287,9 +259,7 @@
 	"environment": {
 		"sandbox-runtime": "3",
 		"nicolive": {
-			"supportedModes": [
-				"ranking"
-			],
+			"supportedModes": ["ranking"],
 			"preferredSessionParameters": {
 				"totalTimeLimit": 85
 			}

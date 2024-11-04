@@ -1,4 +1,4 @@
-import { Phase } from "./phase";
+import { Phase } from ".";
 import { GameCore } from "../game/gameCore";
 
 export class GamePhase implements Phase {

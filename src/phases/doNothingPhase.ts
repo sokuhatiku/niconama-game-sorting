@@ -1,4 +1,4 @@
-import { Phase } from "./phase";
+import { Phase } from ".";
 
 /**
  * 何もしないダミー用のフェーズ
