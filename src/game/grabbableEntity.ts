@@ -11,7 +11,7 @@ export interface PointMoveEvent extends PointEvent {
 
 export class GrabbableEntity {
 	private readonly _entity: g.E;
-	private readonly _rootEntity: g.E;
+	private readonly _constraintArea: g.CommonArea;
 	private readonly _moveCallback: (worldPoint: g.CommonOffset) => void;
 
 	private _grabbing = false;
@@ -42,12 +42,13 @@ export class GrabbableEntity {
 
 	public constructor(params: {
 		scene: g.Scene;
-		grabRoot: g.E;
+		parent: g.E;
 		size: g.CommonSize;
 		offset: g.CommonOffset;
+		constraintArea: g.CommonArea;
 		moveCallback: (worldPoint: g.CommonOffset) => void;
 	}) {
-		this._rootEntity = params.grabRoot;
+		this._constraintArea = params.constraintArea;
 		this._moveCallback = params.moveCallback;
 		const entity = new g.FilledRect({
 			scene: params.scene,
@@ -59,8 +60,8 @@ export class GrabbableEntity {
 			anchorY: 0.5,
 			touchable: true,
 			cssColor: "rgba(255, 0, 0, 1)",
-			opacity: 0.5,
-			parent: params.grabRoot,
+			opacity: 0,
+			parent: params.parent,
 		});
 		this._entity = entity;
 
@@ -70,7 +71,7 @@ export class GrabbableEntity {
 	}
 
 	private handlePointDown(ev: PointEvent): void {
-		if(this._grabbing) {
+		if (this._grabbing) {
 			return;
 		}
 
@@ -91,26 +92,41 @@ export class GrabbableEntity {
 			return;
 		}
 
-		console.log(`【local】pos = ${ev.point.x.toString()}, ${ev.point.y.toString()}`);
-
-		const globalPoint = {x: this._startGlobalPoint.x + ev.startDelta.x, y: this._startGlobalPoint.y + ev.startDelta.y};
+		const globalPoint = this.applyConstraintArea({
+			x: this._startGlobalPoint.x + ev.startDelta.x,
+			y: this._startGlobalPoint.y + ev.startDelta.y,
+		});
 		this.setRootEntityPosition(globalPoint);
-
-		console.log(`【global】pos = ${globalPoint.x.toString()}, ${globalPoint.y.toString()}`);
 
 		this._startGlobalDelta = {
 			x: globalPoint.x - this._startGlobalPoint.x,
 			y: globalPoint.y - this._startGlobalPoint.y,
-		}
+		};
 
 		this._prevGlobalDelta = {
 			x: globalPoint.x - this._prevGlobalPoint.x,
 			y: globalPoint.y - this._prevGlobalPoint.y,
-		}
+		};
 
 		this._prevGlobalPoint = globalPoint;
 
-		this._pointMoveTrigger.fire({point: globalPoint, prevDelta: this._prevGlobalDelta, startDelta: this._startGlobalDelta});
+		this._pointMoveTrigger.fire({
+			point: globalPoint,
+			prevDelta: this._prevGlobalDelta,
+			startDelta: this._startGlobalDelta,
+		});
+	}
+
+	private applyConstraintArea(globalPoint: g.CommonOffset): g.CommonOffset {
+		const x = Math.min(
+			Math.max(globalPoint.x, this._constraintArea.x),
+			this._constraintArea.x + this._constraintArea.width,
+		);
+		const y = Math.min(
+			Math.max(globalPoint.y, this._constraintArea.y),
+			this._constraintArea.y + this._constraintArea.height,
+		);
+		return { x, y };
 	}
 
 	private handlePointUp(_ev: PointUpEvent): void {
@@ -125,15 +141,6 @@ export class GrabbableEntity {
 
 	private setRootEntityPosition(worldPoint: g.CommonOffset): void {
 		this._moveCallback(worldPoint);
-		// const rootParent = this._rootEntity.parent;
-		// if( rootParent instanceof g.E ) {
-		// 	const localPoint = rootParent.globalToLocal(worldPoint);
-		// 	this._rootEntity.moveTo(localPoint.x, localPoint.y);
-		// }
-		// else{
-		// 	this._rootEntity.moveTo(worldPoint.x, worldPoint.y);
-		// }
-		// this._rootEntity.modified();
 	}
 
 	public get grabbable(): boolean {
@@ -145,7 +152,7 @@ export class GrabbableEntity {
 			return;
 		}
 		this._entity.touchable = value;
-		if(!value && this._grabbing) {
+		if (!value && this._grabbing) {
 			this._grabbing = false;
 
 			this._pointUpTrigger.fire({ point: this._prevGlobalPoint });

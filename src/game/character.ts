@@ -14,7 +14,7 @@ export interface CharacterProfile {
 	/**
 	 * キャラクターの当たり判定は与えられたスプライトに依存しますが、この値を使って当たり判定の範囲を調整できます。
 	 */
-	grabSizeOffset: g.CommonRect;
+	grabSizeExpand: g.CommonRect;
 	/**
 	 * 配置されると得点になるエリアのID
 	 */
@@ -77,16 +77,20 @@ export class Character {
 	}) {
 		this._profile = params.profile;
 		this._timeline = params.timeline;
+
+		const sprite = params.profile.activeSprite;
+
 		// 移動可能エリアの大きさを予めスプライトの大きさ分小さくしておく
 		// これにより、スプライトの端がエリアの端に触れたときにスプライトがはみ出さないようにする
-		this._movableArea = {
+		//
+		const leftTopShurinkedArea = {
 			x: params.movableArea.x,
 			y: params.movableArea.y,
-			width: params.movableArea.width - params.profile.activeSprite.width,
-			height:
-				params.movableArea.height - params.profile.activeSprite.height,
+			width: params.movableArea.width - sprite.width,
+			height: params.movableArea.height - sprite.height,
 		};
-		const sprite = params.profile.activeSprite;
+		this._movableArea = leftTopShurinkedArea;
+
 		const entity = new g.Sprite({
 			scene: params.scene,
 			src: sprite,
@@ -98,11 +102,26 @@ export class Character {
 		});
 		this._rootEntity = entity;
 
+		// ドラッグ&ドロップの場合はスプライトの中心をエンティティの座標として計算するため、中心をピボットとして移動可能エリアを縮小する
+		const centerShurinkedArea = {
+			x: params.movableArea.x + sprite.width * 0.5,
+			y: params.movableArea.y + sprite.height * 0.5,
+			width: params.movableArea.width - sprite.width,
+			height: params.movableArea.height - sprite.height,
+		};
+		const grabExpand = params.profile.grabSizeExpand;
 		const grabEntity = new GrabbableEntity({
 			scene: params.scene,
-			grabRoot: entity,
-			size: { width: sprite.width, height: sprite.height },
-			offset: { x: sprite.width * 0.5, y: sprite.height * 0.5 },
+			parent: entity,
+			size: {
+				width: sprite.width + grabExpand.left + grabExpand.right,
+				height: sprite.height + grabExpand.top + grabExpand.bottom,
+			},
+			offset: {
+				x: (sprite.width - grabExpand.left + grabExpand.right) * 0.5,
+				y: (sprite.height - grabExpand.top + grabExpand.bottom) * 0.5,
+			},
+			constraintArea: centerShurinkedArea,
 			moveCallback: (worldPoint) => {
 				this.setPosition(worldPoint);
 			},
@@ -118,7 +137,6 @@ export class Character {
 			this._pointUpTrigger.fire(ev);
 		});
 		this._grabEntity = grabEntity;
-
 
 		entity.onUpdate.add(() => {
 			if (this._grabEntity.grabbing) {
@@ -194,7 +212,10 @@ export class Character {
 	}
 
 	private setPosition(point: g.CommonOffset): void {
-		const modifiedPoint = {x: point.x - this._rootEntity.width * 0.5, y: point.y - this._rootEntity.height * 0.5};
+		const modifiedPoint = {
+			x: point.x - this._rootEntity.width * 0.5,
+			y: point.y - this._rootEntity.height * 0.5,
+		};
 		const localPoint =
 			this._rootEntity.parent instanceof g.E
 				? this._rootEntity.parent.globalToLocal(modifiedPoint)
@@ -239,10 +260,11 @@ export class Character {
 	}
 
 	public setNavigator(navigator: PositionNavigator | null): void {
-		this._navigator = navigator;
-		if (navigator) {
-			this.rerouteRandomPoint();
+		if (this._navigator === navigator) {
+			return;
 		}
+		this._navigator = navigator;
+		this.reroute();
 	}
 
 	public setInteractable(isDraggable: boolean): void {
