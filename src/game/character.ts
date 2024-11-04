@@ -82,7 +82,7 @@ export class Character {
 
 		// 移動可能エリアの大きさを予めスプライトの大きさ分小さくしておく
 		// これにより、スプライトの端がエリアの端に触れたときにスプライトがはみ出さないようにする
-		//
+		// 移動処理時には左上を基準に移動するので、左上を基準に縮小する
 		const leftTopShurinkedArea = {
 			x: params.movableArea.x,
 			y: params.movableArea.y,
