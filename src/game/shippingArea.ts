@@ -1,6 +1,7 @@
 import { AssetLoader } from "../assetLoader";
 import { CircleGauge } from "../components/circleGauge";
-import { Area, AreaParameterObject } from "./area";
+import type { AreaParameterObject } from "./area";
+import { Area } from "./area";
 
 export interface ShippingAreaParameterObject extends AreaParameterObject {
 	x: number;
@@ -18,7 +19,7 @@ export class ShippingArea extends Area {
 	private readonly _shippingLabel: g.FrameSprite;
 	private readonly _doubleShippingBonusLabel: g.FrameSprite;
 
-	private _active = true;
+	private _active: boolean = true;
 	public get isShipping(): boolean {
 		return !this._active;
 	}
@@ -28,10 +29,10 @@ export class ShippingArea extends Area {
 		return this._activeTrigger;
 	}
 
-	private _innactiveTotalTimer = 0;
-	private _innactiveTimer = 0;
+	private _innactiveTotalTimer: number = 0;
+	private _innactiveTimer: number = 0;
 
-	private _shippingBonus = false;
+	private _shippingBonus: boolean = false;
 
 	public constructor(param: ShippingAreaParameterObject) {
 		super(param);
@@ -124,6 +125,17 @@ export class ShippingArea extends Area {
 		this._activeTrigger.fire(false);
 	}
 
+	/**
+	 * 次の出荷が終わるまでの間のボーナスを設定します
+	 */
+	public setOneTimeBonus(): void {
+		this._shippingBonus = true;
+		if (this._innactiveTimer > 0) {
+			this._doubleShippingBonusLabel.show();
+			this._doubleShippingBonusLabel.start();
+		}
+	}
+
 	private setActive(active: boolean): void {
 		if (this._active === active) {
 			return;
@@ -141,17 +153,6 @@ export class ShippingArea extends Area {
 				this._doubleShippingBonusLabel.show();
 				this._doubleShippingBonusLabel.start();
 			}
-		}
-	}
-
-	/**
-	 * 次の出荷が終わるまでの間のボーナスを設定します
-	 */
-	public setOneTimeBonus() {
-		this._shippingBonus = true;
-		if (this._innactiveTimer > 0) {
-			this._doubleShippingBonusLabel.show();
-			this._doubleShippingBonusLabel.start();
 		}
 	}
 }

@@ -39,13 +39,13 @@ export function raycastLines(
 ): RaycastHit | null {
 	let closestHit: RaycastHit | null = null;
 
-	for (const line of lines) {
+	lines.forEach((line) => {
 		const hit = raycastLine(line, ray, distance, hasDirection);
-		if (!hit) continue;
+		if (!hit) return;
 		if (!closestHit || hit.distance < closestHit.distance) {
 			closestHit = hit;
 		}
-	}
+	});
 
 	return closestHit;
 }
@@ -125,13 +125,13 @@ export function rectRaycastLines(
 ): RaycastHit | null {
 	let closestHit: RaycastHit | null = null;
 
-	for (const line of lines) {
+	lines.forEach((line) => {
 		const hit = rectRaycastLine(line, rect, ray, distance, hasDirection);
-		if (!hit) continue;
+		if (!hit) return;
 		if (!closestHit || hit.distance < closestHit.distance) {
 			closestHit = hit;
 		}
-	}
+	});
 
 	return closestHit;
 }

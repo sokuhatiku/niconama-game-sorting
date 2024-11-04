@@ -1,7 +1,9 @@
-import { Phase } from ".";
-import { GameCore } from "../game/gameCore";
+import type { GameCore } from "../game/gameCore";
+import type { Phase } from ".";
 
 export class GamePhase implements Phase {
+	public readonly name: string = "game";
+
 	private readonly _gameCore: GameCore;
 
 	public constructor(params: { gameCore: GameCore }) {
@@ -17,5 +19,4 @@ export class GamePhase implements Phase {
 	public exit(): void {
 		this._gameCore.setActive(false);
 	}
-	public readonly name = "game";
 }

@@ -1,4 +1,4 @@
-import { Phase } from "./phases";
+import type { Phase } from "./phases";
 
 /**
  * ニコ生ゲームが始まってから終わるまでのシーケンスを管理するクラス
@@ -8,10 +8,10 @@ export class PhaseSequencer {
 
 	private readonly _phases: { phase: Phase; dulation: number }[] = [];
 
-	private _currentPhaseIndex = -1;
+	private _currentPhaseIndex: number = -1;
 
-	private _totalProgress = 0;
-	private _currentPhaseProgress = 0;
+	private _totalProgress: number = 0;
+	private _currentPhaseProgress: number = 0;
 
 	public get totalProgress(): number {
 		return this._totalProgress;
@@ -34,28 +34,17 @@ export class PhaseSequencer {
 		this._phases = params.phases;
 
 		let aggregatedSeconds = 0;
-		for (const phase of this._phases) {
+		this._phases.forEach((phase) => {
 			aggregatedSeconds += phase.dulation;
-		}
+		});
 		if (aggregatedSeconds > params.timeLimitSeconds) {
 			console.warn(
-				`シーケンス全体の所要時間（${aggregatedSeconds.toString()}秒）が、与えられた制限時間（${params.timeLimitSeconds.toString()}秒）を超えています。これにより、ゲームプレイ中に中断される可能性があります。`,
+				`シーケンス全体の所要時間（${aggregatedSeconds.toString()}秒）が、与えられた制限時間（${params.timeLimitSeconds.toString()}秒）を超えています。
+				これにより、ゲームプレイ中にアプリが中断される可能性があります。`,
 			);
 		}
 
 		this._totalSeconds = aggregatedSeconds;
-	}
-
-	private calcCurrentPhaseIndex(elapsedSeconds: number): number {
-		let aggregated = 0;
-		for (let i = 0; i < this._phases.length; i++) {
-			const phase = this._phases[i];
-			aggregated += phase.dulation;
-			if (aggregated > elapsedSeconds) {
-				return i;
-			}
-		}
-		return this._phases.length - 1;
 	}
 
 	public update(): void {
@@ -63,7 +52,7 @@ export class PhaseSequencer {
 		const totalProgress = totalElapsedSeconds / this._totalSeconds;
 		const currentPhaseIndex =
 			this.calcCurrentPhaseIndex(totalElapsedSeconds);
-		if (currentPhaseIndex != this._currentPhaseIndex) {
+		if (currentPhaseIndex !== this._currentPhaseIndex) {
 			this.changePhase(currentPhaseIndex);
 		}
 
@@ -84,6 +73,18 @@ export class PhaseSequencer {
 			elapsedFrames: currentElapsedFrames,
 			progress: currentProgress,
 		});
+	}
+
+	private calcCurrentPhaseIndex(elapsedSeconds: number): number {
+		let aggregated = 0;
+		for (let i = 0; i < this._phases.length; i++) {
+			const phase = this._phases[i];
+			aggregated += phase.dulation;
+			if (aggregated > elapsedSeconds) {
+				return i;
+			}
+		}
+		return this._phases.length - 1;
 	}
 
 	private changePhase(phaseIndex: number): void {

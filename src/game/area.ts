@@ -1,5 +1,5 @@
-import { Character } from "./character";
-import { PositionNavigator } from "./positionNavigator";
+import type { Character } from "./character";
+import type { PositionNavigator } from "./positionNavigator";
 
 export interface AreaParameterObject {
 	id: string;

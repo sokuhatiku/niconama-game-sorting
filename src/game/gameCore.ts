@@ -1,14 +1,19 @@
-import { Timeline } from "@akashic-extension/akashic-timeline";
-import { CharacterManager } from "./characterManager";
+import type { Timeline } from "@akashic-extension/akashic-timeline";
 import { AssetLoader } from "../assetLoader";
+import type { Layers } from "../utils/layers";
 import { Area } from "./area";
-import { CharacterProfile } from "./character";
-import { Scoreboard } from "./scoreboard";
-import { RectNavigator } from "./rectNavigator";
-import { PolygonNavigator } from "./polygonNavigator";
-import { Layers } from "../utils/layers";
+import type { CharacterProfile } from "./character";
+import { CharacterManager } from "./characterManager";
 import { ParticleSystem } from "./particleSystem";
+import { PolygonNavigator } from "./polygonNavigator";
+import { RectNavigator } from "./rectNavigator";
+import { Scoreboard } from "./scoreboard";
 import { ShippingArea } from "./shippingArea";
+
+interface SpawnStatistics {
+	maleCount: number;
+	femaleCount: number;
+}
 
 /**
  * ゲームのコアロジックを管理するクラスです。
@@ -25,7 +30,7 @@ export class GameCore {
 
 	private readonly _updateTrigger: g.Trigger = new g.Trigger();
 
-	private readonly statistics = {
+	private readonly statistics: SpawnStatistics = {
 		maleCount: 0,
 		femaleCount: 0,
 	};
@@ -43,9 +48,9 @@ export class GameCore {
 
 	private _layers: Layers;
 
-	private _active = false;
+	private _active: boolean = false;
 
-	private _spawnCooldown = 0;
+	private _spawnCooldown: number = 0;
 
 	public get onScoreUpdated(): g.Trigger<number> {
 		return this._scoreUpdatedTrigger;
@@ -178,7 +183,7 @@ export class GameCore {
 	 * 非アクティブ状態ではキャラクターのスポーンや操作判定が行われません
 	 * @param active 新しいアクティブ状態
 	 */
-	public setActive(active: boolean) {
+	public setActive(active: boolean): void {
 		if (this._active === active) return;
 		this._active = active;
 		if (active) {
@@ -188,16 +193,8 @@ export class GameCore {
 		}
 	}
 
-	private onTurnToActive() {
-		this._characterManager.setAllCharactersInteractable(true);
-	}
-
-	private onTurnToDeactive() {
-		this._characterManager.setAllCharactersInteractable(false);
-	}
-
 	// 毎フレーム呼ばれる
-	public update() {
+	public update(): void {
 		if (!this._active) return;
 
 		this._updateTrigger.fire();
@@ -249,7 +246,15 @@ export class GameCore {
 		return this._scoreboard.summary;
 	}
 
-	private startShipping(area: ShippingArea) {
+	private onTurnToActive(): void {
+		this._characterManager.setAllCharactersInteractable(true);
+	}
+
+	private onTurnToDeactive(): void {
+		this._characterManager.setAllCharactersInteractable(false);
+	}
+
+	private startShipping(area: ShippingArea): void {
 		const charactersToDestroy = area.characters.slice();
 		charactersToDestroy.forEach((c) => {
 			area.removeCharacter(c);

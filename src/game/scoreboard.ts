@@ -6,12 +6,12 @@ export class Scoreboard {
 	private _sippingCountLabel: g.Label;
 	private _scoreLabel: g.Label;
 
-	private _correctCount = 0;
-	private _incorrectCount = 0;
-	private _sippingCount = 0;
-	private _score = 0;
+	private _correctCount: number = 0;
+	private _incorrectCount: number = 0;
+	private _sippingCount: number = 0;
+	private _score: number = 0;
 
-	private _scoreUpdatedTrigger = new g.Trigger<number>();
+	private _scoreUpdatedTrigger: g.Trigger<number> = new g.Trigger<number>();
 
 	public get entity(): g.E {
 		return this._entity;

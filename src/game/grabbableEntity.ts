@@ -1,4 +1,4 @@
-import { PointUpEvent } from "@akashic/akashic-engine";
+import type { PointUpEvent } from "@akashic/akashic-engine";
 
 export interface PointEvent {
 	point: g.CommonOffset;
@@ -14,15 +14,18 @@ export class GrabbableEntity {
 	private readonly _constraintArea: g.CommonArea;
 	private readonly _moveCallback: (worldPoint: g.CommonOffset) => void;
 
-	private _grabbing = false;
+	private _grabbing: boolean = false;
 	private _startGlobalPoint: g.CommonOffset = { x: 0, y: 0 };
 	private _prevGlobalDelta: g.CommonOffset = { x: 0, y: 0 };
 	private _startGlobalDelta: g.CommonOffset = { x: 0, y: 0 };
 	private _prevGlobalPoint: g.CommonOffset = { x: 0, y: 0 };
 
-	private readonly _pointDownTrigger = new g.Trigger<PointEvent>();
-	private readonly _pointMoveTrigger = new g.Trigger<PointMoveEvent>();
-	private readonly _pointUpTrigger = new g.Trigger<PointEvent>();
+	private readonly _pointDownTrigger: g.Trigger<PointEvent> =
+		new g.Trigger<PointEvent>();
+	private readonly _pointMoveTrigger: g.Trigger<PointMoveEvent> =
+		new g.Trigger<PointMoveEvent>();
+	private readonly _pointUpTrigger: g.Trigger<PointEvent> =
+		new g.Trigger<PointEvent>();
 
 	public get grabbing(): boolean {
 		return this._grabbing;

@@ -9,8 +9,8 @@ export class Timer {
 	public onTimeUp?: () => void;
 
 	private _entity: g.Label;
-	private _seconds = 0;
-	private _isRunning = false;
+	private _seconds: number = 0;
+	private _isRunning: boolean = false;
 
 	public get entity(): g.E {
 		return this._entity;

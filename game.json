@@ -10,7 +10,10 @@
 			"systemId": "sound",
 			"duration": 32000,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			},
 			"loop": true
 		},
@@ -20,7 +23,10 @@
 			"systemId": "sound",
 			"duration": 3816,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			}
 		},
 		"safearea": {
@@ -65,7 +71,10 @@
 			"systemId": "sound",
 			"duration": 99,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			}
 		},
 		"pick": {
@@ -74,7 +83,10 @@
 			"systemId": "sound",
 			"duration": 1087,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			}
 		},
 		"appProgressBar": {
@@ -203,7 +215,10 @@
 			"systemId": "sound",
 			"duration": 192,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			}
 		},
 		"ng": {
@@ -212,7 +227,10 @@
 			"systemId": "sound",
 			"duration": 373,
 			"hint": {
-				"extensions": [".m4a", ".ogg"]
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
 			}
 		},
 		"circleGauge": {
@@ -259,7 +277,9 @@
 	"environment": {
 		"sandbox-runtime": "3",
 		"nicolive": {
-			"supportedModes": ["ranking"],
+			"supportedModes": [
+				"ranking"
+			],
 			"preferredSessionParameters": {
 				"totalTimeLimit": 85
 			}

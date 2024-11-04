@@ -1,6 +1,8 @@
-import { Phase } from ".";
+import type { Phase } from ".";
 
 export class TitlePhase implements Phase {
+	public readonly name: string = "title";
+
 	private readonly _titleText: g.Label;
 
 	public constructor(params: { scene: g.Scene; font: g.Font }) {
@@ -33,6 +35,4 @@ export class TitlePhase implements Phase {
 	public exit(): void {
 		this._titleText.hide();
 	}
-
-	public readonly name = "title";
 }

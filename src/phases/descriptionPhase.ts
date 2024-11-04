@@ -1,7 +1,9 @@
-import { Phase } from ".";
 import * as al from "@akashic-extension/akashic-label";
+import type { Phase } from ".";
 
 export class DescriptionPhase implements Phase {
+	public readonly name: string = "description";
+
 	private readonly _background: g.E;
 
 	public constructor(params: { scene: g.Scene; font: g.Font; layer: g.E }) {
@@ -54,5 +56,4 @@ export class DescriptionPhase implements Phase {
 	public exit(): void {
 		this._background.hide();
 	}
-	public readonly name = "description";
 }

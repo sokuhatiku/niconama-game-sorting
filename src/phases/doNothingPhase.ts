@@ -1,9 +1,11 @@
-import { Phase } from ".";
+import type { Phase } from ".";
 
 /**
  * 何もしないダミー用のフェーズ
  */
 export class DoNothingPhase implements Phase {
+	public readonly name: string;
+
 	public constructor(name: string) {
 		this.name = name;
 	}
@@ -17,5 +19,4 @@ export class DoNothingPhase implements Phase {
 	public exit(): void {
 		// do nothing
 	}
-	public readonly name;
 }

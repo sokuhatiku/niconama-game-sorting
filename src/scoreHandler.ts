@@ -4,7 +4,7 @@ interface GameState {
 }
 
 export class ScoreHandler {
-	private _score = 0;
+	private _score: number = 0;
 
 	public get score(): number {
 		return this._score;

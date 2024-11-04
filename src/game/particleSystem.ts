@@ -1,4 +1,5 @@
-import { Timeline, Easing } from "@akashic-extension/akashic-timeline";
+import type { Timeline} from "@akashic-extension/akashic-timeline";
+import { Easing } from "@akashic-extension/akashic-timeline";
 import { AssetLoader } from "../assetLoader";
 
 export class ParticleSystem {
@@ -37,7 +38,7 @@ export class ParticleSystem {
 		};
 	}
 
-	public spawnOKParticle(params: { x: number; y: number }) {
+	public spawnOKParticle(params: { x: number; y: number }): void {
 		const entity = new g.Sprite({
 			scene: this._scene,
 			src: this._sprites.ok,
@@ -61,7 +62,7 @@ export class ParticleSystem {
 			});
 	}
 
-	public spawnNGParticle(params: { x: number; y: number }) {
+	public spawnNGParticle(params: { x: number; y: number }): void {
 		const entity = new g.Sprite({
 			scene: this._scene,
 			src: this._sprites.ng,

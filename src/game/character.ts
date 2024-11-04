@@ -1,6 +1,6 @@
-import { Tween, Timeline } from "@akashic-extension/akashic-timeline";
-import { PositionNavigator } from "./positionNavigator";
+import type { Tween, Timeline } from "@akashic-extension/akashic-timeline";
 import { GrabbableEntity } from "./grabbableEntity";
+import type { PositionNavigator } from "./positionNavigator";
 
 export interface CharacterProfile {
 	/**
@@ -37,9 +37,12 @@ export class Character {
 	private _navigator: PositionNavigator | null = null;
 	private readonly _grabEntity: GrabbableEntity;
 
-	private _pointDownTrigger = new g.Trigger<PointEvent>();
-	private _pointMoveTrigger = new g.Trigger<PointMoveEvent>();
-	private _pointUpTrigger = new g.Trigger<PointEvent>();
+	private _pointDownTrigger: g.Trigger<PointEvent> =
+		new g.Trigger<PointEvent>();
+	private _pointMoveTrigger: g.Trigger<PointMoveEvent> =
+		new g.Trigger<PointMoveEvent>();
+	private _pointUpTrigger: g.Trigger<PointEvent> =
+		new g.Trigger<PointEvent>();
 	public get onPointDown(): g.Trigger<PointEvent> {
 		return this._pointDownTrigger;
 	}
@@ -147,6 +150,30 @@ export class Character {
 		});
 
 		this.setPosition(params.spawnPoint);
+	}
+
+	public setNavigator(navigator: PositionNavigator | null): void {
+		if (this._navigator === navigator) {
+			return;
+		}
+		this._navigator = navigator;
+		this.reroute();
+	}
+
+	public setInteractable(isDraggable: boolean): void {
+		this._rootEntity.src = isDraggable
+			? this._profile.activeSprite
+			: this._profile.inactiveSprite;
+		this._rootEntity.invalidate();
+
+		this._grabEntity.grabbable = isDraggable;
+	}
+
+	public destroy(): void {
+		this._currentMoving?.cancel();
+		this._rootEntity.hide();
+		this._rootEntity.invalidate();
+		this._rootEntity.destroy();
 	}
 
 	private moving(): void {
@@ -257,30 +284,6 @@ export class Character {
 				bottom: this._rootEntity.height,
 			}),
 		];
-	}
-
-	public setNavigator(navigator: PositionNavigator | null): void {
-		if (this._navigator === navigator) {
-			return;
-		}
-		this._navigator = navigator;
-		this.reroute();
-	}
-
-	public setInteractable(isDraggable: boolean): void {
-		this._rootEntity.src = isDraggable
-			? this._profile.activeSprite
-			: this._profile.inactiveSprite;
-		this._rootEntity.invalidate();
-
-		this._grabEntity.grabbable = isDraggable;
-	}
-
-	public destroy(): void {
-		this._currentMoving?.cancel();
-		this._rootEntity.hide();
-		this._rootEntity.invalidate();
-		this._rootEntity.destroy();
 	}
 }
 

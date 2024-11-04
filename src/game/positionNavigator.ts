@@ -1,4 +1,4 @@
-import { Vector } from "../utils/raycast";
+import type { Vector } from "../utils/raycast";
 
 export interface GetNextPositionParameterObject {
 	startPosition: g.CommonOffset;

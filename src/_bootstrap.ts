@@ -1,7 +1,6 @@
-/* eslint-disable */
 // 通常このファイルを編集する必要はありません。ゲームの処理は main.js に記述してください
 import { main } from "./main";
-import { GameMainParameterObject } from "./parameterObject";
+import type { GameMainParameterObject } from "./parameterObject";
 
 export = (originalParam: g.GameMainParameterObject) => {
 	const param: any = {} as GameMainParameterObject;

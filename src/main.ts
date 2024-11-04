@@ -1,16 +1,16 @@
-import { GameMainParameterObject } from "./parameterObject";
-import { ScoreHandler } from "./scoreHandler";
-import { GameCore } from "./game/gameCore";
 import { Timeline } from "@akashic-extension/akashic-timeline";
-import { PhaseSequencer } from "./phaseSequencer";
-import { allAssets, AssetLoader } from "./assetLoader";
 import { AppProgressBar } from "./appProgressBar";
-import { Layers } from "./utils/layers";
-import { TitlePhase } from "./phases/titlePhase";
+import { allAssets, AssetLoader } from "./assetLoader";
+import { GameCore } from "./game/gameCore";
+import type { GameMainParameterObject } from "./parameterObject";
 import { DescriptionPhase } from "./phases/descriptionPhase";
-import { GamePhase } from "./phases/gamePhase";
 import { DoNothingPhase } from "./phases/doNothingPhase";
+import { GamePhase } from "./phases/gamePhase";
 import { ResultPhase } from "./phases/resultPhase";
+import { TitlePhase } from "./phases/titlePhase";
+import { PhaseSequencer } from "./phaseSequencer";
+import { ScoreHandler } from "./scoreHandler";
+import type { Layers } from "./utils/layers";
 
 export function main(param: GameMainParameterObject): void {
 	let applicationTimeLimit = Infinity;

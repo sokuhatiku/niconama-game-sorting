@@ -1,7 +1,8 @@
-import { Timeline } from "@akashic-extension/akashic-timeline";
-import { Character, CharacterProfile } from "./character";
-import { Area } from "./area";
+import type { Timeline } from "@akashic-extension/akashic-timeline";
 import { AssetLoader } from "../assetLoader";
+import type { Area } from "./area";
+import type { CharacterProfile } from "./character";
+import { Character } from "./character";
 
 export interface CharacterPlacedEvent {
 	isCorrectArea: boolean;
@@ -95,29 +96,6 @@ export class CharacterManager {
 		this._characters.push(character);
 	}
 
-	private get defaultArea(): Area {
-		return this._areas[0];
-	}
-
-	private getCurrentAreaOf(character: Character): Area | null {
-		for (const area of this._areas) {
-			if (area.characters.includes(character)) {
-				return area;
-			}
-		}
-		return null;
-	}
-
-	private getOverlappedAreaOf(point: g.CommonOffset): Area | null {
-		for (const area of this._areas) {
-			if (area === this.defaultArea) continue;
-			if (area.navigator.containsPoint(point)) {
-				return area;
-			}
-		}
-		return null;
-	}
-
 	public setAllCharactersInteractable(isInteractable: boolean): void {
 		const charactersToDeactivate = this._characters.filter(
 			(c) => c.isInteractable,
@@ -127,10 +105,42 @@ export class CharacterManager {
 		});
 	}
 
-	public destroyCharacter(character: Character) {
+	public destroyCharacter(character: Character): void {
 		const index = this._characters.indexOf(character);
 		if (index < 0) return;
 		this._characters.splice(index, 1);
 		character.destroy();
+	}
+
+	private get defaultArea(): Area {
+		return this._areas[0];
+	}
+
+	private getCurrentAreaOf(character: Character): Area | null {
+		let finallyArea: Area | null = null;
+
+		this._areas.some((area) => {
+			if (area.characters.indexOf(character) >= 0) {
+				finallyArea = area;
+				return true;
+			}
+			return false;
+		});
+
+		return finallyArea;
+	}
+
+	private getOverlappedAreaOf(point: g.CommonOffset): Area | null {
+		let finallyArea: Area | null = null;
+
+		this._areas.some((area) => {
+			if (area === this.defaultArea) return false;
+			if (area.navigator.containsPoint(point)) {
+				finallyArea = area;
+				return true;
+			}
+		});
+
+		return finallyArea;
 	}
 }

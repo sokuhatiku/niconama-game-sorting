@@ -47,7 +47,11 @@ export const allAssets = [
  * アセットを取得する操作をtype safeにするためのユーティリティクラス
  */
 export class AssetLoader {
-	public constructor(private readonly _scene: g.Scene) {}
+	private readonly _scene: g.Scene;
+
+	public constructor(scene: g.Scene) {
+		this._scene = scene;
+	}
 
 	public getImage(asset: ImageAssetName): g.ImageAsset {
 		return this._scene.asset.getImage(asset);

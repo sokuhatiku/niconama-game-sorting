@@ -1,7 +1,9 @@
-import { Line, Vector, Rect, rectRaycastLines } from "../utils/raycast";
-import {
+import type { Line, Vector, Rect} from "../utils/raycast";
+import { rectRaycastLines } from "../utils/raycast";
+import type {
 	PositionNavigator,
-	GetNextPositionParameterObject,
+	GetNextPositionParameterObject} from "./positionNavigator";
+import {
 	normalize,
 	add,
 	scale,

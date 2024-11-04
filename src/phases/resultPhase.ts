@@ -1,9 +1,11 @@
-import { Phase } from ".";
+import type { Phase } from ".";
 
 export class ResultPhase implements Phase {
+	public readonly name: string = "result";
+
 	private _background: g.FilledRect;
 	private _scoreLabel: g.Label;
-	private _score = 0;
+	private _score: number = 0;
 
 	public constructor(params: { scene: g.Scene; layer: g.E; font: g.Font }) {
 		const background = new g.FilledRect({
@@ -44,7 +46,6 @@ export class ResultPhase implements Phase {
 	public exit(): void {
 		this._background.hide();
 	}
-	public readonly name = "result";
 
 	public setScore(score: number): void {
 		if (this._score === score) {
