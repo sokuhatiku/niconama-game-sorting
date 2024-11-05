@@ -58,6 +58,7 @@ export class CharacterManager {
 
 	public spawnCharacter(params: {
 		position: g.CommonOffset;
+		direction: g.CommonOffset;
 		profile: CharacterProfile;
 	}): void {
 		const area = this.defaultArea;
@@ -66,6 +67,7 @@ export class CharacterManager {
 			timeline: this._timeline,
 			profile: params.profile,
 			spawnPoint: params.position,
+			spawnDirection: params.direction,
 			parent: this._baseLayer,
 			movableArea: this._movableArea,
 		});

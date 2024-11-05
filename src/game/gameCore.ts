@@ -230,12 +230,16 @@ export class GameCore {
 			this.statistics.femaleCount++;
 		}
 
-		const spawnPoint: g.CommonOffset =
-			g.game.random.generate() > 0.5
-				? { x: g.game.width / 2, y: 0 }
-				: { x: g.game.width / 2, y: g.game.height };
+		const isFromTop = g.game.random.generate() > 0.5;
+		const spawnPoint: g.CommonOffset = isFromTop
+			? { x: g.game.width / 2, y: 0 }
+			: { x: g.game.width / 2, y: g.game.height };
+		const spawnDirection = angleToDirection(
+			(isFromTop ? 45 : 225) + g.game.random.generate() * 90,
+		);
 		this._characterManager.spawnCharacter({
 			position: spawnPoint,
+			direction: spawnDirection,
 			profile: isMale
 				? this._characterProfiles.male
 				: this._characterProfiles.female,
@@ -272,6 +276,14 @@ export class GameCore {
 			this._areas.right.setOneTimeBonus();
 		}
 	}
+}
+
+function angleToDirection(angle: number): g.CommonOffset {
+	const rad = (angle / 180) * Math.PI;
+	return {
+		x: Math.cos(rad),
+		y: Math.sin(rad),
+	};
 }
 
 function createMainArea(params: {

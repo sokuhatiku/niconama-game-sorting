@@ -36,6 +36,23 @@ export class Character {
 	private _movingDirection: g.CommonOffset = { x: 0, y: 0 };
 	private _navigator: PositionNavigator | null = null;
 	private readonly _grabEntity: GrabbableEntity;
+	private readonly _profile: CharacterProfile;
+	private readonly _movableArea: g.CommonArea;
+	private readonly _rootEntity: g.E;
+	private readonly _spriteEntity: g.Sprite;
+	private _currentMoving: Tween | null = null;
+
+	public get entity(): g.E {
+		return this._rootEntity;
+	}
+
+	public get profile(): CharacterProfile {
+		return this._profile;
+	}
+
+	public get isInteractable(): boolean {
+		return this._grabEntity.grabbable;
+	}
 
 	private _pointDownTrigger: g.Trigger<PointEvent> =
 		new g.Trigger<PointEvent>();
@@ -53,77 +70,67 @@ export class Character {
 		return this._pointUpTrigger;
 	}
 
-	private readonly _profile: CharacterProfile;
-	private readonly _movableArea: g.CommonArea;
-	private readonly _rootEntity: g.Sprite;
-	private _currentMoving: Tween | null = null;
-
-	public get entity(): g.E {
-		return this._rootEntity;
-	}
-
-	public get profile(): CharacterProfile {
-		return this._profile;
-	}
-
-	public get isInteractable(): boolean {
-		return this._grabEntity.grabbable;
-	}
-
 	public constructor(params: {
 		scene: g.Scene;
 		parent?: g.Scene | g.E;
 		timeline: Timeline;
 		profile: CharacterProfile;
 		spawnPoint: g.CommonOffset;
+		spawnDirection: g.CommonOffset;
 		movableArea: g.CommonArea;
 	}) {
 		this._profile = params.profile;
 		this._timeline = params.timeline;
 
-		const sprite = params.profile.activeSprite;
+		if (!isUnitVector(params.spawnDirection)) {
+			throw new Error("spawnDirection must be a unit vector");
+		}
+		this._movingDirection = params.spawnDirection;
+
+		const root = new g.E({
+			scene: params.scene,
+			x: params.spawnPoint.x,
+			y: params.spawnPoint.y,
+			touchable: false,
+			parent: params.parent ?? params.scene,
+		});
+		this._rootEntity = root;
+
+		const image = params.profile.activeSprite;
+		const sprite = new g.Sprite({
+			scene: params.scene,
+			src: image,
+			width: image.width,
+			height: image.height,
+			touchable: false,
+			parent: root,
+			x: 0,
+			y: 0,
+			anchorX: 0.5,
+			anchorY: 0.5,
+		});
+		this._spriteEntity = sprite;
 
 		// 移動可能エリアの大きさを予めスプライトの大きさ分小さくしておく
 		// これにより、スプライトの端がエリアの端に触れたときにスプライトがはみ出さないようにする
-		// 移動処理時には左上を基準に移動するので、左上を基準に縮小する
-		const leftTopShurinkedArea = {
-			x: params.movableArea.x,
-			y: params.movableArea.y,
-			width: params.movableArea.width - sprite.width,
-			height: params.movableArea.height - sprite.height,
-		};
-		this._movableArea = leftTopShurinkedArea;
-
-		const entity = new g.Sprite({
-			scene: params.scene,
-			src: sprite,
-			width: sprite.width,
-			height: sprite.height,
-			touchable: false,
-			local: true,
-			parent: params.parent ?? params.scene,
-		});
-		this._rootEntity = entity;
-
-		// ドラッグ&ドロップの場合はスプライトの中心をエンティティの座標として計算するため、中心をピボットとして移動可能エリアを縮小する
+		// 掴んで動かすときにもこれを使って移動可能エリアを制限する
 		const centerShurinkedArea = {
-			x: params.movableArea.x + sprite.width * 0.5,
-			y: params.movableArea.y + sprite.height * 0.5,
-			width: params.movableArea.width - sprite.width,
-			height: params.movableArea.height - sprite.height,
+			x: params.movableArea.x + image.width * 0.5,
+			y: params.movableArea.y + image.height * 0.5,
+			width: params.movableArea.width - image.width,
+			height: params.movableArea.height - image.height,
 		};
+		this._movableArea = centerShurinkedArea;
+
 		const grabExpand = params.profile.grabSizeExpand;
 		const grabEntity = new GrabbableEntity({
 			scene: params.scene,
-			parent: entity,
+			parent: root,
 			size: {
-				width: sprite.width + grabExpand.left + grabExpand.right,
-				height: sprite.height + grabExpand.top + grabExpand.bottom,
+				width: image.width + grabExpand.left + grabExpand.right,
+				height: image.height + grabExpand.top + grabExpand.bottom,
 			},
-			offset: {
-				x: (sprite.width - grabExpand.left + grabExpand.right) * 0.5,
-				y: (sprite.height - grabExpand.top + grabExpand.bottom) * 0.5,
-			},
+			offset: { x: 0, y: 0 },
 			constraintArea: centerShurinkedArea,
 			moveCallback: (worldPoint) => {
 				this.setPosition(worldPoint);
@@ -141,7 +148,7 @@ export class Character {
 		});
 		this._grabEntity = grabEntity;
 
-		entity.onUpdate.add(() => {
+		root.onUpdate.add(() => {
 			if (this._grabEntity.grabbing) {
 				return;
 			}
@@ -157,14 +164,19 @@ export class Character {
 			return;
 		}
 		this._navigator = navigator;
-		this.reroute();
+
+		if (this._movingDirection.x === 0 && this._movingDirection.y === 0) {
+			this.rerouteRandomPoint();
+		} else {
+			this.reroute();
+		}
 	}
 
 	public setInteractable(isDraggable: boolean): void {
-		this._rootEntity.src = isDraggable
+		this._spriteEntity.src = isDraggable
 			? this._profile.activeSprite
 			: this._profile.inactiveSprite;
-		this._rootEntity.invalidate();
+		this._spriteEntity.invalidate();
 
 		this._grabEntity.grabbable = isDraggable;
 	}
@@ -172,7 +184,8 @@ export class Character {
 	public destroy(): void {
 		this._currentMoving?.cancel();
 		this._rootEntity.hide();
-		this._rootEntity.invalidate();
+		// onPointDown等の処理中に破棄されると、画像の描画キャッシュが残ってしまいレンダリング時にエラーが発生する為、ここで破棄しておく
+		this._spriteEntity.invalidate();
 		this._rootEntity.destroy();
 	}
 
@@ -262,10 +275,10 @@ export class Character {
 			startDirection: this._movingDirection,
 			maxDistance: 300,
 			rect: {
-				top: 0,
-				left: 0,
-				right: this._rootEntity.width,
-				bottom: this._rootEntity.height,
+				top: this._spriteEntity.height * 0.5,
+				left: this._spriteEntity.width * 0.5,
+				right: this._spriteEntity.width * 0.5,
+				bottom: this._spriteEntity.height * 0.5,
 			},
 		});
 	}
@@ -297,4 +310,9 @@ function isAreaContainsPoint(
 		point.y >= area.y &&
 		point.y <= area.y + area.height
 	);
+}
+
+function isUnitVector(v: g.CommonOffset, epsilon: number = 1e-10): boolean {
+	const length = Math.sqrt(v.x ** 2 + v.y ** 2);
+	return Math.abs(length - 1) < epsilon;
 }
