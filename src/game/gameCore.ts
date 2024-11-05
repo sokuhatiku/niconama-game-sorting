@@ -95,7 +95,7 @@ export class GameCore {
 		};
 
 		const grabSize = { x: -2, y: 0, width: 36, height: 44 };
-		const scale = 1.0;
+		const scale = 1.5;
 		const speed = 100 * scale;
 
 		this._characterProfiles = {
