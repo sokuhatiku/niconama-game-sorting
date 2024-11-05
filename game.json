@@ -89,59 +89,9 @@
 				]
 			}
 		},
-		"appProgressBar": {
-			"type": "script",
-			"path": "script/appProgressBar.js",
-			"global": true
-		},
-		"assetLoader": {
-			"type": "script",
-			"path": "script/assetLoader.js",
-			"global": true
-		},
-		"area": {
-			"type": "script",
-			"path": "script/game/area.js",
-			"global": true
-		},
-		"character": {
-			"type": "script",
-			"path": "script/game/character.js",
-			"global": true
-		},
-		"characterManager": {
-			"type": "script",
-			"path": "script/game/characterManager.js",
-			"global": true
-		},
 		"gameCore": {
 			"type": "script",
 			"path": "script/game/gameCore.js",
-			"global": true
-		},
-		"particleSystem": {
-			"type": "script",
-			"path": "script/game/particleSystem.js",
-			"global": true
-		},
-		"polygonNavigator": {
-			"type": "script",
-			"path": "script/game/polygonNavigator.js",
-			"global": true
-		},
-		"positionNavigator": {
-			"type": "script",
-			"path": "script/game/positionNavigator.js",
-			"global": true
-		},
-		"rectNavigator": {
-			"type": "script",
-			"path": "script/game/rectNavigator.js",
-			"global": true
-		},
-		"scoreboard": {
-			"type": "script",
-			"path": "script/game/scoreboard.js",
 			"global": true
 		},
 		"main": {
@@ -162,11 +112,6 @@
 		"scoreHandler": {
 			"type": "script",
 			"path": "script/scoreHandler.js",
-			"global": true
-		},
-		"raycast": {
-			"type": "script",
-			"path": "script/utils/raycast.js",
 			"global": true
 		},
 		"_bootstrap": {
@@ -268,9 +213,64 @@
 			"path": "script/phases/titlePhase.js",
 			"global": true
 		},
+		"appProgressBar": {
+			"type": "script",
+			"path": "script/appProgressBar.js",
+			"global": true
+		},
+		"assetLoader": {
+			"type": "script",
+			"path": "script/assetLoader.js",
+			"global": true
+		},
+		"area": {
+			"type": "script",
+			"path": "script/game/area.js",
+			"global": true
+		},
+		"character": {
+			"type": "script",
+			"path": "script/game/character.js",
+			"global": true
+		},
+		"characterManager": {
+			"type": "script",
+			"path": "script/game/characterManager.js",
+			"global": true
+		},
 		"grabbableEntity": {
 			"type": "script",
 			"path": "script/game/grabbableEntity.js",
+			"global": true
+		},
+		"particleSystem": {
+			"type": "script",
+			"path": "script/game/particleSystem.js",
+			"global": true
+		},
+		"polygonNavigator": {
+			"type": "script",
+			"path": "script/game/polygonNavigator.js",
+			"global": true
+		},
+		"positionNavigator": {
+			"type": "script",
+			"path": "script/game/positionNavigator.js",
+			"global": true
+		},
+		"rectNavigator": {
+			"type": "script",
+			"path": "script/game/rectNavigator.js",
+			"global": true
+		},
+		"scoreboard": {
+			"type": "script",
+			"path": "script/game/scoreboard.js",
+			"global": true
+		},
+		"raycast": {
+			"type": "script",
+			"path": "script/utils/raycast.js",
 			"global": true
 		}
 	},

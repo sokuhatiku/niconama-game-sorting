@@ -12,13 +12,31 @@ export interface CharacterProfile {
 	 */
 	inactiveSprite: g.ImageAsset;
 	/**
-	 * キャラクターの当たり判定は与えられたスプライトに依存しますが、この値を使って当たり判定の範囲を調整できます。
+	 * キャラクターのスプライトの拡大率
+	 * 1.0で等倍
+	 * grabSizeやcollisionSizeの指定にも影響する
 	 */
-	grabSizeExpand: g.CommonRect;
+	sizeScale?: number;
+	/**
+	 * キャラクターのタップに対する当たり判定
+	 * 画像の中心を原点とした矩形領域で指定する
+	 * 指定しない場合はactiveSpriteと同じ大きさとなる
+	 */
+	grabSize?: g.CommonArea;
+	/**
+	 * キャラクターの地形に対する当たり判定
+	 * 画像の中心を原点とした矩形領域で指定する
+	 * 指定しない場合はactiveSpriteと同じ大きさとなる
+	 */
+	collisionSize?: g.CommonArea;
 	/**
 	 * 配置されると得点になるエリアのID
 	 */
 	goalAreaId: string;
+	/**
+	 * キャラクターの移動速度(px/s)
+	 */
+	speed: number;
 }
 
 export interface PointEvent {
@@ -37,9 +55,10 @@ export class Character {
 	private _navigator: PositionNavigator | null = null;
 	private readonly _grabEntity: GrabbableEntity;
 	private readonly _profile: CharacterProfile;
-	private readonly _movableArea: g.CommonArea;
 	private readonly _rootEntity: g.E;
 	private readonly _spriteEntity: g.Sprite;
+	private readonly _collider: g.CommonArea;
+	private readonly _speed: number;
 	private _currentMoving: Tween | null = null;
 
 	public get entity(): g.E {
@@ -81,6 +100,9 @@ export class Character {
 	}) {
 		this._profile = params.profile;
 		this._timeline = params.timeline;
+		this._speed = params.profile.speed;
+
+		const scale = params.profile.sizeScale ?? 1.0;
 
 		if (!isUnitVector(params.spawnDirection)) {
 			throw new Error("spawnDirection must be a unit vector");
@@ -108,30 +130,36 @@ export class Character {
 			y: 0,
 			anchorX: 0.5,
 			anchorY: 0.5,
+			scaleX: scale,
+			scaleY: scale,
 		});
 		this._spriteEntity = sprite;
 
-		// 移動可能エリアの大きさを予めスプライトの大きさ分小さくしておく
-		// これにより、スプライトの端がエリアの端に触れたときにスプライトがはみ出さないようにする
-		// 掴んで動かすときにもこれを使って移動可能エリアを制限する
-		const centerShurinkedArea = {
-			x: params.movableArea.x + image.width * 0.5,
-			y: params.movableArea.y + image.height * 0.5,
-			width: params.movableArea.width - image.width,
-			height: params.movableArea.height - image.height,
+		this._collider = {
+			x: (params.profile.collisionSize?.x ?? 0) * scale,
+			y: (params.profile.collisionSize?.y ?? 0) * scale,
+			width: (params.profile.collisionSize?.width ?? image.width) * scale,
+			height: (params.profile.collisionSize?.height ?? image.height) * scale,
 		};
-		this._movableArea = centerShurinkedArea;
+		const grabArea = {
+			x: (params.profile.grabSize?.x ?? 0) * scale,
+			y: (params.profile.grabSize?.y ?? 0) * scale,
+			width: (params.profile.grabSize?.width ?? image.width) * scale,
+			height: (params.profile.grabSize?.height ?? image.height) * scale,
+		};
 
-		const grabExpand = params.profile.grabSizeExpand;
+		const constraintArea = {
+			x: params.movableArea.x + grabArea.width * 0.5 - grabArea.x,
+			y: params.movableArea.y + grabArea.height * 0.5 - grabArea.y,
+			width: params.movableArea.width - grabArea.width,
+			height: params.movableArea.height - grabArea.height,
+		};
 		const grabEntity = new GrabbableEntity({
 			scene: params.scene,
 			parent: root,
-			size: {
-				width: image.width + grabExpand.left + grabExpand.right,
-				height: image.height + grabExpand.top + grabExpand.bottom,
-			},
-			offset: { x: 0, y: 0 },
-			constraintArea: centerShurinkedArea,
+			size: grabArea,
+			offset: grabArea,
+			constraintArea: constraintArea,
 			moveCallback: (worldPoint) => {
 				this.setPosition(worldPoint);
 			},
@@ -207,16 +235,6 @@ export class Character {
 			return;
 		}
 
-		// 移動先が移動可能エリアの外の場合は再ルート
-		// (ナビゲータが正常なら起こらないはずではあるが、起きたとしても戻れるようにしておく)
-		if (!isAreaContainsPoint(this._movableArea, nextPoint)) {
-			this.rerouteRandomPoint();
-			return;
-		}
-
-		// 1秒あたりの移動距離(px)
-		const speed = 100;
-
 		// 現在の座標から目的地までの距離を計算
 		const currentPoint = this.currentPoint;
 		const distanceX = nextPoint.x - currentPoint.x;
@@ -224,7 +242,7 @@ export class Character {
 		const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
 		// 移動にかかる時間を計算
-		const duration = (distance / speed) * 1000;
+		const duration = (distance / this._speed) * 1000;
 
 		// 移動方向を計算
 		this._movingDirection = {
@@ -275,10 +293,10 @@ export class Character {
 			startDirection: this._movingDirection,
 			maxDistance: 300,
 			rect: {
-				top: this._spriteEntity.height * 0.5,
-				left: this._spriteEntity.width * 0.5,
-				right: this._spriteEntity.width * 0.5,
-				bottom: this._spriteEntity.height * 0.5,
+				top: this._collider.height * 0.5 - this._collider.y,
+				left: this._collider.width * 0.5 - this._collider.x,
+				right: this._collider.width * 0.5 + this._collider.x,
+				bottom: this._collider.height * 0.5 + this._collider.y,
 			},
 		});
 	}
@@ -298,18 +316,6 @@ export class Character {
 			}),
 		];
 	}
-}
-
-function isAreaContainsPoint(
-	area: g.CommonArea,
-	point: g.CommonOffset,
-): boolean {
-	return (
-		point.x >= area.x &&
-		point.x <= area.x + area.width &&
-		point.y >= area.y &&
-		point.y <= area.y + area.height
-	);
 }
 
 function isUnitVector(v: g.CommonOffset, epsilon: number = 1e-10): boolean {

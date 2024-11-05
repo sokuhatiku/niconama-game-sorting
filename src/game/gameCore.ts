@@ -94,7 +94,10 @@ export class GameCore {
 			}),
 		};
 
-		const grabSizeExpand = { top: 6, left: 4, right: 0, bottom: 6 };
+		const grabSize = { x: -2, y: 0, width: 36, height: 44 };
+		const scale = 1.0;
+		const speed = 100 * scale;
+
 		this._characterProfiles = {
 			male: {
 				activeSprite: this._assetLoader.getImage(
@@ -103,8 +106,10 @@ export class GameCore {
 				inactiveSprite: this._assetLoader.getImage(
 					"/image/male_inactive.png",
 				),
-				grabSizeExpand: grabSizeExpand,
+				grabSize: grabSize,
 				goalAreaId: this._areas.left.id,
+				sizeScale: scale,
+				speed: speed,
 			},
 			female: {
 				activeSprite: this._assetLoader.getImage(
@@ -113,8 +118,10 @@ export class GameCore {
 				inactiveSprite: this._assetLoader.getImage(
 					"/image/female_inactive.png",
 				),
-				grabSizeExpand: grabSizeExpand,
+				grabSize: grabSize,
 				goalAreaId: this._areas.right.id,
+				sizeScale: scale,
+				speed: speed,
 			},
 		};
 
