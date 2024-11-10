@@ -156,7 +156,7 @@ export class ResultPhase implements Phase {
 			.call(() => {
 				new al.Label({
 					scene: this._background.scene,
-					text: `今後の調整用に情報を足したスコアがニコ生で集計されます
+					text: `調整の参考のため情報付与したスコアがニコ生で集計されます
 					${getNiconamaScoreRuby(this._score)}`,
 					font: this._font,
 					fontSize: 35,

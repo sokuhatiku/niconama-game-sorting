@@ -7,7 +7,7 @@ export function getNiconamaScoreRuby(score: GameScore): string {
 	).slice(-3);
 	const totalScore = score.totalScore.toLocaleString();
 
-	return `{"rt":"スコア","rb":"${totalScore}"},{"rt":"品質","rb":"${quality}"},{"rt":"仕分け数","rb":"${sort}"}`;
+	return `{"rt":"【スコア】","rb":"${totalScore}"},{"rt":"【品質】","rb":"${quality}"},{"rt":"【仕分け数】","rb":"${sort}"}`;
 }
 
 export function getNiconamaScore(score: GameScore): number {
