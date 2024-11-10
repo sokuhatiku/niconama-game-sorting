@@ -92,8 +92,8 @@ export class GameScore {
 		// 総スコア=(正しい振り分け数×基礎点)+(正しい振り分け数×基礎点×精度ボーナス率)+((出荷回数+ダブル出荷回数)×出荷ボーナス)
 
 		const basePoint = 10;
-		const qualityBonusRate = 0.5;
-		const shippingBonus = 10;
+		const qualityBonusRate = 2.0;
+		const shippingBonus = 50;
 
 		this._sortingPoint = this._correctSortingCount * basePoint;
 
