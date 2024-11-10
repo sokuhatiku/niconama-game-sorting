@@ -1,7 +1,9 @@
+import * as al from "@akashic-extension/akashic-label";
 import type { Timeline, Tween } from "@akashic-extension/akashic-timeline";
 import { AssetLoader } from "../assetLoader";
 import type { GameScore } from "../game/gameScore";
 import { CountUpEffectLabel } from "../result/countUpEffectLabel";
+import { getNiconamaScoreRuby } from "../utils/niconama";
 import type { Phase } from ".";
 
 export class ResultPhase implements Phase {
@@ -29,9 +31,9 @@ export class ResultPhase implements Phase {
 			scene: params.scene,
 			cssColor: "rgba(255, 255, 255, 0.9)",
 			x: g.game.width * 0.1,
-			y: g.game.height * 0.2,
+			y: g.game.height * 0.1,
 			width: g.game.width * 0.8,
-			height: g.game.height * 0.6,
+			height: g.game.height * 0.8,
 			parent: params.layer,
 		});
 		this._background = background;
@@ -65,7 +67,7 @@ export class ResultPhase implements Phase {
 		});
 
 		const qualityScoreLine = this.createScoreLine({
-			y: 120,
+			y: 100,
 			label: "品質",
 			middleLabel: `${(this._score.sortingQuality * 100).toFixed(1)}%`,
 			point: this._score.qualityPoint,
@@ -73,7 +75,7 @@ export class ResultPhase implements Phase {
 		});
 
 		const shippingScoreLine = this.createScoreLine({
-			y: 220,
+			y: 180,
 			label: "出荷回数",
 			middleLabel:
 				this._score.doubleShippedCount === 0
@@ -84,7 +86,7 @@ export class ResultPhase implements Phase {
 		});
 
 		const totalScoreLine = this.createTotalScoreLine({
-			y: 320,
+			y: 280,
 			label: "最終スコア",
 			point: this._score.totalScore,
 			pointSuffix: "pt",
@@ -149,6 +151,23 @@ export class ResultPhase implements Phase {
 				if (this._score.totalScore > 0) {
 					this.playCountUpSound(dulation);
 				}
+			})
+			.wait(1000)
+			.call(() => {
+				new al.Label({
+					scene: this._background.scene,
+					text: `今後の調整用に情報を足したスコアがニコ生で集計されます
+					${getNiconamaScoreRuby(this._score)}`,
+					font: this._font,
+					fontSize: 35,
+					x: 0,
+					y: 440,
+					width: this._background.width,
+					widthAutoAdjust: false,
+					textAlign: "center",
+					parent: this._background,
+					rubyEnabled: true,
+				});
 			});
 	}
 
@@ -270,3 +289,4 @@ export class ResultPhase implements Phase {
 		}, dulation);
 	}
 }
+

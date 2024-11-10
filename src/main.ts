@@ -14,6 +14,7 @@ import { ResultPhase } from "./phases/resultPhase";
 import { TitlePhase } from "./phases/titlePhase";
 import { PhaseSequencer } from "./phaseSequencer";
 import type { Layers } from "./utils/layers";
+import { getNiconamaScore } from "./utils/niconama";
 
 export function main(param: GameMainParameterObject): void {
 	let applicationTimeLimit = Infinity;
@@ -46,8 +47,8 @@ export function main(param: GameMainParameterObject): void {
 
 		// スコア集計
 		const scoreCounter = new GameScore();
-		scoreCounter.onTotalScoreUpdated.add((score) => {
-			niconama.noticeScore(score);
+		scoreCounter.onTotalScoreUpdated.add((_score) => {
+			niconama.noticeScore(getNiconamaScore(scoreCounter));
 		});
 
 		// ゲームロジック
@@ -109,7 +110,7 @@ export function main(param: GameMainParameterObject): void {
 				{ dulation: 2, phase: readyPhase },
 				{ dulation: 60, phase: gamePhase },
 				{ dulation: 3, phase: new DoNothingPhase("finish") },
-				{ dulation: 10, phase: resultPhase },
+				{ dulation: 15, phase: resultPhase },
 			],
 		});
 

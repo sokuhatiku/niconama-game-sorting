@@ -77,41 +77,11 @@
 				]
 			}
 		},
-		"gameCore": {
-			"type": "script",
-			"path": "script/game/gameCore.js",
-			"global": true
-		},
-		"main": {
-			"type": "script",
-			"path": "script/main.js",
-			"global": true
-		},
-		"parameterObject": {
-			"type": "script",
-			"path": "script/parameterObject.js",
-			"global": true
-		},
-		"phaseSequencer": {
-			"type": "script",
-			"path": "script/phaseSequencer.js",
-			"global": true
-		},
-		"_bootstrap": {
-			"type": "script",
-			"path": "script/_bootstrap.js",
-			"global": true
-		},
 		"circle_gauge_parts": {
 			"type": "image",
 			"path": "image/circle_gauge_parts.png",
 			"width": 32,
 			"height": 64
-		},
-		"shippingArea": {
-			"type": "script",
-			"path": "script/game/shippingArea.js",
-			"global": true
 		},
 		"double_shipping_bonus": {
 			"type": "image",
@@ -161,116 +131,6 @@
 				]
 			}
 		},
-		"circleGauge": {
-			"type": "script",
-			"path": "script/components/circleGauge.js",
-			"global": true
-		},
-		"timer": {
-			"type": "script",
-			"path": "script/components/timer.js",
-			"global": true
-		},
-		"descriptionPhase": {
-			"type": "script",
-			"path": "script/phases/descriptionPhase.js",
-			"global": true
-		},
-		"doNothingPhase": {
-			"type": "script",
-			"path": "script/phases/doNothingPhase.js",
-			"global": true
-		},
-		"gamePhase": {
-			"type": "script",
-			"path": "script/phases/gamePhase.js",
-			"global": true
-		},
-		"resultPhase": {
-			"type": "script",
-			"path": "script/phases/resultPhase.js",
-			"global": true
-		},
-		"titlePhase": {
-			"type": "script",
-			"path": "script/phases/titlePhase.js",
-			"global": true
-		},
-		"area": {
-			"type": "script",
-			"path": "script/game/area.js",
-			"global": true
-		},
-		"character": {
-			"type": "script",
-			"path": "script/game/character.js",
-			"global": true
-		},
-		"characterManager": {
-			"type": "script",
-			"path": "script/game/characterManager.js",
-			"global": true
-		},
-		"particleSystem": {
-			"type": "script",
-			"path": "script/game/particleSystem.js",
-			"global": true
-		},
-		"polygonNavigator": {
-			"type": "script",
-			"path": "script/game/polygonNavigator.js",
-			"global": true
-		},
-		"rectNavigator": {
-			"type": "script",
-			"path": "script/game/rectNavigator.js",
-			"global": true
-		},
-		"scoreboard": {
-			"type": "script",
-			"path": "script/game/scoreboard.js",
-			"global": true
-		},
-		"gameScore": {
-			"type": "script",
-			"path": "script/game/gameScore.js",
-			"global": true
-		},
-		"niconamaGameBridge": {
-			"type": "script",
-			"path": "script/niconamaGameBridge.js",
-			"global": true
-		},
-		"countUpEffectLabel": {
-			"type": "script",
-			"path": "script/result/countUpEffectLabel.js",
-			"global": true
-		},
-		"appProgressBar": {
-			"type": "script",
-			"path": "script/appProgressBar.js",
-			"global": true
-		},
-		"assetLoader": {
-			"type": "script",
-			"path": "script/assetLoader.js",
-			"global": true
-		},
-		"grabbableEntity": {
-			"type": "script",
-			"path": "script/game/grabbableEntity.js",
-			"global": true
-		},
-		"positionNavigator": {
-			"type": "script",
-			"path": "script/game/positionNavigator.js",
-			"global": true
-		},
-		"raycast": {
-			"type": "script",
-			"path": "script/utils/raycast.js",
-			"global": true
-		},
 		"count_finish": {
 			"type": "audio",
 			"path": "audio/count_finish",
@@ -282,11 +142,6 @@
 					".ogg"
 				]
 			}
-		},
-		"readyPhase": {
-			"type": "script",
-			"path": "script/phases/readyPhase.js",
-			"global": true
 		},
 		"count_up": {
 			"type": "audio",
@@ -323,6 +178,156 @@
 					".ogg"
 				]
 			}
+		},
+		"appProgressBar": {
+			"type": "script",
+			"path": "script/appProgressBar.js",
+			"global": true
+		},
+		"assetLoader": {
+			"type": "script",
+			"path": "script/assetLoader.js",
+			"global": true
+		},
+		"circleGauge": {
+			"type": "script",
+			"path": "script/components/circleGauge.js",
+			"global": true
+		},
+		"timer": {
+			"type": "script",
+			"path": "script/components/timer.js",
+			"global": true
+		},
+		"area": {
+			"type": "script",
+			"path": "script/game/area.js",
+			"global": true
+		},
+		"character": {
+			"type": "script",
+			"path": "script/game/character.js",
+			"global": true
+		},
+		"characterManager": {
+			"type": "script",
+			"path": "script/game/characterManager.js",
+			"global": true
+		},
+		"gameCore": {
+			"type": "script",
+			"path": "script/game/gameCore.js",
+			"global": true
+		},
+		"gameScore": {
+			"type": "script",
+			"path": "script/game/gameScore.js",
+			"global": true
+		},
+		"grabbableEntity": {
+			"type": "script",
+			"path": "script/game/grabbableEntity.js",
+			"global": true
+		},
+		"particleSystem": {
+			"type": "script",
+			"path": "script/game/particleSystem.js",
+			"global": true
+		},
+		"polygonNavigator": {
+			"type": "script",
+			"path": "script/game/polygonNavigator.js",
+			"global": true
+		},
+		"positionNavigator": {
+			"type": "script",
+			"path": "script/game/positionNavigator.js",
+			"global": true
+		},
+		"rectNavigator": {
+			"type": "script",
+			"path": "script/game/rectNavigator.js",
+			"global": true
+		},
+		"scoreboard": {
+			"type": "script",
+			"path": "script/game/scoreboard.js",
+			"global": true
+		},
+		"shippingArea": {
+			"type": "script",
+			"path": "script/game/shippingArea.js",
+			"global": true
+		},
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"niconamaGameBridge": {
+			"type": "script",
+			"path": "script/niconamaGameBridge.js",
+			"global": true
+		},
+		"parameterObject": {
+			"type": "script",
+			"path": "script/parameterObject.js",
+			"global": true
+		},
+		"descriptionPhase": {
+			"type": "script",
+			"path": "script/phases/descriptionPhase.js",
+			"global": true
+		},
+		"doNothingPhase": {
+			"type": "script",
+			"path": "script/phases/doNothingPhase.js",
+			"global": true
+		},
+		"gamePhase": {
+			"type": "script",
+			"path": "script/phases/gamePhase.js",
+			"global": true
+		},
+		"readyPhase": {
+			"type": "script",
+			"path": "script/phases/readyPhase.js",
+			"global": true
+		},
+		"resultPhase": {
+			"type": "script",
+			"path": "script/phases/resultPhase.js",
+			"global": true
+		},
+		"titlePhase": {
+			"type": "script",
+			"path": "script/phases/titlePhase.js",
+			"global": true
+		},
+		"phaseSequencer": {
+			"type": "script",
+			"path": "script/phaseSequencer.js",
+			"global": true
+		},
+		"countUpEffectLabel": {
+			"type": "script",
+			"path": "script/result/countUpEffectLabel.js",
+			"global": true
+		},
+		"raycast": {
+			"type": "script",
+			"path": "script/utils/raycast.js",
+			"global": true
+		},
+		"_bootstrap": {
+			"type": "script",
+			"path": "script/_bootstrap.js",
+			"global": true
+		},
+		"niconama": {
+			"type": "script",
+			"path": "script/utils/niconama.js",
+			"global": true
 		}
 	},
 	"environment": {
@@ -332,7 +337,7 @@
 				"ranking"
 			],
 			"preferredSessionParameters": {
-				"totalTimeLimit": 90
+				"totalTimeLimit": 93
 			}
 		}
 	},
