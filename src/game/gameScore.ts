@@ -67,22 +67,22 @@ export class GameScore {
 		return this._scoreUpdatedTrigger;
 	}
 
-	public increaseCorrectSortingCount(): void {
+	public incrementCorrectSortingCount(): void {
 		this._correctSortingCount++;
 		this._updateTotalScore();
 	}
 
-	public increaseIncorrectSortingCount(): void {
+	public incrementIncorrectSortingCount(): void {
 		this._incorrectSortingCount++;
 		this._updateTotalScore();
 	}
 
-	public increaseShippedCount(): void {
+	public incrementShippedCount(): void {
 		this._shippedCount++;
 		this._updateTotalScore();
 	}
 
-	public increaseDoubleShippedCount(): void {
+	public incrementDoubleShippedCount(): void {
 		this._doubleShippedCount++;
 		this._updateTotalScore();
 	}

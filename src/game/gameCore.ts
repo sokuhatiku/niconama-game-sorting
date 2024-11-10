@@ -145,13 +145,13 @@ export class GameCore {
 				}
 
 				if (isCorrectArea && !area.isShipping) {
-					this._scoreboard.increaseCorrectSortingCount();
+					this._scoreboard.incrementCorrectSortingCount();
 					this._particleSystem.spawnOKParticle({
 						x: character.entity.x,
 						y: character.entity.y,
 					});
 				} else {
-					this._scoreboard.increaseIncorrectSortingCount();
+					this._scoreboard.incrementIncorrectSortingCount();
 					this._particleSystem.spawnNGParticle({
 						x: character.entity.x,
 						y: character.entity.y,
@@ -257,7 +257,7 @@ export class GameCore {
 			this._characterManager.destroyCharacter(c);
 		});
 		// 出荷ポイントをスコアに加算
-		this._scoreboard.increaseShippedCount();
+		this._scoreboard.incrementShippedCount();
 
 		// 5秒間出荷中状態にする
 		area.startShipping(5);
@@ -266,7 +266,7 @@ export class GameCore {
 			// 両方のエリアが出荷中状態になっていたらダブル出荷ボーナスを付与
 			this._areas.left.setOneTimeBonus();
 			this._areas.right.setOneTimeBonus();
-			this._scoreboard.increaseDoubleShippedCount();
+			this._scoreboard.incrementDoubleShippedCount();
 		}
 	}
 }
