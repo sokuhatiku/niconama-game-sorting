@@ -109,11 +109,6 @@
 			"path": "script/phaseSequencer.js",
 			"global": true
 		},
-		"scoreHandler": {
-			"type": "script",
-			"path": "script/scoreHandler.js",
-			"global": true
-		},
 		"_bootstrap": {
 			"type": "script",
 			"path": "script/_bootstrap.js",
@@ -271,6 +266,16 @@
 		"raycast": {
 			"type": "script",
 			"path": "script/utils/raycast.js",
+			"global": true
+		},
+		"gameScore": {
+			"type": "script",
+			"path": "script/game/gameScore.js",
+			"global": true
+		},
+		"niconamaGameBridge": {
+			"type": "script",
+			"path": "script/niconamaGameBridge.js",
 			"global": true
 		}
 	},

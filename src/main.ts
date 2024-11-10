@@ -2,6 +2,8 @@ import { Timeline } from "@akashic-extension/akashic-timeline";
 import { AppProgressBar } from "./appProgressBar";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { GameCore } from "./game/gameCore";
+import { GameScore } from "./game/gameScore";
+import { Scoreboard } from "./game/scoreboard";
 import { NiconamaGameBridge } from "./niconamaGameBridge";
 import type { GameMainParameterObject } from "./parameterObject";
 import { DescriptionPhase } from "./phases/descriptionPhase";
@@ -41,18 +43,28 @@ export function main(param: GameMainParameterObject): void {
 		// アニメーション用のタイムライン
 		const timeline = new Timeline(scene);
 
+		// スコア集計
+		const scoreCounter = new GameScore();
+		scoreCounter.onTotalScoreUpdated.add((score) => {
+			niconama.noticeScore(score);
+		});
+
 		// ゲームロジック
 		const gameCore = new GameCore({
 			scene: scene,
 			timeline: timeline,
 			layers: layers,
+			scoreCounter: scoreCounter,
 		});
-		gameCore.onScoreUpdated.add((score) => {
-			niconama.noticeScore(score);
-			resultPhase.setScore(gameCore.score);
+
+		const scoreboard = new Scoreboard({
+			scene: scene,
+			scoreCounter: scoreCounter,
 		});
+
 		const gamePhase = new GamePhase({
 			gameCore: gameCore,
+			scoreboard: scoreboard,
 		});
 
 		const font = new g.DynamicFont({
@@ -76,6 +88,9 @@ export function main(param: GameMainParameterObject): void {
 			scene: scene,
 			layer: layers.gameUi,
 			font: font,
+		});
+		scoreCounter.onTotalScoreUpdated.add((score) => {
+			resultPhase.setScore(score);
 		});
 
 		// アプリ全体のシーケンサー

@@ -4,10 +4,10 @@ import type { Layers } from "../utils/layers";
 import { Area } from "./area";
 import type { CharacterProfile } from "./character";
 import { CharacterManager } from "./characterManager";
+import type { GameScore } from "./gameScore";
 import { ParticleSystem } from "./particleSystem";
 import { PolygonNavigator } from "./polygonNavigator";
 import { RectNavigator } from "./rectNavigator";
-import { Scoreboard } from "./scoreboard";
 import { ShippingArea } from "./shippingArea";
 
 interface SpawnStatistics {
@@ -24,9 +24,6 @@ export class GameCore {
 	private readonly _timeline: Timeline;
 	private readonly _characterManager: CharacterManager;
 	private readonly _particleSystem: ParticleSystem;
-	private readonly _scoreboard: Scoreboard;
-	private readonly _scoreUpdatedTrigger: g.Trigger<number> =
-		new g.Trigger<number>();
 
 	private readonly _updateTrigger: g.Trigger = new g.Trigger();
 
@@ -46,15 +43,13 @@ export class GameCore {
 		center: Area;
 	};
 
-	private _layers: Layers;
+	private readonly _layers: Layers;
+
+	private readonly _scoreboard: GameScore;
 
 	private _active: boolean = false;
 
 	private _spawnCooldown: number = 0;
-
-	public get onScoreUpdated(): g.Trigger<number> {
-		return this._scoreUpdatedTrigger;
-	}
 
 	/**
 	 * ゲームを初期化します。
@@ -64,11 +59,13 @@ export class GameCore {
 		scene: g.Scene;
 		timeline: Timeline;
 		layers: Layers;
+		scoreCounter: GameScore;
 	}) {
 		this._scene = params.scene;
 		this._assetLoader = new AssetLoader(this._scene);
 		this._timeline = params.timeline;
 		this._layers = params.layers;
+		this._scoreboard = params.scoreCounter;
 
 		this._areas = {
 			center: createMainArea({
@@ -148,13 +145,13 @@ export class GameCore {
 				}
 
 				if (isCorrectArea && !area.isShipping) {
-					this._scoreboard.addCorrectPoint();
+					this._scoreboard.increaseCorrectSortingCount();
 					this._particleSystem.spawnOKParticle({
 						x: character.entity.x,
 						y: character.entity.y,
 					});
 				} else {
-					this._scoreboard.addIncorrectPoint();
+					this._scoreboard.increaseIncorrectSortingCount();
 					this._particleSystem.spawnNGParticle({
 						x: character.entity.x,
 						y: character.entity.y,
@@ -175,14 +172,6 @@ export class GameCore {
 				}
 			},
 		);
-
-		this._scoreboard = new Scoreboard({
-			scene: this._scene,
-			parent: this._layers.gameUi,
-		});
-		this._scoreboard.onScoreUpdated.add((score) => {
-			this._scoreUpdatedTrigger.fire(score);
-		});
 	}
 
 	/**
@@ -253,10 +242,6 @@ export class GameCore {
 		});
 	}
 
-	public get score(): number {
-		return this._scoreboard.summary;
-	}
-
 	private onTurnToActive(): void {
 		this._characterManager.setAllCharactersInteractable(true);
 	}
@@ -272,7 +257,7 @@ export class GameCore {
 			this._characterManager.destroyCharacter(c);
 		});
 		// 出荷ポイントをスコアに加算
-		this._scoreboard.addSippingPoint();
+		this._scoreboard.increaseShippedCount();
 
 		// 5秒間出荷中状態にする
 		area.startShipping(5);
@@ -281,6 +266,7 @@ export class GameCore {
 			// 両方のエリアが出荷中状態になっていたらダブル出荷ボーナスを付与
 			this._areas.left.setOneTimeBonus();
 			this._areas.right.setOneTimeBonus();
+			this._scoreboard.increaseDoubleShippedCount();
 		}
 	}
 }
