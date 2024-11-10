@@ -97,12 +97,12 @@ export function main(param: GameMainParameterObject): void {
 		const sequencer = new PhaseSequencer({
 			timeLimitSeconds: applicationTimeLimit,
 			phases: [
-				{ phase: titlePhase, dulation: 3 },
-				{ phase: descriptionPhase, dulation: 10 },
-				{ phase: new DoNothingPhase("ready"), dulation: 3 },
-				{ phase: gamePhase, dulation: 60 },
-				{ phase: new DoNothingPhase("finish"), dulation: 3 },
-				{ phase: resultPhase, dulation: 6 },
+				{ dulation: 3, phase: titlePhase },
+				{ dulation: 10, phase: descriptionPhase },
+				{ dulation: 3, phase: new DoNothingPhase("ready") },
+				{ dulation: 60, phase: gamePhase },
+				{ dulation: 3, phase: new DoNothingPhase("finish") },
+				{ dulation: 6, phase: resultPhase },
 			],
 		});
 
