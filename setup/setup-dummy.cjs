@@ -8,6 +8,8 @@ necessalyFiles = {
         "whistle",
         "ok",
         "ng",
+        "count_up",
+        "count_finish",
     ]
 }
 

@@ -88,9 +88,8 @@ export function main(param: GameMainParameterObject): void {
 			scene: scene,
 			layer: layers.gameUi,
 			font: font,
-		});
-		scoreCounter.onTotalScoreUpdated.add((score) => {
-			resultPhase.setScore(score);
+			timeline: timeline,
+			scoreCounter: scoreCounter,
 		});
 
 		// アプリ全体のシーケンサー
@@ -102,7 +101,7 @@ export function main(param: GameMainParameterObject): void {
 				{ dulation: 3, phase: new DoNothingPhase("ready") },
 				{ dulation: 60, phase: gamePhase },
 				{ dulation: 3, phase: new DoNothingPhase("finish") },
-				{ dulation: 6, phase: resultPhase },
+				{ dulation: 10, phase: resultPhase },
 			],
 		});
 

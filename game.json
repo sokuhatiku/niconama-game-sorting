@@ -208,16 +208,6 @@
 			"path": "script/phases/titlePhase.js",
 			"global": true
 		},
-		"appProgressBar": {
-			"type": "script",
-			"path": "script/appProgressBar.js",
-			"global": true
-		},
-		"assetLoader": {
-			"type": "script",
-			"path": "script/assetLoader.js",
-			"global": true
-		},
 		"area": {
 			"type": "script",
 			"path": "script/game/area.js",
@@ -233,11 +223,6 @@
 			"path": "script/game/characterManager.js",
 			"global": true
 		},
-		"grabbableEntity": {
-			"type": "script",
-			"path": "script/game/grabbableEntity.js",
-			"global": true
-		},
 		"particleSystem": {
 			"type": "script",
 			"path": "script/game/particleSystem.js",
@@ -246,11 +231,6 @@
 		"polygonNavigator": {
 			"type": "script",
 			"path": "script/game/polygonNavigator.js",
-			"global": true
-		},
-		"positionNavigator": {
-			"type": "script",
-			"path": "script/game/positionNavigator.js",
 			"global": true
 		},
 		"rectNavigator": {
@@ -263,11 +243,6 @@
 			"path": "script/game/scoreboard.js",
 			"global": true
 		},
-		"raycast": {
-			"type": "script",
-			"path": "script/utils/raycast.js",
-			"global": true
-		},
 		"gameScore": {
 			"type": "script",
 			"path": "script/game/gameScore.js",
@@ -277,6 +252,60 @@
 			"type": "script",
 			"path": "script/niconamaGameBridge.js",
 			"global": true
+		},
+		"countUpEffectLabel": {
+			"type": "script",
+			"path": "script/result/countUpEffectLabel.js",
+			"global": true
+		},
+		"appProgressBar": {
+			"type": "script",
+			"path": "script/appProgressBar.js",
+			"global": true
+		},
+		"assetLoader": {
+			"type": "script",
+			"path": "script/assetLoader.js",
+			"global": true
+		},
+		"grabbableEntity": {
+			"type": "script",
+			"path": "script/game/grabbableEntity.js",
+			"global": true
+		},
+		"positionNavigator": {
+			"type": "script",
+			"path": "script/game/positionNavigator.js",
+			"global": true
+		},
+		"raycast": {
+			"type": "script",
+			"path": "script/utils/raycast.js",
+			"global": true
+		},
+		"count_finish": {
+			"type": "audio",
+			"path": "audio/count_finish",
+			"systemId": "sound",
+			"duration": 1143,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"count_up": {
+			"type": "audio",
+			"path": "audio/count_up",
+			"systemId": "sound",
+			"duration": 41,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
 		}
 	},
 	"environment": {
@@ -286,7 +315,7 @@
 				"ranking"
 			],
 			"preferredSessionParameters": {
-				"totalTimeLimit": 85
+				"totalTimeLimit": 90
 			}
 		}
 	},
@@ -300,10 +329,12 @@
 		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js",
+		"node_modules/eslint-config-prettier/index.js"
 	],
 	"moduleMainScripts": {
 		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js",
-		"@akashic-extension/akashic-label": "node_modules/@akashic-extension/akashic-label/lib/index.js"
+		"@akashic-extension/akashic-label": "node_modules/@akashic-extension/akashic-label/lib/index.js",
+		"eslint-config-prettier": "node_modules/eslint-config-prettier/index.js"
 	}
 }

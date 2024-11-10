@@ -19,6 +19,8 @@ const audioAssets = [
 	"/audio/put",
 	"/audio/ok",
 	"/audio/ng",
+	"/audio/count_up",
+	"/audio/count_finish",
 ] as const;
 
 const textAssets = [] as const;
