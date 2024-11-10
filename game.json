@@ -17,18 +17,6 @@
 			},
 			"loop": true
 		},
-		"whistle": {
-			"type": "audio",
-			"path": "audio/whistle",
-			"systemId": "sound",
-			"duration": 3816,
-			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
-			}
-		},
 		"safearea": {
 			"type": "image",
 			"path": "image/safearea.png",
@@ -295,11 +283,40 @@
 				]
 			}
 		},
+		"readyPhase": {
+			"type": "script",
+			"path": "script/phases/readyPhase.js",
+			"global": true
+		},
 		"count_up": {
 			"type": "audio",
 			"path": "audio/count_up",
 			"systemId": "sound",
-			"duration": 41,
+			"duration": 27,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"whistle_start": {
+			"type": "audio",
+			"path": "audio/whistle_start",
+			"systemId": "sound",
+			"duration": 961,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"whistle_finish": {
+			"type": "audio",
+			"path": "audio/whistle_finish",
+			"systemId": "sound",
+			"duration": 1974,
 			"hint": {
 				"extensions": [
 					".m4a",

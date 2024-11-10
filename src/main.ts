@@ -9,6 +9,7 @@ import type { GameMainParameterObject } from "./parameterObject";
 import { DescriptionPhase } from "./phases/descriptionPhase";
 import { DoNothingPhase } from "./phases/doNothingPhase";
 import { GamePhase } from "./phases/gamePhase";
+import { ReadyPhase } from "./phases/readyPhase";
 import { ResultPhase } from "./phases/resultPhase";
 import { TitlePhase } from "./phases/titlePhase";
 import { PhaseSequencer } from "./phaseSequencer";
@@ -65,6 +66,7 @@ export function main(param: GameMainParameterObject): void {
 		const gamePhase = new GamePhase({
 			gameCore: gameCore,
 			scoreboard: scoreboard,
+			scene: scene,
 		});
 
 		const font = new g.DynamicFont({
@@ -84,6 +86,12 @@ export function main(param: GameMainParameterObject): void {
 			layer: layers.gameUi,
 		});
 
+		const readyPhase = new ReadyPhase({
+			scene: scene,
+			font: font,
+			layer: layers.gameUi,
+		});
+
 		const resultPhase = new ResultPhase({
 			scene: scene,
 			layer: layers.gameUi,
@@ -98,7 +106,7 @@ export function main(param: GameMainParameterObject): void {
 			phases: [
 				{ dulation: 3, phase: titlePhase },
 				{ dulation: 10, phase: descriptionPhase },
-				{ dulation: 3, phase: new DoNothingPhase("ready") },
+				{ dulation: 2, phase: readyPhase },
 				{ dulation: 60, phase: gamePhase },
 				{ dulation: 3, phase: new DoNothingPhase("finish") },
 				{ dulation: 10, phase: resultPhase },
@@ -113,7 +121,7 @@ export function main(param: GameMainParameterObject): void {
 			progressBar.setProgress(sequencer.currentPhaseProgress);
 		});
 
-		const finishSound = assetLoader.getAudio("/audio/whistle");
+		const finishSound = assetLoader.getAudio("/audio/whistle_finish");
 		sequencer.onPhaseChanged.add((phase) => {
 			if (phase === "finish") {
 				finishSound.play();

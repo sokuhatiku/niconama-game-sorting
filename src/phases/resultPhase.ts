@@ -256,10 +256,7 @@ export class ResultPhase implements Phase {
 	}
 
 	private playCountUpSound(dulation: number): Tween {
-		const audioLength = this._countUpSound.duration;
-		if (audioLength === 0) {
-			throw new Error("countUpSound duration is 0");
-		}
+		const audioLength = 100;
 
 		let loopCount = -1;
 

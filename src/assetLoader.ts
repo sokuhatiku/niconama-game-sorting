@@ -14,7 +14,8 @@ const imageAssets = [
 
 const audioAssets = [
 	"/audio/bgm",
-	"/audio/whistle",
+	"/audio/whistle_start",
+	"/audio/whistle_finish",
 	"/audio/pick",
 	"/audio/put",
 	"/audio/ok",
