@@ -2,6 +2,7 @@ import { Timeline } from "@akashic-extension/akashic-timeline";
 import { AppProgressBar } from "./appProgressBar";
 import { allAssets, AssetLoader } from "./assetLoader";
 import { GameCore } from "./game/gameCore";
+import { NiconamaGameBridge } from "./niconamaGameBridge";
 import type { GameMainParameterObject } from "./parameterObject";
 import { DescriptionPhase } from "./phases/descriptionPhase";
 import { DoNothingPhase } from "./phases/doNothingPhase";
@@ -9,7 +10,6 @@ import { GamePhase } from "./phases/gamePhase";
 import { ResultPhase } from "./phases/resultPhase";
 import { TitlePhase } from "./phases/titlePhase";
 import { PhaseSequencer } from "./phaseSequencer";
-import { ScoreHandler } from "./scoreHandler";
 import type { Layers } from "./utils/layers";
 
 export function main(param: GameMainParameterObject): void {
@@ -18,7 +18,7 @@ export function main(param: GameMainParameterObject): void {
 		applicationTimeLimit = param.sessionParameter.totalTimeLimit;
 	}
 
-	const scoreHandler = new ScoreHandler();
+	const niconama = new NiconamaGameBridge();
 	const scene = new g.Scene({
 		game: g.game,
 		assetPaths: [...allAssets],
@@ -48,7 +48,7 @@ export function main(param: GameMainParameterObject): void {
 			layers: layers,
 		});
 		gameCore.onScoreUpdated.add((score) => {
-			scoreHandler.notice(score);
+			niconama.noticeScore(score);
 			resultPhase.setScore(gameCore.score);
 		});
 		const gamePhase = new GamePhase({
