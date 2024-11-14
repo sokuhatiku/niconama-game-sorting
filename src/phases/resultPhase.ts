@@ -61,7 +61,7 @@ export class ResultPhase implements Phase {
 		const sortingScoreLine = this.createScoreLine({
 			y: 20,
 			label: "仕分け回数",
-			middleLabel: `${this._score.totalSortingCount}回`,
+			middleLabel: `${this._score.correctSortingCount}回`,
 			point: this._score.sortingPoint,
 			pointSuffix: "pt",
 		});
@@ -156,12 +156,12 @@ export class ResultPhase implements Phase {
 			.call(() => {
 				new al.Label({
 					scene: this._background.scene,
-					text: `調整の参考のため情報付与したスコアがニコ生で集計されます
+					text: `以下の数値がニコ生で集計されます
 					${getNiconamaScoreRuby(this._score)}`,
 					font: this._font,
-					fontSize: 35,
+					fontSize: 50,
 					x: 0,
-					y: 440,
+					y: 420,
 					width: this._background.width,
 					widthAutoAdjust: false,
 					textAlign: "center",

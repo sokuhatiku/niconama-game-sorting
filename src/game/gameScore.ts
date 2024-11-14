@@ -93,15 +93,22 @@ export class GameScore {
 
 		const basePoint = 10;
 		const qualityBonusRate = 2.0;
+		const qualityBonusPowerExponent = 5;
 		const shippingBonus = 50;
 
 		this._sortingPoint = this._correctSortingCount * basePoint;
 
-		this._qualityPoint =
-			this._correctSortingCount * basePoint * qualityBonusRate;
+		this._qualityPoint = Math.floor(
+			Math.pow(this.sortingQuality, qualityBonusPowerExponent) *
+				this._sortingPoint *
+				qualityBonusRate,
+		);
 
-		this._shippingPoint =
-			(this._shippedCount + this.doubleShippedCount) * shippingBonus;
+		this._shippingPoint = Math.floor(
+			(this._shippedCount + this.doubleShippedCount) *
+				shippingBonus *
+				this.sortingQuality,
+		);
 
 		const totalScore =
 			this._sortingPoint + this._qualityPoint + this._shippingPoint;

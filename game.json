@@ -314,6 +314,11 @@
 			"path": "script/result/countUpEffectLabel.js",
 			"global": true
 		},
+		"niconama": {
+			"type": "script",
+			"path": "script/utils/niconama.js",
+			"global": true
+		},
 		"raycast": {
 			"type": "script",
 			"path": "script/utils/raycast.js",
@@ -322,11 +327,6 @@
 		"_bootstrap": {
 			"type": "script",
 			"path": "script/_bootstrap.js",
-			"global": true
-		},
-		"niconama": {
-			"type": "script",
-			"path": "script/utils/niconama.js",
 			"global": true
 		}
 	},
