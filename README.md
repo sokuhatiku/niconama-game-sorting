@@ -51,3 +51,11 @@ npm run develop
 ```
 
 手動でビルド等のコマンドを実行することもできます。全てのコマンドは`package.json`を参照してください。
+
+## Web版をデプロイする
+
+備忘録です。多分自分以外使うことはないので気にしないでください
+
+```sh
+npx wrangler pages deploy web --project-name capsule-fish-sorting --branch main
+```
