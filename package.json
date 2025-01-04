@@ -12,6 +12,7 @@
     "lint:fix": "eslint src -c eslint.config.js --fix",
     "start": "akashic sandbox .",
     "export": "akashic export zip --nicolive --force",
+    "export-web": "npm run build & akashic export html --magnify --output ./web",
     "develop": "run-p -l start build:watch update:watch",
     "test": "jest",
     "audioconv": "complete-audio",
