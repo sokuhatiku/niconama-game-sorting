@@ -351,12 +351,10 @@
 		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/index.js",
-		"node_modules/eslint-config-prettier/index.js"
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
 	],
 	"moduleMainScripts": {
 		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js",
-		"@akashic-extension/akashic-label": "node_modules/@akashic-extension/akashic-label/lib/index.js",
-		"eslint-config-prettier": "node_modules/eslint-config-prettier/index.js"
+		"@akashic-extension/akashic-label": "node_modules/@akashic-extension/akashic-label/lib/index.js"
 	}
 }
